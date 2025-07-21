@@ -10,7 +10,8 @@
       class="navbar-toggler"
       type="button"
       (click)="toggleNavbar()"
-      [attr.aria-expanded]="isNavbarCollapsed"
+      [attr.aria-expanded]="isNavbarExpanded"
+      aria-controls="navbarNav"
       aria-label="Toggle navigation"
     >
       <span class="navbar-toggler-icon"></span>
@@ -19,7 +20,7 @@
     <!-- Navbar items (Center) and Login Button (Right) -->
     <div
       class="collapse navbar-collapse"
-      [class.show]="isNavbarCollapsed"
+      [class.show]="isNavbarExpanded"
       id="navbarNav"
     >
       <ul class="navbar-nav mx-auto">

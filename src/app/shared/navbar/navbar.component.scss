@@ -20,7 +20,7 @@ $black: #000000;
   }
 
   .navbar-brand {
-    display: flex;
+    display: flex !important; // Ensure logo is always visible
     align-items: center;
 
     img {
@@ -110,29 +110,42 @@ $black: #000000;
 
 // === Mobile Styling ===
 @media (max-width: 991.98px) {
-  .navbar-collapse {
-    &.show {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
+  .navbar {
+    .navbar-brand {
+      display: flex !important; // Ensure logo remains visible on mobile
+      align-items: center;
 
-    .navbar-nav {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
-
-      .nav-link {
-        &.active::after {
-          width: 100%;
-          left: 0;
-        }
+      img {
+        height: 60px; // Slightly smaller for mobile, adjust as needed
+        width: 150px; // Maintain aspect ratio
+        object-fit: cover;
       }
     }
 
-    .btn {
-      margin-top: 0.5rem;
-      align-self: flex-start;
+    .navbar-collapse {
+      &.show {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .navbar-nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+
+        .nav-link {
+          &.active::after {
+            width: 100%;
+            left: 0;
+          }
+        }
+      }
+
+      .btn {
+        margin-top: 0.5rem;
+        align-self: flex-start;
+      }
     }
   }
 }

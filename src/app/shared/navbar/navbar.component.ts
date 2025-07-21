@@ -10,13 +10,15 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
-  isNavbarCollapsed = true;
+  isNavbarExpanded = false;
 
   toggleNavbar() {
-    this.isNavbarCollapsed = !this.isNavbarCollapsed;
+    this.isNavbarExpanded = !this.isNavbarExpanded;
+    console.log('Navbar toggled, isNavbarExpanded:', this.isNavbarExpanded); // Debugging
   }
 
   closeNavbar() {
-    this.isNavbarCollapsed = false;
+    this.isNavbarExpanded = false;
+    console.log('Navbar closed, isNavbarExpanded:', this.isNavbarExpanded); // Debugging
   }
 }
