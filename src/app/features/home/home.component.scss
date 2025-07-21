@@ -370,21 +370,7 @@ $black: #000000;
     margin-bottom: 20px;
     line-height: 1.2;
 
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -8px;
-      right: 0;
-      width: 50px;
-      height: 3px;
-      background: linear-gradient(45deg, $primary-color, #00a1cb);
-      border-radius: 2px;
 
-      @media (max-width: 992px) {
-        right: auto;
-        margin: 0 auto;
-      }
-    }
   }
 
   .content-text {
@@ -603,5 +589,361 @@ $black: #000000;
     .progress-ring-fill {
       transition: stroke-dashoffset 2s ease-in-out;
     }
+  }
+}
+
+
+.help-section {
+  padding: 60px 0;
+  background: linear-gradient(135deg, #00adb5 0%, #0097b2 100%);
+  color: #fff;
+  .help-card {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    .help-icon { width: 40px; height: 40px; stroke: #ff914d; }
+    h3 { font-size: 1.5rem; }
+    p { font-size: 1rem; }
+  }
+}
+
+
+.help-section {
+  padding: 60px 0;
+  background: $light-gray;
+  text-align: center;
+  direction: rtl;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .section-header {
+    margin-bottom: 30px;
+
+    .section-badge {
+      background: rgba($accent-color, 0.2);
+      color: $accent-color;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      color: $primary-color;
+      margin-bottom: 10px;
+      margin-top: 20px;
+    }
+
+    .section-description {
+      font-size: 1rem;
+      color: $neutral-color;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  .help-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  .help-btn {
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+
+    &.btn-donate {
+      @include gradient-accent;
+      color: $white;
+      &:hover {
+        transform: translateY(-3px);
+      }
+    }
+
+    &.btn-join {
+      background: transparent;
+      border: 2px solid $primary-color;
+      color: $primary-color;
+      &:hover {
+        background: $primary-color;
+        color: $white;
+        transform: translateY(-3px);
+      }
+    }
+
+    @media (max-width: 768px) {
+      padding: 10px 25px;
+      width: 200px;
+      text-align: center;
+    }
+  }
+}
+
+// Variables (you already have these)
+$primary-color: #00adb5;
+$secondary-color: #0097b2;
+$accent-color: #ff914d;
+$neutral-color: #545454;
+$dark-color: #1a1a1a;
+$light-gray: #f8f9fa;
+$white: #ffffff;
+$black: #000000;
+.contact-section {
+  position: relative;
+  padding: 80px 0;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 3px;
+    background: linear-gradient(90deg, $primary-color, $accent-color);
+    border-radius: 2px;
+    box-shadow: 0 0 5px rgba($accent-color, 0.5), 0 0 25px rgba($primary-color, 0.3);
+    animation: shimmer 3s infinite linear;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .section-header {
+    margin-bottom: 50px;
+    text-align: center;
+
+    .section-badge {
+      display: inline-block;
+      background: rgba($accent-color, 0.15);
+      color: $accent-color;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      border: 1px solid rgba($accent-color, 0.3);
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      color: $primary-color;
+      margin-bottom: 15px;
+      line-height: 1.2;
+    }
+
+    .section-description {
+      font-size: 1.1rem;
+      color: $neutral-color;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+  }
+
+  .form-container {
+    background: linear-gradient(135deg, rgba($white, 0.95), rgba($primary-color, 0.05));
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow:
+      0 5px 30px rgba(0, 0, 0, 0.1),
+      0 0 10px rgba($primary-color, 0.2),
+      0 0 20px rgba($accent-color, 0.15);
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.15),
+        0 0 30px rgba($primary-color, 0.3),
+        0 0 50px rgba($accent-color, 0.2);
+      transform: translateY(-3px);
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 14px 18px;
+        border: 1px solid rgba($primary-color, 0.3);
+        border-radius: 10px;
+        font-size: 1rem;
+        background: rgba($white, 0.9);
+        color: $dark-color;
+        transition: all 0.3s ease;
+
+        &:focus {
+          border-color: $accent-color;
+          background: $white;
+          box-shadow: 0 0 8px rgba($accent-color, 0.3);
+          outline: none;
+        }
+
+        &::placeholder {
+          color: lighten($neutral-color, 20%);
+        }
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+    }
+
+    .btn-submit {
+      background: linear-gradient(45deg, $primary-color, $secondary-color);
+      color: $white;
+      padding: 14px 40px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: linear-gradient(45deg, darken($primary-color, 10%), darken($secondary-color, 10%));
+        transform: scale(1.05);
+      }
+
+      &:disabled {
+        background: lighten($primary-color, 20%);
+        cursor: not-allowed;
+        transform: none;
+      }
+    }
+  }
+
+  .contact-info {
+    padding: 40px;
+    background: linear-gradient(135deg, rgba($white, 0.95), rgba($secondary-color, 0.05));
+    border-radius: 16px;
+    box-shadow:
+      0 5px 15px rgba(0, 0, 0, 0.1),
+      0 0 10px rgba($primary-color, 0.2);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.15),
+        0 0 30px rgba($primary-color, 0.3);
+    }
+
+    .info-title {
+      font-size: 1.8rem;
+      color: $primary-color;
+      margin-bottom: 25px;
+      font-weight: 700;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      color: $neutral-color;
+      font-size: 1rem;
+      line-height: 1.6;
+
+      svg {
+        margin-left: 12px;
+        flex-shrink: 0;
+        stroke: $accent-color;
+        width: 28px;
+        height: 28px;
+      }
+
+      a {
+        color: $accent-color;
+        text-decoration: none;
+        font-weight: 500;
+
+        &:hover {
+          color: darken($accent-color, 10%);
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+// Responsive tweaks
+@media (max-width: 768px) {
+  .contact-section {
+    padding: 60px 15px;
+
+    .section-title {
+      font-size: 2rem;
+    }
+
+    .section-description {
+      font-size: 1rem;
+    }
+
+    .form-container,
+    .contact-info {
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+
+    .form-container .form-group {
+      margin-bottom: 20px;
+
+      input,
+      textarea {
+        padding: 12px 15px;
+        font-size: 0.95rem;
+      }
+
+      .btn-submit {
+        padding: 12px 30px;
+        font-size: 1rem;
+      }
+    }
+
+    .contact-info .info-item {
+      font-size: 0.95rem;
+
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
   }
 }
