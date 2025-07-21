@@ -2,7 +2,6 @@ import { Component, AfterViewInit, ElementRef, ViewChild, OnDestroy, PLATFORM_ID
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { isPlatformBrowser } from '@angular/common';
-import { Carousel } from 'bootstrap';
 import AOS from 'aos';
 
 interface Achievement {
@@ -33,7 +32,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       value: 11, 
       label: 'سنة خبرة', 
       count: 0,
-      prefix: '+',
       animationDuration: 2000,
       ringOffset: this.ringDasharray
     },
@@ -72,7 +70,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   ];
 
   private observer?: IntersectionObserver;
-  private carousel?: Carousel;
+  private carousel?: any;
   private countingAnimationFrames: number[] = [];
   private hasAnimated = false;
 
@@ -83,14 +81,18 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   async ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
+      console.log('Running in browser, initializing AOS and carousel');
+      // Initialize AOS
       AOS.init({
         duration: 800,
         easing: 'ease-in-out',
         once: true
       });
-      await this.initializeCarousel();
-      this.setupIntersectionObserver();
-      this.addCarouselEnhancedFeatures();
+
+      // Dynamically import Bootstrap
+      await this.initializeBrowserFeatures();
+    } else {
+      console.log('Running in SSR, skipping browser-specific initialization');
     }
   }
 
@@ -109,8 +111,14 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private async initializeCarousel() {
+  private async initializeBrowserFeatures() {
     try {
+      console.log('Attempting to import Bootstrap dynamically');
+      const bootstrap = await import('bootstrap');
+      const Carousel = bootstrap.Carousel;
+      console.log('Bootstrap imported successfully');
+
+      // Initialize carousel
       const carouselElement = this.carouselElement?.nativeElement;
       if (carouselElement) {
         this.carousel = new Carousel(carouselElement, {
@@ -121,9 +129,13 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
           keyboard: true,
           touch: true
         });
+        console.log('Carousel initialized');
       }
+
+      this.setupIntersectionObserver();
+      this.addCarouselEnhancedFeatures();
     } catch (error) {
-      console.error('Error initializing carousel:', error);
+      console.error('Error initializing browser features:', error);
     }
   }
 
@@ -175,6 +187,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
+    if (!isPlatformBrowser(this.platformId)) return;
     if (event.key === 'ArrowLeft') {
       this.carousel?.prev();
     } else if (event.key === 'ArrowRight') {
@@ -183,6 +196,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   private setupIntersectionObserver(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     this.observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
@@ -227,12 +242,14 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         achievement.count = currentValue;
         achievement.ringOffset = ringDasharray - (currentValue / endValue) * ringDasharray;
 
-        const counterElement = document.querySelector(`#counter-${index}`) as HTMLElement;
-        if (counterElement) {
-          counterElement.style.transform = `scale(${1 + (Math.sin(progress * Math.PI) * 0.05)})`;
-          
-          if (progress === 1) {
-            counterElement.style.transform = 'scale(1)';
+        if (isPlatformBrowser(this.platformId)) {
+          const counterElement = document.querySelector(`#counter-${index}`) as HTMLElement;
+          if (counterElement) {
+            counterElement.style.transform = `scale(${1 + (Math.sin(progress * Math.PI) * 0.05)})`;
+            
+            if (progress === 1) {
+              counterElement.style.transform = 'scale(1)';
+            }
           }
         }
 
@@ -242,8 +259,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         }
       };
 
-      const frameId = requestAnimationFrame(animate);
-      this.countingAnimationFrames.push(frameId);
+      if (isPlatformBrowser(this.platformId)) {
+        const frameId = requestAnimationFrame(animate);
+        this.countingAnimationFrames.push(frameId);
+      }
     }, delay);
   }
 
