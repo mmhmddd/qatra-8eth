@@ -353,8 +353,8 @@ $black: #000000;
 
   .section-badge {
     display: inline-block;
-    background: rgba(#005670, 0.1);
-    color: #005670;
+    background: rgba($primary-color, 0.1);
+    color: $primary-color;
     padding: 6px 18px;
     border-radius: 20px;
     font-size: 0.85rem;
@@ -366,7 +366,7 @@ $black: #000000;
   .section-title {
     font-size: clamp(1.8rem, 3vw, 3rem);
     font-weight: 700;
-    color: #005670;
+    color: $primary-color;
     margin-bottom: 20px;
     line-height: 1.2;
 
@@ -377,7 +377,7 @@ $black: #000000;
       right: 0;
       width: 50px;
       height: 3px;
-      background: linear-gradient(45deg, #005670, #00a1cb);
+      background: linear-gradient(45deg, $primary-color, #00a1cb);
       border-radius: 2px;
 
       @media (max-width: 992px) {
@@ -393,7 +393,7 @@ $black: #000000;
     .lead-text {
       font-size: 1.2rem;
       font-weight: 600;
-      color: #005670;
+      color: $primary-color;
       margin-bottom: 15px;
       line-height: 1.6;
     }
@@ -401,7 +401,7 @@ $black: #000000;
     .description-text {
       font-size: 1rem;
       line-height: 1.8;
-      color: #4a4a4a;
+      color: $neutral-color;
       margin-bottom: 15px;
     }
   }
@@ -421,15 +421,15 @@ $black: #000000;
       align-items: center;
       gap: 10px;
       padding: 10px 15px;
-      background: rgba(#005670, 0.05);
+      background: rgba($primary-color, 0.05);
       border-radius: 20px;
-      border: 1px solid rgba(#005670, 0.1);
+      border: 1px solid rgba($primary-color, 0.1);
       transition: all 0.3s ease;
 
       &:hover {
-        background: rgba(#005670, 0.15);
+        background: rgba($primary-color, 0.15);
         transform: translateY(-2px);
-        box-shadow: 0 5px 10px rgba(#005670, 0.2);
+        box-shadow: 0 5px 10px rgba($primary-color, 0.2);
       }
 
       .feature-icon {
@@ -440,14 +440,14 @@ $black: #000000;
         svg {
           width: 20px;
           height: 20px;
-          stroke: #005670;
+          stroke: $primary-color;
         }
       }
 
       span {
         font-size: 0.9rem;
         font-weight: 600;
-        color: #005670;
+        color: $primary-color;
       }
     }
   }
@@ -459,7 +459,7 @@ $black: #000000;
 }
 .achievements-section {
   padding: 40px 0;
-  background: linear-gradient(135deg, #005670 0%, #003d50 100%);
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
   position: relative;
   text-align: center;
   direction: rtl;
@@ -477,14 +477,14 @@ $black: #000000;
 
     .section-badge {
       display: inline-block;
-      background: rgba(#00a1cb, 0.2);
-      color: #00a1cb;
+      background: rgba($primary-color, 0.2);
+      color: $light-gray;
       padding: 6px 18px;
       border-radius: 20px;
       font-size: 0.85rem;
       font-weight: 600;
       margin-bottom: 15px;
-      border: 1px solid rgba(#00a1cb, 0.4);
+      border: 1px solid rgba($primary-color, 0.4);
     }
 
     .section-title {
@@ -534,8 +534,8 @@ $black: #000000;
     &:hover {
       transform: translateY(-5px);
       background: rgba($white, 0.1);
-      border-color: rgba(#00a1cb, 0.3);
-      box-shadow: 0 10px 20px rgba(#005670, 0.2);
+      border-color: rgba($primary-color, 0.3);
+      box-shadow: 0 10px 20px rgba($secondary-color, 0.2);
     }
   }
 
@@ -546,13 +546,13 @@ $black: #000000;
       width: 40px;
       height: 40px;
       margin: 0 auto;
-      background: rgba(#00a1cb, 0.2);
+      background: rgba($primary-color, 0.2);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.3s ease;
-      border: 1px solid rgba(#00a1cb, 0.3);
+      border: 1px solid rgba($primary-color, 0.3);
 
       svg {
         width: 20px;
