@@ -1,2 +1,223 @@
-<p>home works!</p>
-<button routerLink="/about">Go to About</button>
+<section id="hero_section" class="hero-wrapper">
+  <div id="carouselExample" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="3000" #carouselElement>
+    <!-- Carousel Indicators -->
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="3" aria-label="Slide 4"></button>
+    </div>
+
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class="carousel-img-wrapper">
+          <img src="../../../assets/images/home/student1.png" 
+               class="d-block w-100 carousel-img" 
+               alt="Student 1"
+               loading="eager">
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-img-wrapper">
+          <img src="../../../assets/images/home/student2.png" 
+               class="d-block w-100 carousel-img" 
+               alt="Student 2"
+               loading="lazy">
+          <div class="carousel-overlay"></div>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-img-wrapper">
+          <img src="../../../assets/images/home/student3.png" 
+               class="d-block w-100 carousel-img" 
+               alt="Student 3"
+               loading="lazy">
+          <div class="carousel-overlay"></div>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <div class="carousel-img-wrapper">
+          <img src="../../../assets/images/home/student4.png" 
+               class="d-block w-100 carousel-img" 
+               alt="Student 4"
+               loading="lazy">
+          <div class="carousel-overlay"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Navigation Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev" aria-label="Previous slide">
+      <span class="carousel-control-prev-icon" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 24L12 16L20 8" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next" aria-label="Next slide">
+      <span class="carousel-control-next-icon" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 24L20 16L12 8" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="visually-hidden">Next</span>
+    </button>
+
+    <!-- Hero Content -->
+    <div class="hero-content">
+      <div class="hero-text-wrapper">
+        <h1 class="hero-title">
+          <span class="title-main">مبادرة التعليم الإلكتروني عن بعد</span>
+          <span class="title-subtitle">قطرة غيث</span>
+        </h1>
+        <p class="hero-description">نحو مستقبل تعليمي أفضل للجميع</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary hero-btn">اكتشف المزيد</button>
+          <button class="btn btn-outline-light hero-btn" routerLink="/join-us">تطوع معنا</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Enhanced About Us Section -->
+<section class="about-us-section">
+  <div class="container">
+    <div class="about-us-img-wrapper" data-aos="fade-left">
+      <div class="image-frame">
+        <img src="../../../assets/images/home/student1.png" 
+             alt="About Us Image"
+             class="about-image">
+        <div class="image-decoration"></div>
+      </div>
+    </div>
+    
+    <div class="about-us-content" data-aos="fade-right" data-aos-delay="200">
+      <div class="section-badge">من نحن</div>
+      <h2 class="section-title">لمحة عننا</h2>
+      
+      <div class="content-text">
+        <p class="lead-text">
+          نحن عمل خيري تأسست عام 2020 هدفها مساعدة الطلاب اللذين بحاجة لدراسة خاصة ولا تتوفر لهم الإمكانيات من خلال استقطاب طلاب جامعيين او خريجين للقيام بالمهمه.
+        </p>
+        
+        <p class="description-text">
+          حيث أنها توفر بيئه تعليمية عن بعد لمساعدة جميع الصفوف وبجميع المواد الدراسيه الى جانب التأسيس لمن هو بحاجة.
+        </p>
+        
+        <p class="description-text">
+          والتعليم عن بعد يكون من خلال الأنترنت مثل تطبيقات الزوم والتيمز وغيرُهما حيث تكون الحصص مباشرة ويتم تسجيلها من قبل المتطوع ومراجعتها من مختصين لتأكيد سير عملية التعليم بنجاح.
+        </p>
+      </div>
+
+      <div class="about-features">
+        <div class="feature-item">
+          <div class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="تعليم متخصص">
+              <path d="M4 19.5V4.5A2.5 2.5 0 0 1 6.5 2h11A2.5 2.5 0 0 1 20 4.5v15A2.5 2.5 0 0 1 17.5 22h-11A2.5 2.5 0 0 1 4 19.5z"></path>
+              <path d="M12 11l8 4-8-4-8 4"></path>
+            </svg>
+          </div>
+          <span>تعليم متخصص</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="تعلم عن بعد">
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <path d="M6 8h12"></path>
+              <path d="M6 12h12"></path>
+              <path d="M6 16h6"></path>
+            </svg>
+          </div>
+          <span>تعلم عن بعد</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="فريق متطوعين">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path>
+              <circle cx="10" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <circle cx="16" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <span>فريق متطوعين</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Achievements Section -->
+<section #achievementsSection class="achievements-section" id="achievements">
+  <div class="container">
+    <div class="section-header" data-aos="fade-up">
+      <div class="section-badge">إنجازاتنا</div>
+      <h2 class="section-title">إضافات وإنجازات</h2>
+      <p class="section-description">أرقام تتحدث عن رحلتنا في خدمة التعليم</p>
+    </div>
+    
+    <div class="achievements-container">
+      <div *ngFor="let achievement of achievements; let i = index" 
+           class="achievement-card"
+           data-aos="fade-up"
+           [attr.data-aos-delay]="i * 100">
+        
+        <div class="achievement-icon">
+          <div class="icon-wrapper">
+            <ng-container [ngSwitch]="i">
+              <svg *ngSwitchCase="0" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="سنة خبرة">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <svg *ngSwitchCase="1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="نشاط وخدمة">
+                <path d="M12 2v20M2 12h20"></path>
+              </svg>
+              <svg *ngSwitchCase="2" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="متطوع">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path>
+                <circle cx="10" cy="7" r="4"></circle>
+              </svg>
+              <svg *ngSwitchCase="3" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="شريك وداعم">
+                <path d="M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2"></path>
+                <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+              </svg>
+              <svg *ngSwitchCase="4" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="مستفيد">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <circle cx="16" cy="7" r="4"></circle>
+              </svg>
+            </ng-container>
+          </div>
+        </div>
+        
+        <div class="achievement-number" [id]="'counter-' + i">
+          <span class="number-prefix">{{ achievement.prefix || '' }}</span>
+          <span class="number-value">{{ formatNumber(achievement.count) }}</span>
+          <span class="number-suffix">{{ achievement.suffix || '' }}</span>
+        </div>
+        
+        <div class="achievement-label">{{ achievement.label }}</div>
+        
+        <div class="progress-ring" aria-hidden="true">
+          <svg class="progress-ring-svg" width="80" height="80">
+            <circle class="progress-ring-background" 
+                    cx="40" cy="40" r="36" 
+                    fill="transparent" 
+                    stroke="rgba(255,255,255,0.1)" 
+                    stroke-width="3"/>
+            <circle class="progress-ring-fill" 
+                    cx="40" cy="40" r="36" 
+                    fill="transparent" 
+                    stroke="#005670" 
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    [style.stroke-dasharray]="ringDasharray"
+                    [style.stroke-dashoffset]="achievement.ringOffset || ringDasharray"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
