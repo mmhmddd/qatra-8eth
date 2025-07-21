@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <!-- Logo (Left) -->
+    <a class="navbar-brand" routerLink="/">
+      <img src="/assets/images/home/blacklogo.png" alt="Logo" />
+    </a>
+
+    <!-- Toggle button for mobile -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      (click)="toggleNavbar()"
+      [attr.aria-expanded]="isNavbarCollapsed"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar items (Center) and Login Button (Right) -->
+    <div
+      class="collapse navbar-collapse"
+      [class.show]="isNavbarCollapsed"
+      id="navbarNav"
+    >
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeNavbar()">الرئيسية</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/about" routerLinkActive="active" (click)="closeNavbar()">من نحن</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/testimonials" routerLinkActive="active" (click)="closeNavbar()">الآراء</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/library" routerLinkActive="active" (click)="closeNavbar()">المكتبة</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/join-us" routerLinkActive="active" (click)="closeNavbar()">انضم إلينا</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/contact" routerLinkActive="active" (click)="closeNavbar()">تواصل معنا</a>
+        </li>
+      </ul>
+      <div class="d-flex">
+        <a class="btn" routerLink="/login" (click)="closeNavbar()">تسجيل الدخول</a>
+      </div>
+    </div>
+  </div>
+</nav>

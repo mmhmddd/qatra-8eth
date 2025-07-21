@@ -1,0 +1,151 @@
+$bg-color: #f8f9fa; // Soft off-white (for navbar)
+$text-color: #e9ecef; // Light gray for contrast on black
+$primary-color: #17a2b8; // Rich teal
+$secondary-color: #005566; // Deep blue
+$accent-color: #ff6b6b; // Coral
+
+.footer {
+  background-color: #1c2526; // Dark slate instead of pure black for depth
+  color: $text-color;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.2);
+  padding: 3rem 0;
+
+  .footer-brand {
+    img {
+      height: 60px;
+      width: 140px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  .tagline {
+    color: $accent-color;
+    font-size: 0.95rem;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .contact-info {
+    .contact-link {
+      color: $text-color;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: $accent-color;
+        text-decoration: underline;
+      }
+    }
+
+    .bi {
+      color: $primary-color;
+      font-size: 1rem;
+    }
+  }
+
+  .footer-heading {
+    color: $primary-color;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+
+  .footer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .footer-link {
+      color: $text-color;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      position: relative;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: $accent-color;
+        text-decoration: underline;
+      }
+
+      &.active {
+        color: $accent-color;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background-color: $accent-color;
+          transition: width 0.3s ease;
+        }
+      }
+    }
+  }
+
+  .social-icons {
+    .social-link {
+      color: $primary-color;
+      font-size: 2rem;
+      transition: color 0.3s ease, transform 0.3s ease;
+
+      &:hover {
+        color: $accent-color;
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  .separator {
+    border-top: 1px solid $accent-color;
+    margin: 2rem 0;
+    opacity: 0.5;
+  }
+
+  .copyright {
+    color: $text-color;
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .footer {
+    text-align: center;
+
+    .footer-nav {
+      align-items: center;
+
+      .footer-link {
+        &.active {
+          &::after {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .contact-info {
+      text-align: center;
+
+      .bi {
+        margin-right: 0;
+        margin-left: 0.5rem;
+      }
+    }
+
+    .social-icons {
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+  }
+}
