@@ -27,6 +27,7 @@ $black: #000000;
   background: linear-gradient(135deg, $white 0%, $light-gray 100%);
   position: relative;
   overflow: hidden;
+  margin-top: 50px;
 
   &::before {
     content: '';
