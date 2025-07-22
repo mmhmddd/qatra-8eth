@@ -1,17 +1,43 @@
-// === Global Color Variables ===
 $primary-color: #00adb5;
 $secondary-color: #0097b2;
-$accent-color: #ff914d;   
+$accent-color: #ff914d;
 $neutral-color: #545454;
-$black: #000000;         
+$black: #000000;
 
-// === Navbar Styling ===
 .navbar {
   background-color: $primary-color;
   min-height: 70px;
   padding: 0.5rem 1rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   direction: rtl;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: background-color 0.3s ease, min-height 0.3s ease;
+
+  &.scrolled {
+    background-color: rgba($primary-color, 0.8);
+    min-height: 50px;
+    padding: 0.3rem 1rem;
+
+    .navbar-brand {
+      img {
+        height: 60px;
+        width: 150px;
+      }
+    }
+
+    .navbar-nav {
+      gap: 1.2rem;
+    }
+
+    .btn {
+      padding: 0.3rem 0.8rem;
+    }
+  }
 
   .container-fluid {
     display: flex;
@@ -20,15 +46,14 @@ $black: #000000;
   }
 
   .navbar-brand {
-    display: flex !important; // Ensure logo is always visible
+    display: flex !important;
     align-items: center;
 
     img {
       height: 80px;
       width: 200px;
       object-fit: cover;
-      transition: transform 0.3s ease;
-      font-size: 600;
+      transition: transform 0.3s ease, height 0.3s ease, width 0.3s ease;
 
       &:hover {
         transform: scale(1.05);
@@ -84,7 +109,7 @@ $black: #000000;
           content: '';
           position: absolute;
           bottom: -4px;
-          left: 0;
+          right: 0; // Adjusted for RTL
           width: 100%;
           height: 2px;
           background-color: $accent-color;
@@ -108,16 +133,24 @@ $black: #000000;
   }
 }
 
-// === Mobile Styling ===
 @media (max-width: 991.98px) {
   .navbar {
+    &.scrolled {
+      .navbar-brand {
+        img {
+          height: 50px;
+          width: 120px;
+        }
+      }
+    }
+
     .navbar-brand {
-      display: flex !important; // Ensure logo remains visible on mobile
+      display: flex !important;
       align-items: center;
 
       img {
-        height: 60px; // Slightly smaller for mobile, adjust as needed
-        width: 150px; // Maintain aspect ratio
+        height: 60px;
+        width: 150px;
         object-fit: cover;
       }
     }
@@ -126,26 +159,38 @@ $black: #000000;
       &.show {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: flex-end; // Adjusted for RTL
+        padding-bottom: 1rem;
+        background-color: $primary-color;
       }
 
       .navbar-nav {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: flex-end; // Adjusted for RTL
         gap: 0.5rem;
+        width: 100%;
 
         .nav-link {
           &.active::after {
             width: 100%;
-            left: 0;
+            right: 0; // Adjusted for RTL
           }
         }
       }
 
       .btn {
         margin-top: 0.5rem;
-        align-self: flex-start;
+        align-self: flex-end; // Adjusted for RTL
       }
     }
+  }
+}
+
+body {
+  margin-top: 70px;
+  transition: margin-top 0.3s ease;
+
+  .navbar.scrolled + & {
+    margin-top: 50px;
   }
 }

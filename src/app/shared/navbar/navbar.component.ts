@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -11,14 +11,18 @@ import { RouterModule } from '@angular/router';
 })
 export class NavbarComponent {
   isNavbarExpanded = false;
+  scrolled = false;
+
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
+    this.scrolled = window.scrollY > 50;
+  }
 
   toggleNavbar() {
     this.isNavbarExpanded = !this.isNavbarExpanded;
-    console.log('Navbar toggled, isNavbarExpanded:', this.isNavbarExpanded); // Debugging
   }
 
   closeNavbar() {
     this.isNavbarExpanded = false;
-    console.log('Navbar closed, isNavbarExpanded:', this.isNavbarExpanded); // Debugging
   }
 }
