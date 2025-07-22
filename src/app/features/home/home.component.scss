@@ -25,6 +25,7 @@ $black: #000000;
 .hero-wrapper {
   position: relative;
   overflow: hidden;
+  height: 80vh;
   
   #hero_section & .carousel {
     position: relative;
@@ -36,7 +37,7 @@ $black: #000000;
   }
 
   .carousel-inner {
-    height: 100vh;
+    height: 80vh;
     min-height: 600px;
     position: relative;
 
@@ -63,7 +64,7 @@ $black: #000000;
   }
 
   .carousel-img {
-    object-fit: cover;
+    object-fit: fill;
     height: 100%;
     width: 100%;
     transition: transform 0.8s ease-in-out;
