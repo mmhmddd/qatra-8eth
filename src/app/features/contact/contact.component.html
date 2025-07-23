@@ -1,1 +1,227 @@
-<p>contact works!</p>
+<section class="hero-section">
+  <div class="container hero-container d-flex flex-column align-items-center justify-content-center text-center" dir="rtl">
+    <h1 class="hero-title">تواصلوا معنا</h1>
+    <p class="hero-description">
+      انضموا إلى مبادرتنا التعليمية الخيرية لنشر العلم وبناء مستقبل أفضل. 
+      تواصلوا معنا لمعرفة المزيد عن برامجنا أو لتقديم الدعم والاستفسارات.
+    </p>
+    <div class="container contact-info-container">
+      <h2 class="section-title">معلومات التواصل</h2>
+      <div class="row justify-content-center">
+        <div class="col-md-4 col-sm-6 mb-4">
+          <div class="card contact-card glass-card">
+            <div class="card-body">
+              <h3>عنوان المكتب</h3>
+              <p>  ................ </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6 mb-4">
+          <div class="card contact-card glass-card">
+            <div class="card-body">
+              <h3>أرقام الهواتف</h3>
+              <p>الهاتف: <a href="tel:+96261234567">+962 6 123 4567</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="hero-button btn" (click)="scrollToForm()">أرسل رسالتك الآن</button>
+  </div>
+</section>
+
+<!-- Contact Details Section -->
+<section class="contact-details" dir="rtl">
+  <div class="container">
+    <h2 class="section-title text-center mb-4">معلومات التواصل</h2>
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-4 col-sm-6">
+        <div class="card glass-card p-4 text-center">
+          <i class="fas fa-map-marker-alt"></i>
+          <h4>عنوان المكتب</h4>
+          <p>  ....... .</p>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-6">
+        <div class="card glass-card p-4 text-center">
+          <i class="fas fa-phone"></i>
+          <h4>أرقام الهواتف</h4>
+          <p><a href="tel:+96261234567" style="direction: ltr; unicode-bidi: embed;">+962 6 123 4567</a></p>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-6">
+        <div class="card glass-card p-4 text-center">
+          <i class="fas fa-envelope"></i>
+          <h4>البريد الإلكتروني</h4>
+          <p><a href="mailto:info@example.com">infoexample.com</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WhatsApp Section -->
+<section class="whatsapp-section py-5" dir="rtl">
+  <div class="container">
+    <h2 class="section-title text-center mb-4">تواصلوا معنا عبر الواتساب</h2>
+    <div class="text-center">
+      <button class="btn whatsapp-button" (click)="openWhatsApp()">
+        <i class="fab fa-whatsapp"></i> تواصلوا معنا الآن
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq-section py-5" dir="rtl">
+  <div class="container">
+    <h2 class="section-title text-center mb-4">الأسئلة الشائعة</h2>
+    <div class="faq-container">
+      <div class="faq-item glass-card mb-3">
+        <div class="faq-question" (click)="toggleFaq(0)" [ngClass]="{'active': activeFaq === 0}">
+          <h4>كيف يمكنني الانضمام إلى البرامج التعليمية؟</h4>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer" [@slideInOut]="activeFaq === 0 ? 'open' : 'closed'">
+          <p>يمكنك الانضمام إلى برامجنا التعليمية من خلال التسجيل عبر موقعنا الإلكتروني أو التواصل معنا مباشرة عبر الهاتف أو البريد الإلكتروني. نقدم برامج متنوعة تناسب جميع الأعمار والمستويات.</p>
+        </div>
+      </div>
+      <div class="faq-item glass-card mb-3">
+        <div class="faq-question" (click)="toggleFaq(1)" [ngClass]="{'active': activeFaq === 1}">
+          <h4>ما هي فرص التطوع المتاحة؟</h4>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer" [@slideInOut]="activeFaq === 1 ? 'open' : 'closed'">
+          <p>نوفر فرص تطوع في التدريس، تنظيم الفعاليات، وإدارة المشاريع. يمكنك ملء استمارة التطوع على موقعنا أو التواصل مع فريقنا لمعرفة المزيد عن الفرص المتاحة.</p>
+        </div>
+      </div>
+      <div class="faq-item glass-card mb-3">
+        <div class="faq-question" (click)="toggleFaq(2)" [ngClass]="{'active': activeFaq === 2}">
+          <h4>كيف يمكنني تقديم الدعم؟</h4>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer" [@slideInOut]="activeFaq === 2 ? 'open' : 'closed'">
+          <p>يمكنك تقديم الدعم من خلال التبرع عبر موقعنا الإلكتروني، أو المشاركة في فعالياتنا الخيرية، أو التواصل معنا لمناقشة خيارات الرعاية والشراكات.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Form Section -->
+<section class="contact-form py-5" dir="rtl" id="contact-form">
+  <div class="container">
+    <h2 class="section-title text-center mb-4">أرسل لنا رسالة</h2>
+    <div class="form-container glass-form">
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" id="contact-form" class="needs-validation" novalidate>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="name" class="form-label">الاسم *</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              formControlName="name"
+              required
+              placeholder="أدخل اسمك"
+              [ngClass]="{'is-invalid': contactForm.get('name')?.invalid && (contactForm.get('name')?.touched || submitted)}"
+            >
+            <div *ngIf="contactForm.get('name')?.invalid && (contactForm.get('name')?.touched || submitted)" class="invalid-feedback">
+              الاسم مطلوب
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="email" class="form-label">البريد الإلكتروني *</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              formControlName="email"
+              required
+              placeholder="أدخل بريدك الإلكتروني"
+              [ngClass]="{'is-invalid': contactForm.get('email')?.invalid && (contactForm.get('email')?.touched || submitted)}"
+            >
+            <div *ngIf="contactForm.get('email')?.hasError('required') && (contactForm.get('email')?.touched || submitted)" class="invalid-feedback">
+              البريد الإلكتروني مطلوب
+            </div>
+            <div *ngIf="contactForm.get('email')?.hasError('email') && (contactForm.get('email')?.touched || submitted)" class="invalid-feedback">
+              البريد الإلكتروني غير صالح
+            </div>
+          </div>
+          <div class="col-12">
+            <label for="phone" class="form-label">رقم الهاتف *</label>
+            <input
+              type="tel"
+              class="form-control"
+              id="phone"
+              formControlName="phone"
+              required
+              placeholder="أدخل رقم هاتفك"
+              [ngClass]="{'is-invalid': contactForm.get('phone')?.invalid && (contactForm.get('phone')?.touched || submitted)}"
+            >
+            <div *ngIf="contactForm.get('phone')?.hasError('required') && (contactForm.get('phone')?.touched || submitted)" class="invalid-feedback">
+              رقم الهاتف مطلوب
+            </div>
+            <div *ngIf="contactForm.get('phone')?.hasError('pattern') && (contactForm.get('phone')?.touched || submitted)" class="invalid-feedback">
+              يرجى إدخال رقم هاتف صالح (مثال: +962123456789)
+            </div>
+          </div>
+          <div class="col-12">
+            <label for="service" class="form-label">الخدمة المطلوبة</label>
+            <select
+              class="form-control"
+              id="service"
+              formControlName="service"
+              required
+              [ngClass]="{'is-invalid': contactForm.get('service')?.invalid && (contactForm.get('service')?.touched || submitted)}"
+            >
+              <option value="">اختر الخدمة</option>
+              <option value="educational-programs">برامج تعليمية</option>
+              <option value="volunteering">فرص تطوعية</option>
+              <option value="support">دعم شخصي</option>
+              <option value="other">أخرى</option>
+            </select>
+            <div *ngIf="contactForm.get('service')?.invalid && (contactForm.get('service')?.touched || submitted)" class="invalid-feedback">
+              يرجى اختيار خدمة
+            </div>
+          </div>
+          <div class="col-12">
+            <label for="message" class="form-label">الرسالة *</label>
+            <textarea
+              class="form-control"
+              id="message"
+              formControlName="message"
+              rows="5"
+              required
+              placeholder="اكتب رسالتك هنا"
+              [ngClass]="{'is-invalid': contactForm.get('message')?.invalid && (contactForm.get('message')?.touched || submitted)}"
+            ></textarea>
+            <div *ngIf="contactForm.get('message')?.hasError('required') && (contactForm.get('message')?.touched || submitted)" class="invalid-feedback">
+              الرسالة مطلوبة
+            </div>
+            <div *ngIf="contactForm.get('message')?.hasError('minlength') && (contactForm.get('message')?.touched || submitted)" class="invalid-feedback">
+              الرسالة يجب أن تكون 10 أحرف على الأقل
+            </div>
+          </div>
+          <div class="col-12 text-center">
+            <button type="submit" class="btn btn-submit">إرسال الرسالة</button>
+            <div id="form-status" class="mt-2" *ngIf="submitted && contactForm.valid" style="color: green;">
+              تم إرسال الرسالة بنجاح!
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Map Section -->
+<section class="map-section" dir="rtl">
+  <div class="container">
+    <h2 class="section-title text-center mb-4">موقعنا</h2>
+    <p class="text-center mb-4">زورونا في مقرنا خلال ساعات العمل. <a href="https://www.google.com/maps?q=24.71355168410286,46.67529561500086" target="_blank" rel="noopener noreferrer" style="color: #0097b2;">افتح في خرائط Google</a></p>
+    <div class="map-container glass-map">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3623.116886844975!2d46.67529561500086!3d24.71355168410286!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f038d5a9a7f9b%3A0x5f0b8f0b8f0b8f0b!2sRiyadh%2C%20Saudi%20Arabia!5e0!3m2!1sen!2sus!4v1678886400000!5m2!1sen!2sus" height="400" style="border:0; border-radius: 10px; width: 100%;" allowfullscreen="" referrerpolicy="no-referrer-when-downgrade" title="موقعنا على خرائط جوجل"></iframe>
+    </div>
+  </div>
+</section>

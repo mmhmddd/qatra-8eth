@@ -1,0 +1,540 @@
+// Color Variables (unchanged)
+$primary-color: #00adb5;
+$secondary-color: #0097b2;
+$accent-color: #ff914d;
+$neutral-color: #545454;
+$dark-color: #1a1a1a;
+$light-gray: #f8f9fa;
+$white: #ffffff;
+$black: #000000;
+
+// Enable smooth scrolling
+html {
+  scroll-behavior: smooth;
+}
+
+.hero-section {
+  background-image: url('/assets/images/contact/contactus2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  padding: 2rem 0;
+  margin-top: 5rem;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba($black, 0.5);
+    z-index: 1;
+  }
+}
+
+.hero-container {
+  position: relative;
+  z-index: 2;
+  min-height: 600px;
+}
+
+.hero-title {
+  color: $white;
+  font-weight: 700;
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  text-shadow: 0 2px 4px rgba($black, 0.3);
+}
+
+.hero-description {
+  color: $white;
+  font-family: serif;
+  font-size: 1.25rem;
+  margin-bottom: 2.5rem;
+  max-width: 800px;
+  line-height: 1.6;
+  text-shadow: 0 1px 3px rgba($black, 0.2);
+}
+
+.hero-button {
+  background-color: $primary-color;
+  color: $white;
+  font-family: 'Amiri', serif;
+  font-size: 1.1rem;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  border: none;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: $secondary-color;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($black, 0.2);
+  }
+}
+
+.contact-info-container {
+  margin: 3rem 0;
+}
+
+.section-title {
+  color: $white;
+  font-family: 'Amiri', serif;
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba($black, 0.3);
+}
+
+.contact-card.glass-card {
+  background: rgba($white, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba($white, 0.2);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba($black, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba($black, 0.3);
+  }
+
+  .card-body {
+    padding: 2rem;
+    color: $white;
+
+    h3 {
+      font-family: 'Amiri', serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: $white;
+    }
+
+    p {
+      font-family: 'Amiri', serif;
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+      color: $white;
+      line-height: 1.5;
+
+      a {
+        color: $accent-color;
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: $secondary-color;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+
+
+// WhatsApp Section
+.whatsapp-section {
+  padding: 4rem 0;
+  background: #25D366;
+
+  .section-title {
+    font-family: 'Amiri', serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: $dark-color;
+    margin-bottom: 3rem;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba($black, 0.1);
+  }
+
+  .whatsapp-button {
+    background-color: #1DA851;
+    color: $white;
+    font-family: 'Amiri', serif;
+    font-size: 1.2rem;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    border: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    i {
+      font-size: 1.5rem;
+    }
+
+    &:hover {
+      background-color: #1DA851;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba($black, 0.2);
+    }
+  }
+}
+
+// FAQ Section
+.faq-section {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, $white 0%, #f0f4f8 100%);
+
+  .section-title {
+    font-family: 'Amiri', serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: $dark-color;
+    margin-bottom: 3rem;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba($black, 0.1);
+  }
+
+  .faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .faq-item.glass-card {
+    background: rgba($white, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba($white, 0.3);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba($black, 0.15);
+    overflow: hidden;
+
+    .faq-question {
+      padding: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.3s ease;
+
+      &.active {
+        background-color: rgba($primary-color, 0.1);
+      }
+
+      h4 {
+        font-family: 'Amiri', serif;
+        font-weight: 700;
+        font-size: 1.3rem;
+        color: $dark-color;
+        margin: 0;
+      }
+
+      i {
+        font-size: 1.2rem;
+        color: $primary-color;
+        transition: transform 0.3s ease;
+      }
+
+      &.active i {
+        transform: rotate(180deg);
+      }
+    }
+
+    .faq-answer {
+      font-family: 'Amiri', serif;
+      font-size: 1rem;
+      color: $neutral-color;
+      padding: 0 1.5rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      p {
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Contact Details Section
+.contact-details {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, $white 0%, #f0f4f8 100%);
+
+  .section-title {
+    font-family: 'Amiri', serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: $dark-color;
+    margin-bottom: 3rem;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba($black, 0.1);
+  }
+
+  .card.glass-card {
+    background: rgba($white, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba($white, 0.3);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba($black, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba($black, 0.2);
+    }
+
+    i {
+      font-size: 2.5rem;
+      color: $primary-color;
+      margin-bottom: 1rem;
+    }
+
+    h4 {
+      font-family: 'Amiri', serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: $dark-color;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-family: 'Amiri', serif;
+      font-size: 1rem;
+      color: $neutral-color;
+      margin-bottom: 0.5rem;
+
+      a {
+        color: $accent-color;
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: $secondary-color;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+// Contact Form Section
+.contact-form {
+  padding: 4rem 0;
+  background: $light-gray;
+
+  .section-title {
+    font-family: 'Amiri', serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: $dark-color;
+    margin-bottom: 3rem;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba($black, 0.1);
+  }
+
+  .form-container.glass-form {
+    background: rgba($white, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba($white, 0.3);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba($black, 0.15);
+    padding: 2.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
+
+  .form-label {
+    font-family: 'Amiri', serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: $dark-color;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control {
+    font-family: 'Amiri', serif;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba($neutral-color, 0.3);
+    background: rgba($white, 0.7);
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: 0 0 8px rgba($primary-color, 0.3);
+      background: $white;
+      outline: none;
+    }
+
+    &.is-invalid {
+      border-color: #dc3545;
+      background: rgba(#dc3545, 0.1);
+    }
+  }
+
+  .invalid-feedback {
+    font-family: 'Amiri', serif;
+    font-size: 0.9rem;
+    color: #dc3545;
+  }
+
+  .btn-submit {
+    background-color: $primary-color;
+    color: $white;
+    font-family: 'Amiri', serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0.75rem 2.5rem;
+    border-radius: 8px;
+    border: none;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: $secondary-color;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba($black, 0.2);
+    }
+
+    &:disabled {
+      background-color: $neutral-color;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+  }
+
+  #form-status {
+    font-family: 'Amiri', serif;
+    font-size: 1rem;
+    color: $dark-color;
+  }
+}
+
+// Map Section
+.map-section {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, $white 0%, #f0f4f8 100%);
+
+  .section-title {
+    font-family: 'Amiri', serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: $dark-color;
+    margin-bottom: 2rem;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba($black, 0.1);
+  }
+
+  p {
+    font-family: 'Amiri', serif;
+    font-size: 1.1rem;
+    color: $neutral-color;
+    margin-bottom: 2rem;
+
+    a {
+      color: $secondary-color;
+      text-decoration: none;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: $accent-color;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .map-container.glass-map {
+    background: rgba($white, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba($white, 0.3);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba($black, 0.15);
+    padding: 1rem;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    iframe {
+      border-radius: 10px;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 4rem 0;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+  }
+
+  .hero-button {
+    font-size: 1rem;
+    padding: 0.5rem 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .contact-card.glass-card {
+    .card-body {
+      padding: 1.5rem;
+    }
+  }
+
+  .faq-section {
+    .section-title {
+      font-size: 1.5rem;
+    }
+
+    .faq-item.glass-card {
+      .faq-question {
+        h4 {
+          font-size: 1.2rem;
+        }
+      }
+
+      .faq-answer {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-container {
+    min-height: 500px;
+  }
+
+  .hero-title {
+    font-size: 1.75rem;
+  }
+
+  .hero-description {
+    font-size: 0.9rem;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}

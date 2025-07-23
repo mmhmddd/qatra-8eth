@@ -1,0 +1,133 @@
+// Color Variables
+$primary-color: #00adb5;
+$secondary-color: #0097b2;
+$accent-color: #ff914d;
+$neutral-color: #545454;
+$dark-color: #1a1a1a;
+$light-gray: #f8f9fa;
+$white: #ffffff;
+$black: #000000;
+
+// Import Amiri font for Arabic text
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+
+// Enable smooth scrolling for the entire page
+html {
+  scroll-behavior: smooth;
+}
+
+.hero-section {
+  background-color: $light-gray;
+  padding: 4rem 0;
+  margin-top: 100px;
+}
+
+.hero-title {
+  color: $dark-color;
+  font-family: 'Amiri', serif;
+  font-weight: 700;
+}
+
+.hero-description {
+  color: $neutral-color;
+  font-family: 'Amiri', serif;
+}
+
+.hero-button {
+  background-color: $primary-color;
+  color: $white;
+  transition: background-color 0.3s ease;
+  font-family: 'Amiri', serif;
+
+  &:hover {
+    background-color: $secondary-color;
+  }
+}
+
+.hero-image {
+  border-radius: 50% 10% 50% 50%;
+  border: 3px dotted $accent-color;
+}
+
+.swiper-container {
+  padding: 20px 10px;
+  background-color: $light-gray;
+  overflow: hidden;
+  touch-action: pan-x;
+}
+
+.swiper-slide {
+  padding: 5px;
+}
+
+.testimonial-card {
+  max-width: 320px;
+  min-height: 290px;
+}
+
+.profile-container {
+  gap: 10px;
+}
+
+.profile-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid $accent-color;
+}
+
+.name {
+  color: $dark-color;
+  font-family: 'Amiri', serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.rating {
+  margin-bottom: 1rem;
+}
+
+.star {
+  color: $accent-color;
+  font-size: 1.2rem;
+}
+
+.comment {
+  color: $neutral-color;
+  font-family: 'Amiri', serif;
+}
+
+@media (max-width: 768px) {
+  .swiper-container {
+    padding: 10px 5px;
+  }
+
+  .testimonial-card {
+    max-width: 90vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .swiper-container {
+    padding: 10px 0;
+  }
+
+  .testimonial-card {
+    max-width: 90vw;
+    min-height: 300px;
+  }
+
+  .profile-image {
+    width: 50px;
+    height: 50px;
+  }
+
+  .name {
+    font-size: 1.1rem;
+  }
+
+  .comment {
+    font-size: 0.95rem;
+  }
+}
