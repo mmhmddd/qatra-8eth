@@ -24,20 +24,17 @@ html {
 
 .hero-title {
   color: $dark-color;
-  font-family: 'Amiri', serif;
   font-weight: 700;
 }
 
 .hero-description {
   color: $neutral-color;
-  font-family: 'Amiri', serif;
 }
 
 .hero-button {
   background-color: $primary-color;
   color: $white;
   transition: background-color 0.3s ease;
-  font-family: 'Amiri', serif;
 
   &:hover {
     background-color: $secondary-color;

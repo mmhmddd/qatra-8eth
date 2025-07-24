@@ -18,12 +18,16 @@ export const routes: Routes = [
     loadComponent: () => import('./features/join-us/join-us.component').then(m => m.JoinUsComponent)
   },
   {
-    path: 'Leaderboards',
+    path: 'leaderboards',
     loadComponent: () => import('./features/leaderboards/leaderboards.component').then(m => m.LeaderboardsComponent)
   },
   {
     path: 'testimonials',
     loadComponent: () => import('./features/testimonials/testimonials.component').then(m => m.TestimonialsComponent)
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./auth/login/login.component').then(m => m.LoginComponent)
   },
   {
     path: '',
