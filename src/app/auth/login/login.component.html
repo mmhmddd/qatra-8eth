@@ -68,8 +68,7 @@
             </div>
             
             <!-- Divider -->
-            <div class="divider mb-4">
-            </div>
+            <div class="divider mb-4"></div>
             
             <!-- Login Form -->
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
@@ -89,7 +88,6 @@
                     placeholder="أدخل بريدك الإلكتروني"
                     (focus)="onFieldFocus('email')"
                     autocomplete="email"
-                    [disabled]="isLoading"
                   >
                 </div>
                 <div *ngIf="isFieldInvalid('email')" class="invalid-feedback">
@@ -117,7 +115,6 @@
                     placeholder="أدخل كلمة المرور"
                     (focus)="onFieldFocus('password')"
                     autocomplete="current-password"
-                    [disabled]="isLoading"
                   >
                   <button
                     type="button"
@@ -145,13 +142,9 @@
                     type="checkbox"
                     class="form-check-input"
                     id="rememberMe"
-                    [checked]="rememberMe"
                     (change)="onRememberMeChange($event)"
-                    [disabled]="isLoading"
                   >
-                  <label class="form-check-label" for="rememberMe">
-                    تذكرني
-                  </label>
+                  <label class="form-check-label" for="rememberMe">تذكرني</label>
                 </div>
                 <a 
                   href="#" 
@@ -166,7 +159,7 @@
               <button 
                 type="submit" 
                 class="btn btn-primary login-btn w-100 mb-3"
-                [disabled]="isLoading"
+                [disabled]="isLoading || loginForm.invalid"
               >
                 <span *ngIf="!isLoading">
                   <i class="fas fa-sign-in-alt me-2"></i>
@@ -198,50 +191,6 @@
               </div>
               
             </form>
-            
-            <!-- Demo Login Buttons -->
-            <div class="demo-section mb-4">
-              <p class="demo-title">تسجيل دخول تجريبي:</p>
-              <div class="row g-2">
-                <div class="col-6">
-                  <button 
-                    type="button" 
-                    class="btn btn-outline-primary btn-sm w-100"
-                    (click)="demoLogin('admin')"
-                    [disabled]="isLoading"
-                  >
-                    <i class="fas fa-user-shield me-1"></i>
-                    مدير
-                  </button>
-                </div>
-                <div class="col-6">
-                  <button 
-                    type="button" 
-                    class="btn btn-outline-secondary btn-sm w-100"
-                    (click)="demoLogin('user')"
-                    [disabled]="isLoading"
-                  >
-                    <i class="fas fa-user me-1"></i>
-                    مستخدم
-                  </button>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Register Link -->
-            <div class="register-link text-center">
-              <p class="mb-0">
-                ليس لديك حساب؟ 
-                <a 
-                  href="#" 
-                  class="register-btn"
-                  (click)="goToRegister(); $event.preventDefault()"
-                >
-                  إنشاء حساب جديد
-                </a>
-              </p>
-            </div>
-            
           </div>
         </div>
       </div>

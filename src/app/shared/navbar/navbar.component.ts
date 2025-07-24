@@ -2,6 +2,7 @@ import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,12 +17,12 @@ export class NavbarComponent {
 
   constructor(
     private router: Router,
+    private authService: AuthService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    // Subscribe to router events to scroll to top on navigation
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd && isPlatformBrowser(this.platformId)) {
-        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top with smooth behavior
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     });
   }
@@ -39,5 +40,21 @@ export class NavbarComponent {
 
   closeNavbar() {
     this.isNavbarExpanded = false;
+  }
+
+  isLoggedIn(): boolean {
+    if (isPlatformBrowser(this.platformId)) {
+      return !!localStorage.getItem('token');
+    }
+    return false; // Return false during SSR or non-browser environments
+  }
+
+  handleAuthAction() {
+    if (this.isLoggedIn()) {
+      this.authService.logout();
+    } else {
+      this.router.navigate(['/login']);
+    }
+    this.closeNavbar();
   }
 }

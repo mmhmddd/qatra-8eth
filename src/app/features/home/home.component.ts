@@ -302,4 +302,12 @@ import { Component, AfterViewInit, ElementRef, ViewChild, OnDestroy, PLATFORM_ID
            form.resetForm();
          }
        }
+
+         openWhatsApp() {
+           if (isPlatformBrowser(this.platformId)) {
+             const whatsappUrl = `https://wa.me/+96279876543?text=${encodeURIComponent('مرحبا، أود التواصل معكم بخصوص المبادرة التعليمية')}`;
+             window.open(whatsappUrl, '_blank');
+           }
+         }
+       
      }
