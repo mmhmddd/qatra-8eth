@@ -1,0 +1,45 @@
+<app-sidebar></app-sidebar>
+<main>
+  <div class="join-requests-container">
+    <h2>جميع طلبات الانضمام</h2>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th *ngFor="let header of headers">{{ header.label }}</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let request of joinRequests">
+            <td *ngFor="let header of headers">
+              <span *ngIf="header.key === 'status'" [ngClass]="getStatusClass(request.status)">
+                {{ request.status | statusTranslate }}
+              </span>
+              <span *ngIf="header.key !== 'status'">
+                {{ request[header.key] || 'غير متوفر' }}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-success" (click)="confirmApproveRequest(request._id)" [disabled]="request.status !== 'Pending' || isLoading">
+                <i class="fas fa-check"></i> موافقة
+              </button>
+              <button class="btn btn-danger" (click)="confirmRejectRequest(request._id)" [disabled]="request.status !== 'Pending' || isLoading">
+                <i class="fas fa-times"></i> رفض
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="joinRequests.length === 0">
+            <td [attr.colspan]="headers.length + 1" class="text-center">لا توجد طلبات انضمام</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="loading-overlay" *ngIf="isLoading">
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <p>جاري التحميل...</p>
+      </div>
+    </div>
+  </div>
+</main>

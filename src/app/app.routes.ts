@@ -26,6 +26,14 @@ export const routes: Routes = [
     loadComponent: () => import('./features/testimonials/testimonials.component').then(m => m.TestimonialsComponent)
   },
   {
+    path: 'dashboard',
+    loadComponent: () => import('./dashboard/dashboard/dashboard.component').then(m => m.DashboardComponent)
+  },
+  {
+    path: 'all-join-request',
+    loadComponent: () => import('./dashboard/all-join-request/all-join-request.component').then(m => m.AllJoinRequestComponent)
+  },
+  {
     path: 'login',
     loadComponent: () => import('./auth/login/login.component').then(m => m.LoginComponent)
   },

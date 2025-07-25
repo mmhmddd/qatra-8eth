@@ -13,5 +13,4 @@ export const ApiEndpoints = {
     approve: (id: string) => `${base}/join-requests/${id}/approve`,
     reject: (id: string) => `${base}/join-requests/${id}/reject`,
   },
-  // Add more sections here if needed later
 };
