@@ -133,12 +133,18 @@ $black: #000000;
     }
   }
 
+  .buttons-container {
+    min-width: 120px; /* Ensure buttons don't shrink too much */
+  }
+
   .btn {
     font-weight: 600;
     padding: 0.4rem 1rem;
     border-radius: 8px;
     border: none;
     transition: background-color 0.3s ease;
+    width: 100%; /* Ensure buttons take full width of container */
+    text-align: center;
 
     &.btn-primary {
       background-color: $accent-color; 
@@ -155,6 +161,31 @@ $black: #000000;
 
       &:hover {
         background-color: #c82333; 
+      }
+    }
+
+    &.btn-profile {
+      background-color: transparent;
+      color: $black;
+      padding: 0.4rem 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+
+      svg {
+        transition: color 0.3s ease;
+        margin-left: 0.5rem;
+      }
+
+      span {
+        transition: color 0.3s ease;
+      }
+
+      &:hover {
+        svg, span {
+          color: $accent-color;
+        }
       }
     }
   }
@@ -205,9 +236,20 @@ $black: #000000;
         }
       }
 
+      .buttons-container {
+        width: 100%;
+        align-items: flex-end;
+      }
+
       .btn {
         margin-top: 0.5rem;
+        width: auto; /* Allow buttons to size based on content in mobile */
         align-self: flex-end;
+
+        &.btn-profile {
+          margin-top: 0.5rem;
+          margin-bottom: 0.5rem;
+        }
       }
     }
   }

@@ -1,9 +1,10 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ApiEndpoints } from '../../core/constants/api-endpoints';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { ApiEndpoints } from '../../core/constants/api-endpoints';
+import { JoinRequestResponse } from './join-request.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,19 +16,18 @@ export class AuthService {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
-  login(credentials: { email: string; password: string }): Observable<any> {
-    return this.http.post(ApiEndpoints.auth.login, credentials).pipe(
+  login(credentials: { email: string; password: string }): Observable<JoinRequestResponse> {
+    return this.http.post<JoinRequestResponse>(ApiEndpoints.auth.login, credentials).pipe(
       tap({
         next: (response: any) => {
           console.log('استجابة الخادم:', response);
-          if (response && isPlatformBrowser(this.platformId)) {
-            localStorage.setItem('token', response.token || 'logged-in');
+          if (response && response.token && isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('token', response.token);
             this.router.navigate(['/home']);
           }
         },
         error: (error) => {
           console.error('خطأ في تسجيل الدخول:', error);
-          alert('فشل تسجيل الدخول: ' + (error.error?.message || 'بيانات غير صحيحة'));
         }
       })
     );
@@ -38,5 +38,9 @@ export class AuthService {
       localStorage.removeItem('token');
     }
     this.router.navigate(['/login']);
+  }
+
+  isLoggedIn(): boolean {
+    return isPlatformBrowser(this.platformId) && !!localStorage.getItem('token');
   }
 }

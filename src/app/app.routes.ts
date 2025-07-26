@@ -34,8 +34,20 @@ export const routes: Routes = [
     loadComponent: () => import('./dashboard/all-join-request/all-join-request.component').then(m => m.AllJoinRequestComponent)
   },
   {
+    path: 'all-members',
+    loadComponent: () => import('./dashboard/all-members/all-members.component').then(m => m.AllMembersComponent)
+  },
+  {
+    path: 'member/:id',
+    loadComponent: () => import('./dashboard/show-member/show-member.component').then(m => m.ShowMemberComponent)
+  },
+  {
     path: 'login',
     loadComponent: () => import('./auth/login/login.component').then(m => m.LoginComponent)
+  },
+  {
+    path: 'profile',
+    loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent)
   },
   {
     path: '',

@@ -23,8 +23,14 @@ export class AppComponent implements OnInit {
     this.router.events.pipe(
       filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
-      this.isDashboardRoute = event.urlAfterRedirects.startsWith('/dashboard');
-      console.log('Current route:', event.urlAfterRedirects, 'isDashboardRoute:', this.isDashboardRoute); // Debugging
+      const url = event.urlAfterRedirects;
+      this.isDashboardRoute = 
+        url.startsWith('/dashboard') ||
+        url.startsWith('/all-join-request') ||
+        url.startsWith('/all-members') ||
+        !!url.match(/^\/member\/[^\/]+$/) ||
+        url.startsWith('/login');
+      console.log('Current route:', url, 'isDashboardRoute:', this.isDashboardRoute); 
     });
   }
 }

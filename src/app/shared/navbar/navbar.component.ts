@@ -46,7 +46,7 @@ export class NavbarComponent {
     if (isPlatformBrowser(this.platformId)) {
       return !!localStorage.getItem('token');
     }
-    return false; // Return false during SSR or non-browser environments
+    return false;
   }
 
   handleAuthAction() {
@@ -55,6 +55,11 @@ export class NavbarComponent {
     } else {
       this.router.navigate(['/login']);
     }
+    this.closeNavbar();
+  }
+
+  navigateToProfile() {
+    this.router.navigate(['/profile']);
     this.closeNavbar();
   }
 }
