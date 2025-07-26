@@ -150,12 +150,6 @@ $box-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
   .form-group {
     flex: 1 1 100%;
   }
-
-  @media (min-width: 768px) {
-    .form-group {
-      flex: 1 1 calc(50% - #{$spacer / 2});
-    }
-  }
 }
 
 // Form Groups
