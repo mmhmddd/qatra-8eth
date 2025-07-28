@@ -78,6 +78,6 @@ export class AllMembersComponent implements OnInit, OnDestroy {
   }
 
   trackByMemberId(index: number, member: JoinRequest): any {
-    return member._id || index;
+    return member.id || index;
   }
 }

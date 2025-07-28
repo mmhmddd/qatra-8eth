@@ -79,7 +79,7 @@
             <tbody>
               <tr 
                 *ngFor="let member of approvedMembers; trackBy: trackByMemberId" 
-                [routerLink]="['/member', member._id]"
+                [routerLink]="['/member', member.id]"
                 class="member-row">
                 <td class="member-name">
                   <div class="name-cell">
@@ -88,7 +88,7 @@
                   </div>
                 </td>
                 <td class="member-email">{{ member.email || 'غير محدد' }}</td>
-                <td class="member-phone">{{ member.number || 'غير محدد' }}</td>
+                <td class="member-phone">{{ member.phone || 'غير محدد' }}</td>
                 <td class="member-specialization">{{ member.academicSpecialization || 'غير محدد' }}</td>
                 <td class="member-address">{{ member.address || 'غير محدد' }}</td>
                 <td class="member-hours">

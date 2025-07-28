@@ -1,3 +1,4 @@
+
 import { environment } from "../../../environments/environment";
 
 const base = environment.apiBaseUrl;
@@ -13,12 +14,15 @@ export const ApiEndpoints = {
     reject: (id: string) => `${base}/join-requests/${id}/reject`,
     getApproved: `${base}/approved-members`,
     getMember: (id: string) => `${base}/members/${id}`,
-    updateVolunteerHours: (id: string) => `${base}/members/${id}/volunteer-hours`,
+    updateMemberDetails: (id: string) => `${base}/members/${id}/update-details`,
+    addStudent: (id: string) => `${base}/members/${id}/add-student`,
   },
   profile: {
     get: `${base}/profile`,
     updatePassword: `${base}/profile/password`,
     uploadImage: `${base}/profile/image`,
-    updateProfile: `${base}/profile/update`,
+    addMeeting: `${base}/profile/meetings`,
+    updateMeeting: (meetingId: string) => `${base}/profile/meetings/${meetingId}`,
+    deleteMeeting: (meetingId: string) => `${base}/profile/meetings/${meetingId}`,
   },
 };

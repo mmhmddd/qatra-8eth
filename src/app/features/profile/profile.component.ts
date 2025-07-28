@@ -1,10 +1,9 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProfileService, ProfileResponse, UserProfile } from '../../core/services/profile.service';
-import { AuthService } from '../../core/services/auth.service';
+import { ProfileService } from '../../core/services/profile.service';
 import { Router } from '@angular/router';
-import { JoinRequestResponse } from '../../core/services/join-request.service';
+import { JoinRequestService, JoinRequestResponse } from '../../core/services/join-request.service';
 
 @Component({
   selector: 'app-profile',
@@ -14,173 +13,182 @@ import { JoinRequestResponse } from '../../core/services/join-request.service';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  // Using Angular 17 signals for better reactivity
-  user = signal<UserProfile>({ 
-    email: '', 
-    profileImage: null, 
-    numberOfStudents: 0, 
-    subjects: [] 
-  });
-  
-  joinRequest = signal<any>({ 
-    name: '', 
-    number: '', 
-    academicSpecialization: '', 
-    address: '', 
-    volunteerHours: 0 
-  });
-
-  currentPassword = signal<string>('');
-  newPassword = signal<string>('');
-  profileImage = signal<File | null>(null);
-  error = signal<string | null>(null);
-  success = signal<string | null>(null);
-  showPasswordModal = signal<boolean>(false);
-  isLoading = signal<boolean>(false);
-  isUploadingImage = signal<boolean>(false);
+  profile: JoinRequestResponse['data'] | null = null;
+  error: string | null = null;
+  currentPassword: string = '';
+  newPassword: string = '';
+  showPasswordModal: boolean = false;
+  meeting: {
+    title: string;
+    date: string;
+    startTime: string;
+    endTime: string;
+  } = {
+    title: '',
+    date: '',
+    startTime: '',
+    endTime: ''
+  };
+  showMeetingModal: boolean = false;
+  selectedFile: File | null = null;
+  isUploading: boolean = false;
+  showUploadField: boolean = true;
+  backendUrl: string = 'http://localhost:5000'; // Backend base URL
 
   constructor(
     private profileService: ProfileService,
-    private authService: AuthService,
+    private joinRequestService: JoinRequestService,
     private router: Router
   ) {}
 
-  ngOnInit() {
-    if (!this.authService.isLoggedIn()) {
-      this.router.navigate(['/login']);
-    } else {
-      this.fetchProfile();
-    }
+  ngOnInit(): void {
+    this.loadProfile();
   }
 
-  fetchProfile() {
-    this.isLoading.set(true);
-    this.error.set(null);
-    
+  loadProfile(): void {
     this.profileService.getProfile().subscribe({
-      next: (response: JoinRequestResponse) => {
-        this.isLoading.set(false);
-        
-        if (response.success) {
-          const data = response.data as ProfileResponse;
-          this.user.set(data.user || { 
-            email: '', 
-            profileImage: null, 
-            numberOfStudents: 0, 
-            subjects: [] 
-          });
-          this.joinRequest.set(data.joinRequest || { 
-            name: '', 
-            number: '', 
-            academicSpecialization: '', 
-            address: '', 
-            volunteerHours: 0 
-          });
-          this.success.set(response.message);
+      next: (response) => {
+        console.log('Profile response:', response);
+        if (response.success && response.data) {
+          this.profile = response.data;
+          // Prepend backend URL to profileImage if it exists
+          if (this.profile.profileImage) {
+            this.profile.profileImage = `${this.backendUrl}${this.profile.profileImage}`;
+          }
+          this.showUploadField = !this.profile.profileImage; // Hide upload field if image exists
         } else {
-          this.error.set(response.error || 'خطأ في جلب بيانات الملف الشخصي');
+          this.error = response.message || 'فشل في جلب بيانات الملف الشخصي';
         }
       },
-      error: (err: JoinRequestResponse) => {
-        this.isLoading.set(false);
-        this.error.set(err.error || 'خطأ في جلب بيانات الملف الشخصي');
-        console.error('Profile fetch error:', err);
+      error: (err) => {
+        this.error = err.message || 'حدث خطأ أثناء جلب بيانات الملف الشخصي';
+        console.error('Profile loading error:', err);
       }
     });
   }
 
-  onFileChange(event: Event) {
+  onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      const file = input.files[0];
-      
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        this.error.set('حجم الصورة يجب أن يكون أقل من 5 ميجابايت');
-        return;
-      }
-      
-      // Validate file type
-      if (!file.type.match(/^image\/(jpeg|jpg|png)$/)) {
-        this.error.set('يجب أن تكون الصورة من نوع JPEG أو PNG');
-        return;
-      }
-      
-      this.profileImage.set(file);
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
       this.uploadProfileImage();
     }
   }
 
-  uploadProfileImage() {
-    const image = this.profileImage();
-    if (image) {
-      this.isUploadingImage.set(true);
-      this.error.set(null);
-      
-      this.profileService.uploadProfileImage(image).subscribe({
-        next: (response: JoinRequestResponse) => {
-          this.isUploadingImage.set(false);
-          
-          if (response.success) {
-            const updatedUser = { ...this.user(), profileImage: response.data.profileImage };
-            this.user.set(updatedUser);
-            this.success.set(response.message);
-          } else {
-            this.error.set(response.error || 'خطأ في رفع الصورة الشخصية');
+  uploadProfileImage(): void {
+    if (!this.selectedFile) {
+      this.error = 'يرجى اختيار صورة أولاً';
+      alert(this.error);
+      return;
+    }
+    this.isUploading = true;
+    this.profileService.uploadProfileImage(this.selectedFile).subscribe({
+      next: (response) => {
+        console.log('Upload image response:', response);
+        if (response.success && response.data && this.profile) {
+          this.profile.profileImage = `${this.backendUrl}${response.data.profileImage}`;
+          this.showUploadField = false; // Hide upload field after successful upload
+          this.selectedFile = null; // Clear selected file
+          this.error = null;
+          alert(response.message);
+          // Reset the file input field
+          const fileInput = document.getElementById('profileImageInput') as HTMLInputElement;
+          if (fileInput) {
+            fileInput.value = '';
           }
-        },
-        error: (err: JoinRequestResponse) => {
-          this.isUploadingImage.set(false);
-          this.error.set(err.error || 'خطأ في رفع الصورة الشخصية');
-        }
-      });
-    }
-  }
-
-  openPasswordModal() {
-    this.showPasswordModal.set(true);
-    this.currentPassword.set('');
-    this.newPassword.set('');
-    this.error.set(null);
-    this.success.set(null);
-  }
-
-  closePasswordModal() {
-    this.showPasswordModal.set(false);
-  }
-
-  updatePassword() {
-    const current = this.currentPassword();
-    const newPass = this.newPassword();
-    
-    if (!current || !newPass) {
-      this.error.set('كلمة المرور الحالية والجديدة مطلوبة');
-      return;
-    }
-
-    if (newPass.length < 6) {
-      this.error.set('كلمة المرور الجديدة يجب أن تكون 6 أحرف على الأقل');
-      return;
-    }
-
-    this.profileService.updatePassword(current, newPass).subscribe({
-      next: (response: JoinRequestResponse) => {
-        if (response.success) {
-          this.success.set(response.message);
-          this.error.set(null);
-          this.closePasswordModal();
-        } else {
-          this.error.set(response.error || 'خطأ في تحديث كلمة المرور');
         }
       },
-      error: (err: JoinRequestResponse) => {
-        this.error.set(err.error || 'خطأ في تحديث كلمة المرور');
+      error: (err) => {
+        this.isUploading = false;
+        this.error = err.message || 'فشل في رفع الصورة';
+        console.error('Upload image error:', err);
+        alert(this.error);
+      },
+      complete: () => {
+        this.isUploading = false;
       }
     });
   }
 
-  dismissAlert() {
-    this.error.set(null);
-    this.success.set(null);
+  changeImage(): void {
+    this.showUploadField = true; // Show upload field to allow changing the image
+  }
+
+  openPasswordModal(): void {
+    this.showPasswordModal = true;
+  }
+
+  closePasswordModal(): void {
+    this.showPasswordModal = false;
+    this.currentPassword = '';
+    this.newPassword = '';
+  }
+
+  changePassword(): void {
+    if (this.currentPassword && this.newPassword) {
+      this.profileService.updatePassword(this.currentPassword, this.newPassword).subscribe({
+        next: (response) => {
+          alert(response.message);
+          this.closePasswordModal();
+        },
+        error: (err) => {
+          this.error = err.message || 'فشل في تغيير كلمة المرور';
+          alert(this.error);
+        }
+      });
+    } else {
+      alert('يرجى إدخال كلمة المرور الحالية والجديدة');
+    }
+  }
+
+  openMeetingModal(): void {
+    this.showMeetingModal = true;
+  }
+
+  closeMeetingModal(): void {
+    this.showMeetingModal = false;
+    this.meeting = { title: '', date: '', startTime: '', endTime: '' };
+  }
+
+  addMeeting(): void {
+    if (this.meeting.title && this.meeting.date && this.meeting.startTime && this.meeting.endTime) {
+      this.profileService.addMeeting(
+        this.meeting.title,
+        this.meeting.date,
+        this.meeting.startTime,
+        this.meeting.endTime
+      ).subscribe({
+        next: (response) => {
+          if (response.success && response.data && this.profile) {
+            this.profile.meetings = response.data.meetings;
+            alert(response.message);
+            this.closeMeetingModal();
+          }
+        },
+        error: (err) => {
+          this.error = err.message || 'فشل في إضافة الموعد';
+          alert(this.error);
+        }
+      });
+    } else {
+      alert('يرجى إدخال جميع تفاصيل الموعد');
+    }
+  }
+
+  deleteMeeting(meetingId: string): void {
+    if (confirm('هل أنت متأكد من حذف هذا الموعد؟')) {
+      this.profileService.deleteMeeting(meetingId).subscribe({
+        next: (response) => {
+          if (response.success && response.data && this.profile) {
+            this.profile.meetings = response.data.meetings;
+            alert(response.message);
+          }
+        },
+        error: (err) => {
+          this.error = err.message || 'فشل في حذف الموعد';
+          alert(this.error);
+        }
+      });
+    }
   }
 }

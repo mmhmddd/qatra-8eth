@@ -1,5 +1,8 @@
+
+
+
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { ApiEndpoints } from '../constants/api-endpoints';
@@ -15,14 +18,17 @@ export interface JoinRequestResponse {
 }
 
 export interface JoinRequest {
-  _id: string;
+  id: string;
   name: string;
   email: string;
-  number: string;
+  phone: string;
   academicSpecialization: string;
   address: string;
   status: 'Pending' | 'Approved' | 'Rejected';
-  volunteerHours?: number;
+  volunteerHours: number;
+  numberOfStudents: number;
+  subjects: string[];
+  students: { name: string; email: string; phone: string }[];
   createdAt: string;
 }
 
@@ -37,9 +43,19 @@ interface ApproveJoinRequestResponse {
   password: string;
 }
 
-interface VolunteerHoursResponse {
+interface UpdateMemberDetailsResponse {
   message: string;
-  member: JoinRequest;
+  volunteerHours: number;
+  numberOfStudents: number;
+  students: { name: string; email: string; phone: string }[];
+  subjects: string[];
+}
+
+interface AddStudentResponse {
+  message: string;
+  student: { name: string; email: string; phone: string };
+  numberOfStudents: number;
+  students: { name: string; email: string; phone: string }[];
 }
 
 interface RejectJoinRequestResponse {
@@ -47,24 +63,30 @@ interface RejectJoinRequestResponse {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class JoinRequestService {
+  private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
   constructor(private http: HttpClient) {}
 
-  create(data: { name: string; email: string; number: string; academicSpecialization: string; address: string }): Observable<JoinRequestResponse> {
-    return this.http.post<CreateJoinRequestResponse>(ApiEndpoints.joinRequests.create, data).pipe(
-      map(response => ({
-        success: true,
-        message: response.message || 'تم تسجيل طلب الانضمام بنجاح',
-        data: { id: response.id }
-      })),
+  create(data: { name: string; email: string; number: string; academicSpecialization: string; address: string; subjects?: string[] }): Observable<JoinRequestResponse> {
+    console.log('إرسال البيانات إلى الخادم:', data);
+    return this.http.post<CreateJoinRequestResponse>(ApiEndpoints.joinRequests.create, data, { headers: this.headers }).pipe(
+      map(response => {
+        console.log('استجابة الخادم:', response);
+        return {
+          success: true,
+          message: response.message || 'تم تسجيل طلب الانضمام بنجاح',
+          data: { id: response.id }
+        };
+      }),
       catchError(error => {
-        console.error('Error creating join request:', error);
+        console.error('خطأ في إرسال طلب الانضمام:', error);
         return throwError(() => ({
           success: false,
-          message: 'خطأ في تسجيل طلب الانضمام',
-          error: error.error?.message || error.message
+          message: error.error?.message || 'فشل في تسجيل طلب الانضمام، تحقق من البيانات أو الاتصال بالخادم',
+          error: error.statusText || error.message
         }));
       })
     );
@@ -73,10 +95,10 @@ export class JoinRequestService {
   getAll(): Observable<JoinRequest[]> {
     return this.http.get<JoinRequest[]>(ApiEndpoints.joinRequests.getAll).pipe(
       catchError(error => {
-        console.error('Error fetching join requests:', error);
+        console.error('خطأ في جلب طلبات الانضمام:', error);
         return throwError(() => ({
           success: false,
-          message: 'خطأ في جلب طلبات الانضمام',
+          message: 'فشل في جلب طلبات الانضمام، تحقق من الاتصال بالخادم',
           error: error.error?.message || error.message
         }));
       })
@@ -86,41 +108,104 @@ export class JoinRequestService {
   getApprovedMembers(): Observable<JoinRequest[]> {
     return this.http.get<JoinRequest[]>(ApiEndpoints.joinRequests.getApproved).pipe(
       catchError(error => {
-        console.error('Error fetching approved members:', error);
+        console.error('خطأ في جلب الأعضاء المعتمدين:', error);
         return throwError(() => ({
           success: false,
-          message: 'خطأ في جلب الأعضاء المعتمدين',
+          message: 'فشل في جلب الأعضاء المعتمدين، تحقق من الاتصال بالخادم',
           error: error.error?.message || error.message
         }));
       })
     );
   }
 
-  getMember(id: string): Observable<JoinRequest> {
+  getMember(id: string): Observable<JoinRequestResponse> {
     return this.http.get<JoinRequest>(ApiEndpoints.joinRequests.getMember(id)).pipe(
-      catchError(error => {
-        console.error('Error fetching member:', error);
-        return throwError(() => ({
-          success: false,
-          message: 'خطأ في جلب بيانات العضو',
-          error: error.error?.message || error.message
-        }));
-      })
-    );
-  }
-
-  updateVolunteerHours(id: string, volunteerHours: number): Observable<JoinRequestResponse> {
-    return this.http.put<VolunteerHoursResponse>(ApiEndpoints.joinRequests.updateVolunteerHours(id), { volunteerHours }).pipe(
       map(response => ({
         success: true,
-        message: response.message || 'تم تحديث ساعات التطوع بنجاح',
-        member: response.member
+        message: 'تم جلب بيانات العضو بنجاح',
+        member: {
+          id: response.id,
+          name: response.name,
+          email: response.email,
+          phone: response.phone,
+          academicSpecialization: response.academicSpecialization,
+          address: response.address,
+          status: response.status,
+          volunteerHours: response.volunteerHours || 0,
+          numberOfStudents: response.numberOfStudents || 0,
+          subjects: response.subjects || [],
+          students: response.students || [],
+          createdAt: response.createdAt
+        }
       })),
       catchError(error => {
-        console.error('Error updating volunteer hours:', error);
+        console.error('خطأ في جلب بيانات العضو:', error);
         return throwError(() => ({
           success: false,
-          message: 'خطأ في تحديث ساعات التطوع',
+          message: 'فشل في جلب بيانات العضو، تحقق من المعرف أو الاتصال بالخادم',
+          error: error.error?.message || error.message
+        }));
+      })
+    );
+  }
+
+  updateMemberDetails(id: string, volunteerHours: number, numberOfStudents: number, students: { name: string; email: string; phone: string }[], subjects: string[]): Observable<JoinRequestResponse> {
+    if (!Number.isInteger(volunteerHours) || volunteerHours < 0 || !Number.isInteger(numberOfStudents) || numberOfStudents < 0) {
+      return throwError(() => ({
+        success: false,
+        message: 'يجب أن تكون ساعات التطوع وعدد الطلاب أرقامًا صحيحة غير سالبة'
+      }));
+    }
+    if (students.some(student => !student.name || !student.email || !student.phone)) {
+      return throwError(() => ({
+        success: false,
+        message: 'بيانات الطلاب يجب أن تحتوي على الاسم، البريد الإلكتروني، والهاتف'
+      }));
+    }
+    return this.http.put<UpdateMemberDetailsResponse>(ApiEndpoints.joinRequests.updateMemberDetails(id), { volunteerHours, numberOfStudents, students, subjects }, { headers: this.headers }).pipe(
+      map(response => ({
+        success: true,
+        message: response.message || 'تم تحديث تفاصيل العضو بنجاح',
+        data: {
+          volunteerHours: response.volunteerHours,
+          numberOfStudents: response.numberOfStudents,
+          students: response.students,
+          subjects: response.subjects
+        }
+      })),
+      catchError(error => {
+        console.error('خطأ في تحديث تفاصيل العضو:', error);
+        return throwError(() => ({
+          success: false,
+          message: 'فشل في تحديث تفاصيل العضو، تحقق من البيانات أو الاتصال بالخادم',
+          error: error.error?.message || error.message
+        }));
+      })
+    );
+  }
+
+  addStudent(id: string, name: string, email: string, phone: string): Observable<JoinRequestResponse> {
+    if (!name || !email || !phone) {
+      return throwError(() => ({
+        success: false,
+        message: 'الاسم، البريد الإلكتروني، والهاتف مطلوبة للطالب'
+      }));
+    }
+    return this.http.post<AddStudentResponse>(ApiEndpoints.joinRequests.addStudent(id), { name, email, phone }, { headers: this.headers }).pipe(
+      map(response => ({
+        success: true,
+        message: response.message || 'تم إضافة الطالب بنجاح',
+        data: {
+          student: response.student,
+          numberOfStudents: response.numberOfStudents,
+          students: response.students
+        }
+      })),
+      catchError(error => {
+        console.error('خطأ في إضافة الطالب:', error);
+        return throwError(() => ({
+          success: false,
+          message: 'فشل في إضافة الطالب، تحقق من البيانات أو الاتصال بالخادم',
           error: error.error?.message || error.message
         }));
       })
@@ -128,7 +213,7 @@ export class JoinRequestService {
   }
 
   approve(id: string): Observable<JoinRequestResponse> {
-    return this.http.post<ApproveJoinRequestResponse>(ApiEndpoints.joinRequests.approve(id), {}).pipe(
+    return this.http.post<ApproveJoinRequestResponse>(ApiEndpoints.joinRequests.approve(id), {}, { headers: this.headers }).pipe(
       map(response => ({
         success: true,
         message: response.message || 'تم الموافقة على الطلب وإنشاء الحساب',
@@ -136,10 +221,10 @@ export class JoinRequestService {
         password: response.password
       })),
       catchError(error => {
-        console.error('Error approving join request:', error);
+        console.error('خطأ في الموافقة على الطلب:', error);
         return throwError(() => ({
           success: false,
-          message: 'خطأ في الموافقة على الطلب',
+          message: 'فشل في الموافقة على الطلب، تحقق من المعرف أو الاتصال بالخادم',
           error: error.error?.message || error.message
         }));
       })
@@ -147,19 +232,21 @@ export class JoinRequestService {
   }
 
   reject(id: string): Observable<JoinRequestResponse> {
-    return this.http.post<RejectJoinRequestResponse>(ApiEndpoints.joinRequests.reject(id), {}).pipe(
+    return this.http.post<RejectJoinRequestResponse>(ApiEndpoints.joinRequests.reject(id), {}, { headers: this.headers }).pipe(
       map(response => ({
         success: true,
         message: response.message || 'تم رفض الطلب'
       })),
       catchError(error => {
-        console.error('Error rejecting join request:', error);
+        console.error('خطأ في رفض الطلب:', error);
         return throwError(() => ({
           success: false,
-          message: 'خطأ في رفض الطلب',
+          message: 'فشل في رفض الطلب، تحقق من المعرف أو الاتصال بالخادم',
           error: error.error?.message || error.message
         }));
       })
     );
   }
 }
+
+

@@ -1,251 +1,150 @@
-<!-- Main Profile Container -->
-<div class="profile-container" dir="rtl">
-  <!-- Loading Spinner -->
-  <div *ngIf="isLoading()" class="loading-spinner">
-    <div class="spinner"></div>
-    <p>جاري تحميل البيانات...</p>
-  </div>
+<div class="container mt-5">
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
-  <!-- Main Content -->
-  <div *ngIf="!isLoading()" class="profile-content">
-    <!-- Page Header -->
-    <div class="page-header">
-      <h1 class="page-title">الملف الشخصي</h1>
-      <p class="page-subtitle">إدارة بياناتك الشخصية وإعداداتك</p>
+  <div *ngIf="profile" class="card shadow">
+    <div class="card-header bg-primary text-white">
+      <h2 class="mb-0">الملف الشخصي</h2>
     </div>
-
-    <!-- Alert Messages -->
-    <div class="alerts-container">
-      <div *ngIf="error()" class="alert alert-danger" role="alert">
-        <div class="alert-content">
-          <svg class="alert-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-          </svg>
-          <span>{{ error() }}</span>
-          <button class="alert-close" (click)="dismissAlert()" type="button">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-            </svg>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4 text-center">
+          <img *ngIf="profile.profileImage" [src]="profile.profileImage" alt="صورة الملف الشخصي" class="img-fluid rounded-circle mb-3 profile-image">
+          <img *ngIf="!profile.profileImage" src="/assets/default-profile.png" alt="صورة افتراضية" class="img-fluid rounded-circle mb-3 profile-image">
+          <button *ngIf="profile.profileImage" (click)="changeImage()" class="btn btn-sm btn-primary change-image-btn">
+            تغيير الصورة
           </button>
-        </div>
-      </div>
-
-      <div *ngIf="success()" class="alert alert-success" role="alert">
-        <div class="alert-content">
-          <svg class="alert-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-          </svg>
-          <span>{{ success() }}</span>
-          <button class="alert-close" (click)="dismissAlert()" type="button">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Profile Cards Grid -->
-    <div class="profile-grid">
-      <!-- Profile Image Card -->
-      <div class="profile-card image-card">
-        <div class="card-header">
-          <h3 class="card-title">الصورة الشخصية</h3>
-        </div>
-        <div class="card-body">
-          <div class="profile-image-container">
-            <div class="profile-image-wrapper">
-              <img
-                *ngIf="user().profileImage"
-                [src]="user().profileImage"
-                alt="صورة الملف الشخصي"
-                class="profile-image"
-              />
-              <div *ngIf="!user().profileImage" class="profile-image-placeholder">
-                <svg viewBox="0 0 24 24" class="placeholder-icon">
-                  <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
-                <span>لا توجد صورة</span>
-              </div>
-              
-              <!-- Upload Progress Overlay -->
-              <div *ngIf="isUploadingImage()" class="upload-overlay">
-                <div class="upload-spinner"></div>
-                <span>جاري الرفع...</span>
-              </div>
-            </div>
-            
-            <!-- File Input -->
-            <div class="file-input-container">
-              <input
-                type="file"
-                accept="image/jpeg,image/jpg,image/png"
-                (change)="onFileChange($event)"
-                class="file-input"
-                id="profileImageInput"
-                [disabled]="isUploadingImage()"
-              />
-              <label for="profileImageInput" class="file-input-label">
-                <svg viewBox="0 0 24 24" class="upload-icon">
-                  <path fill="currentColor" d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                </svg>
-                اختيار صورة جديدة
-              </label>
-            </div>
-            <p class="file-hint">الحد الأقصى: 5 ميجابايت (JPEG, PNG)</p>
+          <div *ngIf="showUploadField" class="upload-section mt-3">
+            <input type="file" id="profileImageInput" class="form-control mb-2" accept="image/jpeg,image/png" (change)="onFileSelected($event)">
+            <button [disabled]="isUploading" class="btn btn-primary" (click)="uploadProfileImage()">
+              {{ isUploading ? 'جاري الرفع...' : 'رفع الصورة' }}
+            </button>
           </div>
         </div>
-      </div>
-
-      <!-- Personal Information Card -->
-      <div class="profile-card info-card">
-        <div class="card-header">
-          <h3 class="card-title">المعلومات الشخصية</h3>
-        </div>
-        <div class="card-body">
-          <div class="info-grid">
-            <div class="info-item">
-              <div class="info-label">الاسم</div>
-              <div class="info-value">{{ joinRequest().name || 'غير متوفر' }}</div>
-            </div>
-            
-            <div class="info-item">
-              <div class="info-label">البريد الإلكتروني</div>
-              <div class="info-value">{{ user().email || 'غير متوفر' }}</div>
-            </div>
-            
-            <div class="info-item">
-              <div class="info-label">رقم الهاتف</div>
-              <div class="info-value">{{ joinRequest().number || 'غير متوفر' }}</div>
-            </div>
-            
-            <div class="info-item">
-              <div class="info-label">التخصص الجامعي</div>
-              <div class="info-value">{{ joinRequest().academicSpecialization || 'غير متوفر' }}</div>
-            </div>
-            
-            <div class="info-item full-width">
-              <div class="info-label">العنوان</div>
-              <div class="info-value">{{ joinRequest().address || 'غير متوفر' }}</div>
-            </div>
-          </div>
+        <div class="col-md-8">
+          <h4>المعلومات الشخصية</h4>
+          <p><strong>الاسم:</strong> {{ profile.name }}</p>
+          <p><strong>البريد الإلكتروني:</strong> {{ profile.email }}</p>
+          <p><strong>الهاتف:</strong> {{ profile.phone }}</p>
+          <p><strong>العنوان:</strong> {{ profile.address }}</p>
+          <p><strong>التخصص الأكاديمي:</strong> {{ profile.academicSpecialization }}</p>
+          <p><strong>ساعات التطوع:</strong> {{ profile.volunteerHours }}</p>
+          <p><strong>عدد الطلاب:</strong> {{ profile.numberOfStudents }}</p>
+          <p><strong>المواد:</strong> {{ profile.subjects.join(', ') }}</p>
+          
+          <button class="btn btn-primary mt-3" (click)="openPasswordModal()">تغيير كلمة المرور</button>
         </div>
       </div>
 
-      <!-- Statistics Card -->
-      <div class="profile-card stats-card">
-        <div class="card-header">
-          <h3 class="card-title">الإحصائيات</h3>
-        </div>
-        <div class="card-body">
-          <div class="stats-grid">
-            <div class="stat-item">
-              <div class="stat-icon volunteer">
-                <svg viewBox="0 0 24 24">
-                  <path fill="currentColor" d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/>
-                </svg>
-              </div>
-              <div class="stat-content">
-                <div class="stat-value">{{ joinRequest().volunteerHours || 0 }}</div>
-                <div class="stat-label">ساعات التطوع</div>
-              </div>
-            </div>
-            
-            <div class="stat-item">
-              <div class="stat-icon students">
-                <svg viewBox="0 0 24 24">
-                  <path fill="currentColor" d="M16 4C16.88 4 17.67 4.25 18.31 4.69C18.95 5.13 19.5 5.74 19.88 6.44C20.25 7.14 20.5 7.94 20.5 8.75C20.5 9.56 20.25 10.36 19.88 11.06C19.5 11.76 18.95 12.37 18.31 12.81C17.67 13.25 16.88 13.5 16 13.5C15.12 13.5 14.33 13.25 13.69 12.81C13.05 12.37 12.5 11.76 12.12 11.06C11.75 10.36 11.5 9.56 11.5 8.75C11.5 7.94 11.75 7.14 12.12 6.44C12.5 5.74 13.05 5.13 13.69 4.69C14.33 4.25 15.12 4 16 4M16 14.5C18.33 14.5 20.5 15.42 20.5 16.75V18H11.5V16.75C11.5 15.42 13.67 14.5 16 14.5M8 4C8.88 4 9.67 4.25 10.31 4.69C10.95 5.13 11.5 5.74 11.88 6.44C12.25 7.14 12.5 7.94 12.5 8.75C12.5 9.56 12.25 10.36 11.88 11.06C11.5 11.76 10.95 12.37 10.31 12.81C9.67 13.25 8.88 13.5 8 13.5C7.12 13.5 6.33 13.25 5.69 12.81C5.05 12.37 4.5 11.76 4.12 11.06C3.75 10.36 3.5 9.56 3.5 8.75C3.5 7.94 3.75 7.14 4.12 6.44C4.5 5.74 5.05 5.13 5.69 4.69C6.33 4.25 7.12 4 8 4M8 14.5C10.33 14.5 12.5 15.42 12.5 16.75V18H3.5V16.75C3.5 15.42 5.67 14.5 8 14.5Z"/>
-                </svg>
-              </div>
-              <div class="stat-content">
-                <div class="stat-value">{{ user().numberOfStudents || 0 }}</div>
-                <div class="stat-label">عدد الطلاب</div>
-              </div>
-            </div>
-          </div>
+      <div class="mt-4">
+        <h4>الطلاب</h4>
+        <div *ngIf="profile.students.length === 0" class="alert alert-info">لا يوجد طلاب مسجلين</div>
+        <div class="table-responsive">
+          <table class="table table-striped" *ngIf="profile.students.length > 0">
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>البريد الإلكتروني</th>
+                <th>الهاتف</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let student of profile.students">
+                <td>{{ student.name }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ student.phone }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <!-- Subjects Card -->
-      <div class="profile-card subjects-card full-width">
-        <div class="card-header">
-          <h3 class="card-title">المواد التي يتم تدريسها</h3>
-        </div>
-        <div class="card-body">
-          <div *ngIf="user().subjects.length > 0; else noSubjects" class="subjects-list">
-            <span *ngFor="let subject of user().subjects" class="subject-tag">
-              {{ subject }}
-            </span>
-          </div>
-          <ng-template #noSubjects>
-            <div class="empty-state">
-              <svg viewBox="0 0 24 24" class="empty-icon">
-                <path fill="currentColor" d="M19,3H5C3.9,3 3,3.9 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.9 20.1,3 19,3M5,19V5H19V19H5Z"/>
-              </svg>
-              <p>لا توجد مواد مسجلة حالياً</p>
-            </div>
-          </ng-template>
+      <div class="mt-4">
+        <h4>المواعيد</h4>
+        <button class="btn btn-success mb-3" (click)="openMeetingModal()">إضافة موعد</button>
+        <div *ngIf="profile.meetings.length === 0" class="alert alert-info">لا يوجد مواعيد مسجلة</div>
+        <div class="table-responsive">
+          <table class="table table-striped" *ngIf="profile.meetings.length > 0">
+            <thead>
+              <tr>
+                <th>العنوان</th>
+                <th>التاريخ</th>
+                <th>وقت البدء</th>
+                <th>وقت الانتهاء</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let meeting of profile.meetings">
+                <td>{{ meeting.title }}</td>
+                <td>{{ meeting.date }}</td>
+                <td>{{ meeting.startTime }}</td>
+                <td>{{ meeting.endTime }}</td>
+                <td>
+                  <button class="btn btn-danger btn-sm" (click)="deleteMeeting(meeting.id)">حذف</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-    </div>
-
-    <!-- Actions Section -->
-    <div class="actions-section">
-      <button class="btn btn-primary" (click)="openPasswordModal()">
-        <svg viewBox="0 0 24 24" class="btn-icon">
-          <path fill="currentColor" d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
-        </svg>
-        تغيير كلمة المرور
-      </button>
     </div>
   </div>
 
   <!-- Password Change Modal -->
-  <div class="modal-overlay" [class.show]="showPasswordModal()" *ngIf="showPasswordModal()" (click)="closePasswordModal()">
-    <div class="modal-dialog" (click)="$event.stopPropagation()">
+  <div class="modal fade" [ngClass]="{'show d-block': showPasswordModal}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h3 class="modal-title">تغيير كلمة المرور</h3>
-          <button type="button" class="modal-close" (click)="closePasswordModal()">
-            <svg viewBox="0 0 24 24">
-              <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-            </svg>
-          </button>
+          <h5 class="modal-title">تغيير كلمة المرور</h5>
+          <button type="button" class="btn-close" (click)="closePasswordModal()"></button>
         </div>
-        
         <div class="modal-body">
-          <div class="form-group">
+          <div class="mb-3">
             <label for="currentPassword" class="form-label">كلمة المرور الحالية</label>
-            <input
-              type="password"
-              class="form-control"
-              id="currentPassword"
-              [value]="currentPassword()"
-              (input)="currentPassword.set($any($event.target).value)"
-              placeholder="أدخل كلمة المرور الحالية"
-            />
+            <input type="password" class="form-control" id="currentPassword" [(ngModel)]="currentPassword">
           </div>
-          
-          <div class="form-group">
+          <div class="mb-3">
             <label for="newPassword" class="form-label">كلمة المرور الجديدة</label>
-            <input
-              type="password"
-              class="form-control"
-              id="newPassword"
-              [value]="newPassword()"
-              (input)="newPassword.set($any($event.target).value)"
-              placeholder="أدخل كلمة المرور الجديدة (6 أحرف على الأقل)"
-            />
+            <input type="password" class="form-control" id="newPassword" [(ngModel)]="newPassword">
           </div>
         </div>
-        
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closePasswordModal()">
-            إلغاء
-          </button>
-          <button type="button" class="btn btn-primary" (click)="updatePassword()">
-            تحديث كلمة المرور
-          </button>
+          <button type="button" class="btn btn-secondary" (click)="closePasswordModal()">إغلاق</button>
+          <button type="button" class="btn btn-primary" (click)="changePassword()">حفظ التغييرات</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Meeting Modal -->
+  <div class="modal fade" [ngClass]="{'show d-block': showMeetingModal}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">إضافة موعد</h5>
+          <button type="button" class="btn-close" (click)="closeMeetingModal()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="meetingTitle" class="form-label">العنوان</label>
+            <input type="text" class="form-control" id="meetingTitle" [(ngModel)]="meeting.title">
+          </div>
+          <div class="mb-3">
+            <label for="meetingDate" class="form-label">التاريخ</label>
+            <input type="date" class="form-control" id="meetingDate" [(ngModel)]="meeting.date">
+          </div>
+          <div class="mb-3">
+            <label for="startTime" class="form-label">وقت البدء</label>
+            <input type="time" class="form-control" id="startTime" [(ngModel)]="meeting.startTime">
+          </div>
+          <div class="mb-3">
+            <label for="endTime" class="form-label">وقت الانتهاء</label>
+            <input type="time" class="form-control" id="endTime" [(ngModel)]="meeting.endTime">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeMeetingModal()">إغلاق</button>
+          <button type="button" class="btn btn-primary" (click)="addMeeting()">حفظ الموعد</button>
         </div>
       </div>
     </div>
