@@ -1,16 +1,66 @@
 <div class="dashboard-wrapper">
-<app-sidebar></app-sidebar>
+  <app-sidebar></app-sidebar>
 
   <!-- Main Content -->
   <main class="main-content">
     <header class="dashboard-header">
       <h1>لوحة التحكم</h1>
-      <div class="user-profile">
-        <i class="fas fa-user-circle"></i>
-        <span>مرحباً، محمد</span>
-      </div>
+
     </header>
     <section class="content-area">
+      <!-- Error Message -->
+      <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ error }}
+        <button type="button" class="btn-close" (click)="error = null"></button>
+      </div>
+
+      <!-- Dashboard Cards -->
+      <div class="row g-4">
+        <!-- Card 1: All Members -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card shadow-sm dashboard-card" (click)="navigateTo('/all-members')">
+            <div class="card-body text-center">
+              <i class="fas fa-users fa-3x mb-3"></i>
+              <h5 class="card-title">عرض جميع الأعضاء</h5>
+              <p class="card-text">عرض قائمة الأعضاء المعتمدين</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Join Requests -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card shadow-sm dashboard-card" (click)="navigateTo('/all-join-request')">
+            <div class="card-body text-center">
+              <i class="fas fa-file-alt fa-3x mb-3"></i>
+              <h5 class="card-title">عرض جميع الطلبات</h5>
+              <p class="card-text">عدد الطلبات: {{ joinRequestsCount }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Members Count -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card shadow-sm dashboard-card">
+            <div class="card-body text-center">
+              <i class="fas fa-user-check fa-3x mb-3"></i>
+              <h5 class="card-title">عدد الأعضاء</h5>
+              <p class="card-text">إجمالي الأعضاء: {{ membersCount }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Add Book -->
+        <div class="col-md-6 col-lg-3">
+          <div class="card shadow-sm dashboard-card" (click)="navigateTo('/add-book')">
+            <div class="card-body text-center">
+              <i class="fas fa-book fa-3x mb-3"></i>
+              <h5 class="card-title">إضافة كتاب</h5>
+              <p class="card-text">إضافة كتاب جديد إلى النظام</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <router-outlet></router-outlet>
     </section>
   </main>

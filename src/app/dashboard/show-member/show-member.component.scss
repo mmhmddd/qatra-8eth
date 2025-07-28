@@ -1,0 +1,36 @@
+main {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.card {
+  border-radius: 0.5rem;
+}
+
+.card-header {
+  font-weight: bold;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.table th, .table td {
+  vertical-align: middle;
+}
+
+.alert {
+  margin-bottom: 1rem;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

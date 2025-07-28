@@ -5,7 +5,7 @@ $neutral-color: #545454;
 $dark-color: #1a1a1a;
 $light-gray: #f8f9fa;
 $white: #ffffff;
-$black:#000 ;
+$black: #000;
 
 .dashboard-wrapper {
   display: flex;
@@ -13,8 +13,6 @@ $black:#000 ;
   font-family: 'Noto Kufi Arabic', sans-serif;
   direction: rtl;
 }
-
-
 
 .main-content {
   flex: 1;
@@ -48,30 +46,69 @@ $black:#000 ;
   .content-area {
     min-height: calc(100vh - 100px);
   }
-}
 
-@media (max-width: 768px) {
-  .sidebar {
-    width: 200px;
-    transform: translateX(100%);
-    transition: transform 0.3s ease;
+  .dashboard-card {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;
+    background: $white;
 
-    &.collapsed {
-      transform: translateX(0);
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba($black, 0.1);
     }
 
-    .sidebar-toggle {
-      display: block;
+    .card-body {
+      padding: 1.5rem;
+
+      i {
+        color: $primary-color;
+      }
+
+      .card-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: $dark-color;
+      }
+
+      .card-text {
+        color: $neutral-color;
+      }
     }
   }
 
+  .dashboard-card.no-hover {
+    cursor: default;
+
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+}
+
+@media (max-width: 768px) {
   .main-content {
     margin-right: 0;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.4rem;
   }
 }
 
 @media (max-width: 576px) {
-  .dashboard-header h1 {
-    font-size: 1.4rem;
+  .dashboard-card {
+    .card-body {
+      padding: 1rem;
+
+      i {
+        font-size: 2.5rem;
+      }
+
+      .card-title {
+        font-size: 1rem;
+      }
+    }
   }
 }

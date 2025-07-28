@@ -14,6 +14,7 @@ export class SidebarComponent {
   activeNavIndex = 0;
 
   navItems = [
+    { label: 'لوحة التحكم الرئيسية', icon: 'fas fa-users', link: '/dashboard' },
     { label: 'عرض جميع الأعضاء', icon: 'fas fa-users', link: '/all-members' },
     { label: 'عرض جميع الطلبات', icon: 'fas fa-file-alt', link: '/all-join-request' },
     { label: 'إضافة عضو', icon: 'fas fa-user-plus', link: '/add-member' },
