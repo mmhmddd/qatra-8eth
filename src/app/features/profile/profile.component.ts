@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProfileService } from '../../core/services/profile.service';
+import { ProfileService} from '../../core/services/profile.service';
 import { Router } from '@angular/router';
-import { JoinRequestService, JoinRequestResponse } from '../../core/services/join-request.service';
+import { JoinRequestService , JoinRequestResponse  } from '../../core/services/join-request.service';
 
 @Component({
   selector: 'app-profile',
@@ -13,6 +13,9 @@ import { JoinRequestService, JoinRequestResponse } from '../../core/services/joi
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
+setActiveSection(arg0: string) {
+throw new Error('Method not implemented.');
+}
   profile: JoinRequestResponse['data'] | null = null;
   error: string | null = null;
   currentPassword: string = '';
@@ -33,7 +36,8 @@ export class ProfileComponent implements OnInit {
   selectedFile: File | null = null;
   isUploading: boolean = false;
   showUploadField: boolean = true;
-  backendUrl: string = 'http://localhost:5000'; // Backend base URL
+  backendUrl: string = 'http://localhost:5000';
+activeSection: any;
 
   constructor(
     private profileService: ProfileService,
@@ -56,6 +60,14 @@ export class ProfileComponent implements OnInit {
             this.profile.profileImage = `${this.backendUrl}${this.profile.profileImage}`;
           }
           this.showUploadField = !this.profile.profileImage; // Hide upload field if image exists
+          // Log students data for debugging
+          console.log('Students:', this.profile.students);
+          console.log('Number of Students:', this.profile.numberOfStudents);
+          // Check for data inconsistency
+          if (this.profile.numberOfStudents > 0 && this.profile.students.length === 0) {
+            this.error = 'يوجد تناقض في بيانات الطلاب. يرجى التواصل مع الإدارة.';
+            console.warn(this.error);
+          }
         } else {
           this.error = response.message || 'فشل في جلب بيانات الملف الشخصي';
         }

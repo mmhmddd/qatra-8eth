@@ -1,107 +1,175 @@
-<div class="container mt-5">
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+<div class="container-fluid p-0">
+  <div class="row g-0">
+    <!-- Sidebar -->
+    <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse" id="sidebarMenu">
+      <div class="position-sticky pt-3">
+        <div class="text-center mb-4">
+          <img *ngIf="profile?.profileImage" [src]="profile.profileImage" alt="صورة الملف الشخصي" class="img-fluid rounded-circle profile-image">
+          <img *ngIf="!profile?.profileImage" src="/assets/default-profile.png" alt="صورة افتراضية" class="img-fluid rounded-circle profile-image">
+          <h5 class="text-white mt-2">{{ profile?.name || 'اسم المستخدم' }}</h5>
+        </div>
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link text-white" [ngClass]="{'active': activeSection === 'profile'}" (click)="setActiveSection('profile')" href="#profile">الملف الشخصي</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" [ngClass]="{'active': activeSection === 'students'}" (click)="setActiveSection('students')" href="#students">الطلاب</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" [ngClass]="{'active': activeSection === 'meetings'}" (click)="setActiveSection('meetings')" href="#meetings">المواعيد</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" (click)="openPasswordModal()">تغيير كلمة المرور</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
 
-  <div *ngIf="profile" class="card shadow">
-    <div class="card-header bg-primary text-white">
-      <h2 class="mb-0">الملف الشخصي</h2>
-    </div>
-    <div class="card-body">
-      <div class="row">
-        <div class="col-md-4 text-center">
-          <img *ngIf="profile.profileImage" [src]="profile.profileImage" alt="صورة الملف الشخصي" class="img-fluid rounded-circle mb-3 profile-image">
-          <img *ngIf="!profile.profileImage" src="/assets/default-profile.png" alt="صورة افتراضية" class="img-fluid rounded-circle mb-3 profile-image">
-          <button *ngIf="profile.profileImage" (click)="changeImage()" class="btn btn-sm btn-primary change-image-btn">
-            تغيير الصورة
+    <!-- Main Content -->
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+      <!-- Navbar for mobile -->
+      <nav class="navbar navbar-dark bg-dark d-md-none">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
           </button>
-          <div *ngIf="showUploadField" class="upload-section mt-3">
-            <input type="file" id="profileImageInput" class="form-control mb-2" accept="image/jpeg,image/png" (change)="onFileSelected($event)">
-            <button [disabled]="isUploading" class="btn btn-primary" (click)="uploadProfileImage()">
-              {{ isUploading ? 'جاري الرفع...' : 'رفع الصورة' }}
-            </button>
+          <span class="navbar-brand">{{ profile?.name || 'الملف الشخصي' }}</span>
+        </div>
+      </nav>
+
+      <div *ngIf="error" class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+        {{ error }}
+        <button type="button" class="btn-close" (click)="error = null"></button>
+      </div>
+
+      <div id="profile" *ngIf="profile" class="card shadow-sm mt-4">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">الملف الشخصي</h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 text-center">
+              <div class="position-relative">
+                <img *ngIf="profile.profileImage" [src]="profile.profileImage" alt="صورة الملف الشخصي" class="img-fluid rounded-circle mb-3 profile-image">
+                <img *ngIf="!profile.profileImage" src="/assets/default-profile.png" alt="صورة افتراضية" class="img-fluid rounded-circle mb-3 profile-image">
+                <button *ngIf="profile.profileImage" (click)="changeImage()" class="btn btn-sm btn-outline-primary change-image-btn">
+                  تغيير الصورة
+                </button>
+              </div>
+              <div *ngIf="showUploadField" class="upload-section mt-3">
+                <input type="file" id="profileImageInput" class="form-control mb-2" accept="image/jpeg,image/png" (change)="onFileSelected($event)">
+                <button [disabled]="isUploading" class="btn btn-primary" (click)="uploadProfileImage()">
+                  {{ isUploading ? 'جاري الرفع...' : 'رفع الصورة' }}
+                </button>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <h4 class="mb-3">المعلومات الشخصية</h4>
+              <dl class="row">
+                <dt class="col-sm-4">الاسم:</dt>
+                <dd class="col-sm-8">{{ profile.name }}</dd>
+                <dt class="col-sm-4">البريد الإلكتروني:</dt>
+                <dd class="col-sm-8">{{ profile.email }}</dd>
+                <dt class="col-sm-4">الهاتف:</dt>
+                <dd class="col-sm-8">{{ profile.phone }}</dd>
+                <dt class="col-sm-4">العنوان:</dt>
+                <dd class="col-sm-8">{{ profile.address }}</dd>
+                <dt class="col-sm-4">التخصص الأكاديمي:</dt>
+                <dd class="col-sm-8">{{ profile.academicSpecialization }}</dd>
+                <dt class="col-sm-4">ساعات التطوع:</dt>
+                <dd class="col-sm-8">{{ profile.volunteerHours }}</dd>
+                <dt class="col-sm-4">عدد الطلاب:</dt>
+                <dd class="col-sm-8">{{ profile.numberOfStudents }}</dd>
+                <dt class="col-sm-4">المواد:</dt>
+                <dd class="col-sm-8">{{ profile.subjects.join(', ') }}</dd>
+              </dl>
+            </div>
           </div>
         </div>
-        <div class="col-md-8">
-          <h4>المعلومات الشخصية</h4>
-          <p><strong>الاسم:</strong> {{ profile.name }}</p>
-          <p><strong>البريد الإلكتروني:</strong> {{ profile.email }}</p>
-          <p><strong>الهاتف:</strong> {{ profile.phone }}</p>
-          <p><strong>العنوان:</strong> {{ profile.address }}</p>
-          <p><strong>التخصص الأكاديمي:</strong> {{ profile.academicSpecialization }}</p>
-          <p><strong>ساعات التطوع:</strong> {{ profile.volunteerHours }}</p>
-          <p><strong>عدد الطلاب:</strong> {{ profile.numberOfStudents }}</p>
-          <p><strong>المواد:</strong> {{ profile.subjects.join(', ') }}</p>
-          
-          <button class="btn btn-primary mt-3" (click)="openPasswordModal()">تغيير كلمة المرور</button>
+      </div>
+
+      <!-- Students Section -->
+      <div id="students" class="card shadow-sm mt-4">
+        <div class="card-header bg-secondary text-white">
+          <h4 class="mb-0">الطلاب</h4>
+        </div>
+        <div class="card-body">
+          <div *ngIf="profile.numberOfStudents > 0 && profile.students.length === 0" class="alert alert-warning">
+            يوجد {{ profile.numberOfStudents }} طالب/طلاب مسجلين، لكن تفاصيل الطلاب غير متوفرة حاليًا. يرجى التواصل مع الإدارة.
+          </div>
+          <div *ngIf="profile.numberOfStudents === 0 && profile.students.length === 0" class="alert alert-info">
+            لا يوجد طلاب مسجلين.
+          </div>
+          <div class="table-responsive" *ngIf="profile.students.length > 0">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>الاسم</th>
+                  <th>البريد الإلكتروني</th>
+                  <th>الهاتف</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let student of profile.students">
+                  <td>{{ student.name || 'غير متوفر' }}</td>
+                  <td>{{ student.email || 'غير متوفر' }}</td>
+                  <td>{{ student.phone || 'غير متوفر' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
-      <div class="mt-4">
-        <h4>الطلاب</h4>
-        <div *ngIf="profile.students.length === 0" class="alert alert-info">لا يوجد طلاب مسجلين</div>
-        <div class="table-responsive">
-          <table class="table table-striped" *ngIf="profile.students.length > 0">
-            <thead>
-              <tr>
-                <th>الاسم</th>
-                <th>البريد الإلكتروني</th>
-                <th>الهاتف</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let student of profile.students">
-                <td>{{ student.name }}</td>
-                <td>{{ student.email }}</td>
-                <td>{{ student.phone }}</td>
-              </tr>
-            </tbody>
-          </table>
+      <!-- Meetings Section -->
+      <div id="meetings" class="card shadow-sm mt-4 mb-4">
+        <div class="card-header bg-secondary text-white">
+          <h4 class="mb-0">المواعيد</h4>
+        </div>
+        <div class="card-body">
+          <button class="btn btn-success mb-3" (click)="openMeetingModal()">إضافة موعد</button>
+          <div *ngIf="profile?.meetings.length === 0" class="alert alert-info">لا يوجد مواعيد مسجلة.</div>
+          <div class="table-responsive" *ngIf="profile?.meetings.length > 0">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>العنوان</th>
+                  <th>التاريخ</th>
+                  <th>وقت البدء</th>
+                  <th>وقت الانتهاء</th>
+                  <th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let meeting of profile.meetings">
+                  <td>{{ meeting.title }}</td>
+                  <td>{{ meeting.date }}</td>
+                  <td>{{ meeting.startTime }}</td>
+                  <td>{{ meeting.endTime }}</td>
+                  <td>
+                    <button class="btn btn-danger btn-sm" (click)="deleteMeeting(meeting.id)">حذف</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-
-      <div class="mt-4">
-        <h4>المواعيد</h4>
-        <button class="btn btn-success mb-3" (click)="openMeetingModal()">إضافة موعد</button>
-        <div *ngIf="profile.meetings.length === 0" class="alert alert-info">لا يوجد مواعيد مسجلة</div>
-        <div class="table-responsive">
-          <table class="table table-striped" *ngIf="profile.meetings.length > 0">
-            <thead>
-              <tr>
-                <th>العنوان</th>
-                <th>التاريخ</th>
-                <th>وقت البدء</th>
-                <th>وقت الانتهاء</th>
-                <th>الإجراءات</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let meeting of profile.meetings">
-                <td>{{ meeting.title }}</td>
-                <td>{{ meeting.date }}</td>
-                <td>{{ meeting.startTime }}</td>
-                <td>{{ meeting.endTime }}</td>
-                <td>
-                  <button class="btn btn-danger btn-sm" (click)="deleteMeeting(meeting.id)">حذف</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+    </main>
   </div>
 
   <!-- Password Change Modal -->
-  <div class="modal fade" [ngClass]="{'show d-block': showPasswordModal}" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+  <div class="modal fade" [ngClass]="{'show d-block': showPasswordModal}" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">تغيير كلمة المرور</h5>
-          <button type="button" class="btn-close" (click)="closePasswordModal()"></button>
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="passwordModalLabel">تغيير كلمة المرور</h5>
+          <button type="button" class="btn-close" (click)="closePasswordModal()" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
             <label for="currentPassword" class="form-label">كلمة المرور الحالية</label>
-            <input type="password" class="form-control" id="currentPassword" [(ngModel)]="currentPassword">
+           -pink            <input type="password" class="form-control" id="currentPassword" [(ngModel)]="currentPassword">
           </div>
           <div class="mb-3">
             <label for="newPassword" class="form-label">كلمة المرور الجديدة</label>
@@ -117,12 +185,12 @@
   </div>
 
   <!-- Meeting Modal -->
-  <div class="modal fade" [ngClass]="{'show d-block': showMeetingModal}" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+  <div class="modal fade" [ngClass]="{'show d-block': showMeetingModal}" tabindex="-1" role="dialog" aria-labelledby="meetingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">إضافة موعد</h5>
-          <button type="button" class="btn-close" (click)="closeMeetingModal()"></button>
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="meetingModalLabel">إضافة موعد</h5>
+          <button type="button" class="btn-close" (click)="closeMeetingModal()" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
