@@ -1,4 +1,3 @@
-
 import { environment } from "../../../environments/environment";
 
 const base = environment.apiBaseUrl;
@@ -24,5 +23,11 @@ export const ApiEndpoints = {
     addMeeting: `${base}/profile/meetings`,
     updateMeeting: (meetingId: string) => `${base}/profile/meetings/${meetingId}`,
     deleteMeeting: (meetingId: string) => `${base}/profile/meetings/${meetingId}`,
+  },
+  pdf: {
+    upload: `${base}/pdf/upload`,
+    list: `${base}/pdf/list`,
+    delete: (id: string) => `${base}/pdf/${id}`,
+    view: (id: string) => `${base}/pdf/view/${id}`,
   },
 };

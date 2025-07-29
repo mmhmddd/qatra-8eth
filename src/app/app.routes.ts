@@ -26,6 +26,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/testimonials/testimonials.component').then(m => m.TestimonialsComponent)
   },
   {
+    path: 'library',
+    loadComponent: () => import('./features/library/library.component').then(m => m.LibraryComponent)
+  },
+  {
     path: 'dashboard',
     loadComponent: () => import('./dashboard/dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
@@ -36,6 +40,10 @@ export const routes: Routes = [
   {
     path: 'all-members',
     loadComponent: () => import('./dashboard/all-members/all-members.component').then(m => m.AllMembersComponent)
+  },
+  {
+    path: 'upload-pdf',
+    loadComponent: () => import('./dashboard/upload-pdf/upload-pdf.component').then(m => m.UploadPdfComponent)
   },
   {
     path: 'member/:id',

@@ -1,0 +1,227 @@
+$primary-color: #00adb5;
+$secondary-color: #0097b2;
+$accent-color: #ff914d;
+$neutral-color: #545454;
+$dark-color: #1a1a1a;
+$light-gray: #f8f9fa;
+$white: #ffffff;
+$black: #000;
+
+.dashboard-wrapper {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Noto Kufi Arabic', sans-serif;
+  direction: rtl;
+}
+
+app-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background-color: $dark-color;
+  color: $white;
+}
+
+.main-content {
+  flex: 1;
+  background: $light-gray;
+  padding: 1.5rem;
+  overflow-y: auto;
+  margin-right: 220px; /* Match sidebar width */
+}
+
+.upload-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  h1 {
+    font-size: 1.8rem;
+    color: $dark-color;
+  }
+}
+
+.form-group {
+  margin-bottom: 15px;
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    color: $neutral-color;
+    font-weight: 500;
+    font-size: 1rem;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid $neutral-color;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: $white;
+    color: $dark-color;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 5px rgba($primary-color, 0.3);
+    }
+  }
+
+  input[type="file"] {
+    padding: 5px;
+  }
+}
+
+button {
+  background-color: $primary-color;
+  color: $white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: 'Noto Kufi Arabic', sans-serif;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: $secondary-color;
+  }
+
+  &:disabled {
+    background-color: lighten($neutral-color, 20%);
+    cursor: not-allowed;
+  }
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.pdf-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Enforce 3 cards per row */
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.dashboard-card {
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
+  background: $white;
+  min-width: 200px; /* Ensure cards don't get too narrow */
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba($black, 0.1);
+  }
+
+  .card-body {
+    padding: 1.5rem;
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: $dark-color;
+      margin: 0 0 10px;
+    }
+
+    .card-text {
+      color: $neutral-color;
+      font-size: 0.9rem;
+      margin: 5px 0;
+    }
+
+    a {
+      color: $accent-color;
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 0.9rem;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .delete-btn {
+      background-color: $accent-color;
+      margin-top: 10px;
+
+      &:hover {
+        background-color: darken($accent-color, 10%);
+      }
+    }
+  }
+}
+
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: 10px;
+
+  p {
+    color: $neutral-color;
+    font-size: 1rem;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+  }
+}
+
+.loader {
+  border: 4px solid $light-gray;
+  border-top: 4px solid $primary-color;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-right: 0; /* Remove margin for smaller screens */
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboard-card {
+    .card-body {
+      padding: 1rem;
+
+      .card-title {
+        font-size: 1rem;
+      }
+
+      .card-text,
+      a,
+      .delete-btn {
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  app-sidebar {
+    width: 180px;
+  }
+}

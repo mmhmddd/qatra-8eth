@@ -1,0 +1,85 @@
+<div class="dashboard-wrapper">
+  <app-sidebar></app-sidebar>
+
+  <main class="main-content">
+    <div class="upload-container">
+      <div class="dashboard-header">
+        <h1>Upload PDF</h1>
+      </div>
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="pdfFile">PDF File</label>
+          <input 
+            type="file" 
+            id="pdfFile" 
+            accept=".pdf" 
+            (change)="onFileSelected($event)" 
+            required 
+          />
+        </div>
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input 
+            type="text" 
+            id="title" 
+            [(ngModel)]="title" 
+            name="title" 
+            placeholder="Enter title" 
+            required 
+          />
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <input 
+            type="text" 
+            id="description" 
+            [(ngModel)]="description" 
+            name="description" 
+            placeholder="Enter description" 
+            required 
+          />
+        </div>
+        <div class="form-group">
+          <label for="creatorName">Creator Name</label>
+          <input 
+            type="text" 
+            id="creatorName" 
+            [(ngModel)]="creatorName" 
+            name="creatorName" 
+            placeholder="Enter creator name" 
+            required 
+          />
+        </div>
+        <button type="submit" [disabled]="isLoading">Upload</button>
+      </form>
+      <p [class.error]="isError" *ngIf="message">{{ message }}</p>
+
+      <div class="dashboard-header">
+        <h1>Uploaded PDFs</h1>
+      </div>
+      <div class="pdf-list" *ngIf="!isLoading; else loading">
+        <div *ngIf="pdfs.length > 0; else noPdfs">
+          <div class="dashboard-card" *ngFor="let pdf of pdfs">
+            <div class="card-body">
+              <h3 class="card-title">{{ pdf.title }}</h3>
+              <p class="card-text"><strong>Description:</strong> {{ pdf.description }}</p>
+              <p class="card-text"><strong>Creator:</strong> {{ pdf.creatorName }}</p>
+              <p class="card-text"><strong>Uploaded:</strong> {{ pdf.createdAt | date:'medium' }}</p>
+              <a [href]="getFullPdfUrl(pdf.filePath)" target="_blank">View PDF</a>
+              <button class="delete-btn" (click)="deletePdf(pdf.id)" [disabled]="isLoading">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #noPdfs>
+        <p>No PDFs uploaded yet.</p>
+      </ng-template>
+      <ng-template #loading>
+        <div class="loader-container">
+          <div class="loader"></div>
+          <p>Loading PDFs...</p>
+        </div>
+      </ng-template>
+    </div>
+  </main>
+</div>
