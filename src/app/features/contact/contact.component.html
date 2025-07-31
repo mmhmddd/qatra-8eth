@@ -2,7 +2,7 @@
   <div class="container hero-container d-flex flex-column align-items-center justify-content-center text-center" dir="rtl">
     <h1 class="hero-title" @fadeInUp>تواصلوا معنا</h1>
     <p class="hero-description" @fadeInUp>
-      انضموا إلى مبادرتنا التعليمية الخيرية لنشر العلم وبناء مستقبل أفضل. 
+      انضموا إلى مبادرتنا التعليمية الخيرية لنشر العلم وبناء مستقبل أفضل.
       تواصلوا معنا لمعرفة المزيد عن برامجنا أو لتقديم الدعم والاستفسارات.
     </p>
     <div class="container contact-info-container">
@@ -83,9 +83,9 @@
     <h2 class="section-title text-center mb-4">الأسئلة الشائعة</h2>
     <div class="faq-container">
       <div class="faq-item glass-card mb-3" *ngFor="let faq of faqData; let i = index" @fadeInUp>
-        <div 
-          class="faq-question" 
-          (click)="toggleFaq(i)" 
+        <div
+          class="faq-question"
+          (click)="toggleFaq(i)"
           [ngClass]="{'active': activeFaq === i}"
           role="button"
           [attr.aria-expanded]="activeFaq === i"
@@ -94,9 +94,9 @@
           <h4>{{ faq.question }}</h4>
           <i class="fas fa-chevron-down" [@iconRotate]="getIconState(i)"></i>
         </div>
-        <div 
+        <div
           #faqAnswer
-          class="faq-answer" 
+          class="faq-answer"
           [id]="'faq-answer-' + i"
           [@slideInOut]="getFaqState(i)"
           [attr.aria-hidden]="activeFaq !== i"
@@ -133,7 +133,7 @@
               ممتاز! الاسم صحيح
             </div>
           </div>
-          
+
           <div class="col-md-6">
             <label for="email" class="form-label">البريد الإلكتروني *</label>
             <input
@@ -152,7 +152,7 @@
               عنوان البريد الإلكتروني صحيح
             </div>
           </div>
-          
+
           <div class="col-12">
             <label for="phone" class="form-label">رقم الهاتف *</label>
             <input
@@ -171,7 +171,7 @@
               رقم الهاتف صحيح
             </div>
           </div>
-          
+
           <div class="col-12">
             <label for="service" class="form-label">الخدمة المطلوبة *</label>
             <select
@@ -195,7 +195,7 @@
               تم اختيار الخدمة بنجاح
             </div>
           </div>
-          
+
           <div class="col-12">
             <label for="message" class="form-label">الرسالة *</label>
             <textarea
@@ -203,12 +203,12 @@
               id="message"
               formControlName="message"
               rows="5"
-              placeholder="اكتب رسالتك هنا... (10-500 حرف)"
+              placeholder="اكتب رسالتك هنا... (10-1000 حرف)"
               (focus)="onFieldFocus('message')"
-              maxlength="500"
+              maxlength="1000"
             ></textarea>
             <div class="form-text">
-              عدد الأحرف: {{ contactForm.get('message')?.value?.length || 0 }}/500
+              عدد الأحرف: {{ contactForm.get('message')?.value?.length || 0 }}/1000
             </div>
             <div *ngIf="isFieldInvalid('message')" class="invalid-feedback">
               {{ getFieldErrorMessage('message') }}
@@ -217,10 +217,10 @@
               الرسالة مكتوبة بشكل جيد
             </div>
           </div>
-          
+
           <div class="col-12 text-center">
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               class="btn btn-submit me-3"
               [disabled]="isFormSubmitting"
             >
@@ -233,19 +233,20 @@
                 جاري الإرسال...
               </span>
             </button>
-            
-            <button 
-              type="button" 
+
+            <button
+              type="button"
               class="btn btn-outline-secondary"
               (click)="clearForm()"
               [disabled]="isFormSubmitting"
+              style="margin: 7px;"
             >
-              <i class="fas fa-eraser me-2"></i>
+              <i class="fas fa-eraser me-2" ></i>
               مسح النموذج
             </button>
-            
-            <div 
-              *ngIf="formSubmissionMessage" 
+
+            <div
+              *ngIf="formSubmissionMessage"
               class="mt-3 p-3 rounded"
               [ngClass]="{
                 'alert alert-success': formSubmissionMessage.includes('بنجاح'),
@@ -268,21 +269,21 @@
 <section class="map-section" dir="rtl">
   <div class="container">
     <h2 class="section-title text-center mb-4">موقعنا على الخريطة</h2>
-    <p class="text-center mb-4">
-      زورونا في مقرنا خلال ساعات العمل الرسمية (الأحد - الخميس: 8:00 ص - 4:00 م). 
+    <!-- <p class="text-center mb-4">
+      حجز موعد عن طريق جوجل ميتينج
       <a href="https://www.google.com/maps?q=31.963158,35.930359" target="_blank" rel="noopener noreferrer">
         <i class="fas fa-external-link-alt me-2"></i>
         افتح في خرائط Google
       </a>
-    </p>
+    </p> -->
     <div class="map-container glass-map">
-      <iframe 
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3384.143859288373!2d35.92815931513084!3d31.963158981246284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151ca1c726c22fa7%3A0x5f8c0b8d8b8b8b8b!2sAmman%2C%20Jordan!5e0!3m2!1sen!2sus!4v1678886400000!5m2!1sen!2sus" 
-        height="400" 
-        style="border:0; border-radius: 15px; width: 100%;" 
-        allowfullscreen="" 
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3384.143859288373!2d35.92815931513084!3d31.963158981246284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151ca1c726c22fa7%3A0x5f8c0b8d8b8b8b8b!2sAmman%2C%20Jordan!5e0!3m2!1sen!2sus!4v1678886400000!5m2!1sen!2sus"
+        height="400"
+        style="border:0; border-radius: 15px; width: 100%;"
+        allowfullscreen=""
         loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade" 
+        referrerpolicy="no-referrer-when-downgrade"
         title="موقع المبادرة التعليمية على خرائط Google"
       ></iframe>
     </div>
@@ -390,7 +391,7 @@
     padding: 0.6rem 1.2rem;
     font-size: 0.9rem;
   }
-  
+
   .social-btn i {
     font-size: 1rem;
   }

@@ -16,12 +16,96 @@ export class UploadPdfComponent {
   title = '';
   description = '';
   creatorName = '';
+  subject = '';
+  semester = '';
+  academicLevel = '';
   selectedFile: File | null = null;
   errorMessage: string | null = null;
   successMessage: string | null = null;
 
   // PDF list
   pdfs: Pdf[] = [];
+
+  // Subjects list for dropdown
+  subjects = [
+    'اللغة العربية',
+    'اللغة الإنجليزية',
+    'الرياضيات',
+    'العلوم',
+    'الفيزياء',
+    'الكيمياء',
+    'الأحياء',
+    'الجيولوجيا والبيئة',
+    'الحاسوب',
+    'التربية الإسلامية',
+    'التربية الوطنية',
+    'التاريخ',
+    'الجغرافيا',
+    'الثقافة المالية',
+    'الثقافة العامة',
+    'التربية الفنية',
+    'التربية الرياضية',
+    'اللغة الفرنسية',
+    'العلوم الحياتية',
+    'التكنولوجيا',
+    'علوم الأرض',
+    'علوم البيئة',
+    'الاقتصاد المنزلي',
+    'العلوم المهنية',
+    'الإنتاج النباتي',
+    'الإنتاج الحيواني',
+    'العلوم الصناعية الخاصة',
+    'الرسم الصناعي',
+    'الرسم الهندسي',
+    'الكهرباء',
+    'الإلكترونيات',
+    'الميكانيك',
+    'النجارة',
+    'الحدادة',
+    'الفندقة',
+    'السياحة',
+    'التجميل',
+    'الخياطة',
+    'التمريض',
+    'الصحة العامة',
+    'التربية المهنية',
+    'الأنشطة والمهارات الحياتية',
+    'مهارات الاتصال',
+    'دراسات اجتماعية',
+    'القانون',
+    'الفلسفة',
+    'علم النفس',
+    'علم الاجتماع',
+    'التسويق',
+    'المحاسبة',
+    'الإدارة',
+    'العلوم الشرعية',
+    'التفسير',
+    'الحديث',
+    'الفقه',
+    'التلاوة والتجويد',
+    'العقيدة الإسلامية'
+  ];
+
+  // Academic levels with colors
+  academicLevels = [
+    { value: 'أول', color: '#FFE4E1' },
+    { value: 'ثاني', color: '#E6E6FA' },
+    { value: 'ثالث', color: '#F0FFF0' },
+    { value: 'رابع', color: '#FFFACD' },
+    { value: 'خامس', color: '#E0FFFF' },
+    { value: 'سادس', color: '#F5F5DC' },
+    { value: 'سابع', color: '#D3D3D3' },
+    { value: 'ثامن', color: '#F0F8FF' },
+    { value: 'تاسع', color: '#FFF5EE' },
+    { value: 'عاشر', color: '#F5FFFA' },
+    { value: 'أول ثانوي', color: '#FAFAD2' },
+    { value: 'ثانوي (توجيهي)', color: '#EEDD82' }
+  ];
+
+  // Filtered subjects for search
+  filteredSubjects = [...this.subjects];
+  subjectSearch = '';
 
   constructor(private pdfService: PdfService) {
     this.loadPdfs();
@@ -32,12 +116,30 @@ export class UploadPdfComponent {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       this.selectedFile = input.files[0];
+    } else {
+      this.selectedFile = null;
+    }
+  }
+
+  // Filter subjects based on search input
+  filterSubjects(): void {
+    const searchTerm = this.subjectSearch.toLowerCase().trim();
+    this.filteredSubjects = this.subjects.filter(subject =>
+      subject.toLowerCase().includes(searchTerm)
+    );
+  }
+
+  // Prevent dropdown from closing when clicking search input
+  onSubjectDropdownClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (target.tagName === 'INPUT') {
+      event.stopPropagation();
     }
   }
 
   // Upload PDF
   uploadPdf(): void {
-    if (!this.selectedFile || !this.title || !this.description || !this.creatorName) {
+    if (!this.selectedFile || !this.title || !this.description || !this.creatorName || !this.subject || !this.semester || !this.academicLevel) {
       this.errorMessage = 'يرجى ملء جميع الحقول واختيار ملف PDF';
       return;
     }
@@ -45,7 +147,7 @@ export class UploadPdfComponent {
     this.errorMessage = null;
     this.successMessage = null;
 
-    this.pdfService.uploadPdf(this.selectedFile, this.title, this.description, this.creatorName)
+    this.pdfService.uploadPdf(this.selectedFile, this.title, this.description, this.creatorName, this.subject, this.semester, this.academicLevel)
       .subscribe({
         next: (pdf) => {
           this.successMessage = 'تم رفع ملف PDF بنجاح';
@@ -112,6 +214,11 @@ export class UploadPdfComponent {
     this.title = '';
     this.description = '';
     this.creatorName = '';
+    this.subject = '';
+    this.semester = '';
+    this.academicLevel = '';
+    this.subjectSearch = '';
+    this.filteredSubjects = [...this.subjects];
     this.selectedFile = null;
     (document.getElementById('pdfFile') as HTMLInputElement).value = '';
   }

@@ -95,7 +95,7 @@ $black: #000000;
       line-height: 1.8;
       color: $neutral-color;
       text-align: justify;
-      
+
       @media (max-width: 768px) {
         text-align: center;
         font-size: 1rem;
@@ -320,7 +320,7 @@ $black: #000000;
       max-width: 800px;
       margin: 0 auto;
       line-height: 1.6;
-      
+
       .highlight {
         color: $primary-color;
         font-weight: 600;
@@ -679,6 +679,7 @@ $black: #000000;
       transform: translateY(-8px);
       border-color: $primary-color;
       animation: float 3s ease-in-out infinite;
+      background-color: transparent !important;
 
       &::before {
         left: 100%;
@@ -731,24 +732,23 @@ $black: #000000;
     position: relative;
     z-index: 1;
     filter: grayscale(20%) opacity(0.9);
-    transition: transform 0.6s cubic-bezier(0.25, 1.5, 0.5, 1), 
-                filter 0.4s ease-in-out, 
-                box-shadow 0.4s ease-in-out;
+    transition: transform 0.6s cubic-bezier(0.25, 1.5, 0.5, 1),
+                filter 0.4s ease-in-out; /* Removed box-shadow from transition */
   }
 
   &:hover {
     &::after {
-      opacity: 1;
+      opacity: 0; /* Ensure no background effect appears */
     }
 
     .partner-logo {
       filter: grayscale(0%) opacity(1);
       transform: scale(1.1);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); // ظل ناعم
+      box-shadow: none; /* Explicitly remove box-shadow on hover */
+      background: transparent; /* Ensure no background is applied */
     }
   }
-}
-    // Different animation delays for staggered effect
+}    // Different animation delays for staggered effect
     &:nth-child(1) { animation-delay: 0s; }
     &:nth-child(2) { animation-delay: 0.1s; }
     &:nth-child(3) { animation-delay: 0.2s; }

@@ -26,6 +26,9 @@
             (change)="onFileSelected($event)"
             required
           />
+          <span class="error-text" *ngIf="!selectedFile">
+            يرجى اختيار ملف PDF
+          </span>
         </div>
 
         <div class="form-group">
@@ -39,18 +42,30 @@
             required
             #titleInput="ngModel"
           />
+          <span class="error-text" *ngIf="titleInput.touched && titleInput.invalid">
+            العنوان مطلوب
+          </span>
         </div>
 
         <div class="form-group">
           <label for="description">الوصف:</label>
-          <textarea
+          <select
             id="description"
             [(ngModel)]="description"
             name="description"
-            placeholder="أدخل وصف الملف"
             required
             #descriptionInput="ngModel"
-          ></textarea>
+          >
+            <option value="" disabled selected>اختر الوصف</option>
+            <option value="كتاب">كتاب</option>
+            <option value="واجابات">واجابات</option>
+            <option value="امتحان">امتحان</option>
+            <option value="مراجعات">مراجعات</option>
+            <option value="أخرى">أخرى</option>
+          </select>
+          <span class="error-text" *ngIf="descriptionInput.touched && descriptionInput.invalid">
+            الوصف مطلوب
+          </span>
         </div>
 
         <div class="form-group">
@@ -64,6 +79,86 @@
             required
             #creatorInput="ngModel"
           />
+          <span class="error-text" *ngIf="creatorInput.touched && creatorInput.invalid">
+            اسم المنشئ مطلوب
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="subject">المادة:</label>
+          <div class="searchable-dropdown">
+            <select
+              id="subject"
+              [(ngModel)]="subject"
+              name="subject"
+              required
+              #subjectInput="ngModel"
+              (click)="onSubjectDropdownClick($event)"
+            >
+              <option value="" disabled selected>اختر المادة</option>
+              <option class="search-option" disabled>
+                <input
+                  type="text"
+                  [(ngModel)]="subjectSearch"
+                  name="subjectSearch"
+                  placeholder="ابحث عن المادة"
+                  (input)="filterSubjects()"
+                  (click)="$event.stopPropagation()"
+                  autocomplete="off"
+                />
+              </option>
+              <option *ngFor="let subject of filteredSubjects" [value]="subject">{{ subject }}</option>
+            </select>
+            <span class="error-text" *ngIf="subjectInput.touched && subjectInput.invalid">
+              المادة مطلوبة
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="semester">الفصل الدراسي:</label>
+          <select
+            id="semester"
+            [(ngModel)]="semester"
+            name="semester"
+            required
+            #semesterInput="ngModel"
+          >
+            <option value="" disabled selected>اختر الفصل الدراسي</option>
+            <option value="الفصل الأول">الفصل الأول</option>
+            <option value="الفصل الثاني">الفصل الثاني</option>
+          </select>
+          <span class="error-text" *ngIf="semesterInput.touched && semesterInput.invalid">
+            الفصل الدراسي مطلوب
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="academicLevel">المرحلة الدراسية:</label>
+          <select
+            id="academicLevel"
+            [(ngModel)]="academicLevel"
+            name="academicLevel"
+            required
+            #academicLevelInput="ngModel"
+          >
+            <option value="" disabled selected>اختر المرحلة الدراسية</option>
+            <option value="أول" >أول</option>
+            <option value="ثاني" >ثاني</option>
+            <option value="ثالث" >ثالث</option>
+            <option value="رابع" >رابع</option>
+            <option value="خامس" >خامس</option>
+            <option value="سادس">سادس</option>
+            <option value="سابع">سابع</option>
+            <option value="ثامن">ثامن</option>
+            <option value="تاسع">تاسع</option>
+            <option value="عاشر">عاشر</option>
+            <option value="أول ثانوي">أول ثانوي</option>
+            <option value="ثانوي (توجيهي)">ثانوي (توجيهي)</option>
+          </select>
+          <span class="error-text" *ngIf="academicLevelInput.touched && academicLevelInput.invalid">
+            المرحلة الدراسية مطلوبة
+          </span>
         </div>
 
         <button
@@ -86,6 +181,9 @@
               <th>العنوان</th>
               <th>الوصف</th>
               <th>المنشئ</th>
+              <th>المادة</th>
+              <th>الفصل الدراسي</th>
+              <th>المرحلة الدراسية</th>
               <th>اسم الملف</th>
               <th>تاريخ الرفع</th>
               <th>الإجراءات</th>
@@ -96,6 +194,9 @@
               <td>{{ pdf.title }}</td>
               <td>{{ pdf.description }}</td>
               <td>{{ pdf.creatorName }}</td>
+              <td>{{ pdf.subject }}</td>
+              <td>{{ pdf.semester }}</td>
+              <td>{{ pdf.academicLevel }}</td>
               <td>{{ pdf.fileName }}</td>
               <td>{{ pdf.createdAt | date:'short':'ar' }}</td>
               <td>

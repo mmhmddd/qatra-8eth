@@ -26,7 +26,7 @@ $black: #000000;
   position: relative;
   overflow: hidden;
   height: 80vh;
-  
+
   #hero_section & .carousel {
     position: relative;
     margin: 0 auto;
@@ -49,7 +49,7 @@ $black: #000000;
 
   .carousel-item {
     transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
-    
+
     &.active .carousel-img {
       transform: scale(1.05);
       animation: kenBurns 8s ease-in-out infinite alternate;
@@ -89,7 +89,7 @@ $black: #000000;
   .carousel-indicators {
     bottom: 30px;
     margin-bottom: 0;
-    
+
     [data-bs-target] {
       width: 50px;
       height: 4px;
@@ -97,7 +97,7 @@ $black: #000000;
       background: rgba($white, 0.4);
       transition: all 0.3s ease;
       margin: 0 4px;
-      
+
       &.active {
         background: $accent-color;
         transform: scaleX(1.2);
@@ -117,13 +117,13 @@ $black: #000000;
     border-radius: 50%;
     opacity: 0.7;
     transition: all 0.4s ease;
-    
+
     &:hover {
       background: rgba($accent-color, 0.9);
       transform: translateY(-50%) scale(1.15);
       opacity: 1;
       box-shadow: 0 0 15px rgba($accent-color, 0.5);
-      
+
       .carousel-control-prev-icon,
       .carousel-control-next-icon {
         svg {
@@ -170,7 +170,7 @@ $black: #000000;
 
   .hero-title {
     margin-bottom: 20px;
-    
+
     .title-main {
       display: block;
       font-size: clamp(2rem, 4vw, 4rem);
@@ -181,7 +181,7 @@ $black: #000000;
       letter-spacing: 1px;
       line-height: 1.2;
     }
-    
+
     .title-subtitle {
       display: block;
       font-size: clamp(1.5rem, 3vw, 2.5rem);
@@ -213,23 +213,23 @@ $black: #000000;
     transition: all 0.3s ease;
     text-decoration: none;
     border: 2px solid transparent;
-    
+
     &.btn-primary {
       @include gradient-accent;
       color: $white;
       border-color: $accent-color;
-      
+
       &:hover {
         transform: translateY(-2px);
         box-shadow: 0 10px 20px rgba($accent-color, 0.3);
       }
     }
-    
+
     &.btn-outline-light {
       background: transparent;
       color: $white;
       border-color: $white;
-      
+
       &:hover {
         background: $white;
         color: $primary-color;
@@ -247,7 +247,7 @@ $black: #000000;
     height: 4px;
     background: rgba($white, 0.2);
     overflow: hidden;
-    
+
     .progress-bar {
       height: 100%;
       background: $accent-color;
@@ -700,7 +700,7 @@ $black: #000000;
 // Enhanced WhatsApp Section
 .whatsapp-section {
   padding: 5rem 0;
-  background: linear-gradient(135deg, #25D366, #1DA851);
+  background: linear-gradient(135deg, $primary-color, $secondary-color);
   position: relative;
   overflow: hidden;
 
