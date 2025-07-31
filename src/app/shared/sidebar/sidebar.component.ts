@@ -17,9 +17,8 @@ export class SidebarComponent {
     { label: 'لوحة التحكم الرئيسية', icon: 'fas fa-users', link: '/dashboard' },
     { label: 'عرض جميع الأعضاء', icon: 'fas fa-users', link: '/all-members' },
     { label: 'عرض جميع الطلبات', icon: 'fas fa-file-alt', link: '/all-join-request' },
-    { label: 'إضافة عضو', icon: 'fas fa-user-plus', link: '/add-member' },
-    { label: 'حذف عضو', icon: 'fas fa-user-minus', link: '/delete-member' }
-  ];
+    { label: 'إضافة كتاب', icon: 'fas fa-user-plus', link: '/upload-pdf' }
+    ];
 
   constructor(private router: Router) {
     // Set active nav based on current route

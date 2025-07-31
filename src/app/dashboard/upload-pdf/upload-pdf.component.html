@@ -1,85 +1,127 @@
-<div class="dashboard-wrapper">
+<div class="container">
+  <!-- Sidebar -->
   <app-sidebar></app-sidebar>
 
-  <main class="main-content">
-    <div class="upload-container">
-      <div class="dashboard-header">
-        <h1>Upload PDF</h1>
-      </div>
-      <form (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <label for="pdfFile">PDF File</label>
-          <input 
-            type="file" 
-            id="pdfFile" 
-            accept=".pdf" 
-            (change)="onFileSelected($event)" 
-            required 
-          />
-        </div>
-        <div class="form-group">
-          <label for="title">Title</label>
-          <input 
-            type="text" 
-            id="title" 
-            [(ngModel)]="title" 
-            name="title" 
-            placeholder="Enter title" 
-            required 
-          />
-        </div>
-        <div class="form-group">
-          <label for="description">Description</label>
-          <input 
-            type="text" 
-            id="description" 
-            [(ngModel)]="description" 
-            name="description" 
-            placeholder="Enter description" 
-            required 
-          />
-        </div>
-        <div class="form-group">
-          <label for="creatorName">Creator Name</label>
-          <input 
-            type="text" 
-            id="creatorName" 
-            [(ngModel)]="creatorName" 
-            name="creatorName" 
-            placeholder="Enter creator name" 
-            required 
-          />
-        </div>
-        <button type="submit" [disabled]="isLoading">Upload</button>
-      </form>
-      <p [class.error]="isError" *ngIf="message">{{ message }}</p>
+  <div class="content">
+    <!-- Upload Form -->
+    <div class="upload-section">
+      <h2>رفع ملف PDF</h2>
 
-      <div class="dashboard-header">
-        <h1>Uploaded PDFs</h1>
+      <!-- Success/Error Messages -->
+      <div *ngIf="successMessage" class="success-message">
+        {{ successMessage }}
       </div>
-      <div class="pdf-list" *ngIf="!isLoading; else loading">
-        <div *ngIf="pdfs.length > 0; else noPdfs">
-          <div class="dashboard-card" *ngFor="let pdf of pdfs">
-            <div class="card-body">
-              <h3 class="card-title">{{ pdf.title }}</h3>
-              <p class="card-text"><strong>Description:</strong> {{ pdf.description }}</p>
-              <p class="card-text"><strong>Creator:</strong> {{ pdf.creatorName }}</p>
-              <p class="card-text"><strong>Uploaded:</strong> {{ pdf.createdAt | date:'medium' }}</p>
-              <a [href]="getFullPdfUrl(pdf.filePath)" target="_blank">View PDF</a>
-              <button class="delete-btn" (click)="deletePdf(pdf.id)" [disabled]="isLoading">Delete</button>
-            </div>
-          </div>
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Form -->
+      <form (ngSubmit)="uploadPdf()" class="upload-form" #uploadForm="ngForm">
+        <div class="form-group">
+          <label for="pdfFile">اختر ملف PDF:</label>
+          <input
+            type="file"
+            id="pdfFile"
+            accept="application/pdf"
+            (change)="onFileSelected($event)"
+            required
+          />
         </div>
+
+        <div class="form-group">
+          <label for="title">العنوان:</label>
+          <input
+            type="text"
+            id="title"
+            [(ngModel)]="title"
+            name="title"
+            placeholder="أدخل عنوان الملف"
+            required
+            #titleInput="ngModel"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="description">الوصف:</label>
+          <textarea
+            id="description"
+            [(ngModel)]="description"
+            name="description"
+            placeholder="أدخل وصف الملف"
+            required
+            #descriptionInput="ngModel"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="creatorName">اسم المنشئ:</label>
+          <input
+            type="text"
+            id="creatorName"
+            [(ngModel)]="creatorName"
+            name="creatorName"
+            placeholder="أدخل اسم المنشئ"
+            required
+            #creatorInput="ngModel"
+          />
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="!uploadForm.form.valid || !selectedFile"
+        >
+          رفع الملف
+        </button>
+      </form>
+    </div>
+
+    <!-- PDF List -->
+    <div class="pdf-list-section">
+      <h2>قائمة ملفات PDF</h2>
+
+      <div *ngIf="pdfs.length > 0; else noPdfs" class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>العنوان</th>
+              <th>الوصف</th>
+              <th>المنشئ</th>
+              <th>اسم الملف</th>
+              <th>تاريخ الرفع</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let pdf of pdfs; trackBy: trackByPdfId">
+              <td>{{ pdf.title }}</td>
+              <td>{{ pdf.description }}</td>
+              <td>{{ pdf.creatorName }}</td>
+              <td>{{ pdf.fileName }}</td>
+              <td>{{ pdf.createdAt | date:'short':'ar' }}</td>
+              <td>
+                <button
+                  class="view-btn"
+                  (click)="viewPdf(pdf.id)"
+                  type="button"
+                >
+                  عرض
+                </button>
+                <button
+                  class="delete-btn"
+                  (click)="deletePdf(pdf.id)"
+                  type="button"
+                >
+                  حذف
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+
       <ng-template #noPdfs>
-        <p>No PDFs uploaded yet.</p>
-      </ng-template>
-      <ng-template #loading>
-        <div class="loader-container">
-          <div class="loader"></div>
-          <p>Loading PDFs...</p>
-        </div>
+        <p>لا توجد ملفات PDF لعرضها</p>
       </ng-template>
     </div>
-  </main>
+  </div>
 </div>

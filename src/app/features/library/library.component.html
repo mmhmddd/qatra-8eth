@@ -1,17 +1,1 @@
-<div class="library-container">
-  <h2>PDF Library</h2>
-  <p [class.error]="isError" *ngIf="message">{{ message }}</p>
-  <div class="pdf-list" *ngIf="pdfs.length > 0; else noPdfs">
-    <div class="pdf-item" *ngFor="let pdf of pdfs">
-      <h3>{{ pdf.title }}</h3>
-      <p><strong>Description:</strong> {{ pdf.description }}</p>
-      <p><strong>Creator:</strong> {{ pdf.creatorName }}</p>
-      <p><strong>Uploaded:</strong> {{ pdf.createdAt | date:'medium' }}</p>
-      <a [href]="getFullPdfUrl(pdf.filePath)" target="_blank">View PDF</a>
-      <button class="delete-btn" (click)="deletePdf(pdf.id)">Delete</button>
-    </div>
-  </div>
-  <ng-template #noPdfs>
-    <p>No PDFs available in the library.</p>
-  </ng-template>
-</div>
+<p>library works!</p>

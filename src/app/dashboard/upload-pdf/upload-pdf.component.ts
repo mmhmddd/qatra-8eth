@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Pdf, PdfService } from '../../core/services/pdf.service';
-import { environment } from '../../../environments/environment';
-import { SidebarComponent } from "../../shared/sidebar/sidebar.component";
+import { SidebarComponent } from '../../shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-upload-pdf',
@@ -12,115 +11,108 @@ import { SidebarComponent } from "../../shared/sidebar/sidebar.component";
   templateUrl: './upload-pdf.component.html',
   styleUrls: ['./upload-pdf.component.scss']
 })
-export class UploadPdfComponent implements OnInit {
-  file: File | null = null;
-  title: string = '';
-  description: string = '';
-  creatorName: string = '';
-  message: string = '';
-  isError: boolean = false;
+export class UploadPdfComponent {
+  // Form fields
+  title = '';
+  description = '';
+  creatorName = '';
+  selectedFile: File | null = null;
+  errorMessage: string | null = null;
+  successMessage: string | null = null;
+
+  // PDF list
   pdfs: Pdf[] = [];
-  isLoading: boolean = false;
 
-  constructor(private pdfService: PdfService) {}
-
-  ngOnInit(): void {
+  constructor(private pdfService: PdfService) {
     this.loadPdfs();
   }
 
-  loadPdfs(): void {
-    this.isLoading = true;
-    this.pdfService.getPdfs().subscribe({
-      next: (pdfs) => {
-        this.pdfs = pdfs;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Load PDFs error:', error);
-        this.message = error.message || 'Failed to load PDFs';
-        this.isError = true;
-        this.isLoading = false;
-      }
-    });
-  }
-
+  // Handle file selection
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.file = input.files[0];
+    if (input.files && input.files[0]) {
+      this.selectedFile = input.files[0];
     }
   }
 
-  onSubmit(): void {
-    if (!this.file || !this.title || !this.description || !this.creatorName) {
-      this.message = 'All fields are required';
-      this.isError = true;
+  // Upload PDF
+  uploadPdf(): void {
+    if (!this.selectedFile || !this.title || !this.description || !this.creatorName) {
+      this.errorMessage = 'يرجى ملء جميع الحقول واختيار ملف PDF';
       return;
     }
 
-    if (this.file.type !== 'application/pdf') {
-      this.message = 'Only PDF files are allowed';
-      this.isError = true;
-      return;
-    }
+    this.errorMessage = null;
+    this.successMessage = null;
 
-    this.isLoading = true;
-    this.pdfService.uploadPdf(this.file, this.title, this.description, this.creatorName)
+    this.pdfService.uploadPdf(this.selectedFile, this.title, this.description, this.creatorName)
       .subscribe({
         next: (pdf) => {
-          this.message = 'PDF uploaded successfully';
-          this.isError = false;
+          this.successMessage = 'تم رفع ملف PDF بنجاح';
           this.resetForm();
-          this.loadPdfs();
+          this.loadPdfs(); // Refresh the list
         },
-        error: (error) => {
-          console.error('Upload PDF error:', error);
-          this.message = error.message || 'Failed to upload PDF';
-          this.isError = true;
-          this.isLoading = false;
+        error: (err) => {
+          this.errorMessage = err.message;
         }
       });
   }
 
-  deletePdf(id: string): void {
-    if (confirm('Are you sure you want to delete this PDF?')) {
-      console.log('Attempting to delete PDF with ID:', id);
-      this.isLoading = true;
-      this.pdfService.deletePdf(id).subscribe({
-        next: (response) => {
-          console.log('Delete response:', response);
-          this.message = 'PDF deleted successfully';
-          this.isError = false;
-          this.pdfs = this.pdfs.filter(pdf => pdf.id !== id);
-          this.isLoading = false;
+  // Load all PDFs
+  private loadPdfs(): void {
+    this.pdfService.getPdfs()
+      .subscribe({
+        next: (pdfs) => {
+          this.pdfs = pdfs;
         },
-        error: (error) => {
-          console.error('Delete PDF error:', {
-            message: error.message,
-            status: error.status,
-            error: error.error,
-            statusText: error.statusText
-          });
-          this.message = error.error?.message || 'Failed to delete PDF';
-          this.isError = true;
-          this.isLoading = false;
+        error: (err) => {
+          this.errorMessage = err.message;
         }
       });
+  }
+
+  // Delete PDF
+  deletePdf(id: string): void {
+    if (confirm('هل أنت متأكد من حذف هذا الملف؟')) {
+      this.pdfService.deletePdf(id)
+        .subscribe({
+          next: (response) => {
+            this.successMessage = response.message;
+            this.loadPdfs(); // Refresh the list
+          },
+          error: (err) => {
+            this.errorMessage = err.message;
+          }
+        });
     }
   }
 
-  resetForm(): void {
-    this.file = null;
+  // View PDF
+  viewPdf(id: string): void {
+    this.pdfService.getPdfDetails(id)
+      .subscribe({
+        next: (blob) => {
+          const url = URL.createObjectURL(blob);
+          window.open(url, '_blank'); // Open PDF in a new tab
+          URL.revokeObjectURL(url);
+        },
+        error: (err) => {
+          this.errorMessage = err.message;
+        }
+      });
+  }
+
+  // Track by function for better performance
+  trackByPdfId(index: number, pdf: Pdf): string {
+    return pdf.id;
+  }
+
+  // Reset form after successful upload
+  private resetForm(): void {
     this.title = '';
     this.description = '';
     this.creatorName = '';
-    const fileInput = document.getElementById('pdfFile') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = '';
-    }
-  }
-
-  getFullPdfUrl(filePath: string): string {
-    return `${environment.apiBaseUrl}${filePath}`;
+    this.selectedFile = null;
+    (document.getElementById('pdfFile') as HTMLInputElement).value = '';
   }
 }

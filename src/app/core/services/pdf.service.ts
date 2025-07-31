@@ -4,84 +4,141 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ApiEndpoints } from '../constants/api-endpoints';
 
+// Define Pdf interface to match backend schema
 export interface Pdf {
   id: string;
   title: string;
   description: string;
   creatorName: string;
-  filePath: string;
+  fileName: string;
   uploadedBy: string;
   createdAt: string;
 }
 
-interface ApiResponse<T> {
+// Define API response interfaces
+interface UploadResponse {
   message: string;
-  pdf?: T;
-  pdfs?: T;
+  pdf: Pdf;
+}
+
+interface ListResponse {
+  message: string;
+  pdfs: Pdf[];
+}
+
+interface DeleteResponse {
+  message: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class PdfService {
+  // Maximum file size (5MB, adjust if backend limit is different)
+  private readonly MAX_FILE_SIZE = 5 * 1024 * 1024;
+
   constructor(private http: HttpClient) {}
 
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found in localStorage');
+    }
     return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
+      'Authorization': `Bearer ${token || ''}`
     });
   }
 
+  /**
+   * Upload a PDF file to the server
+   * @param file The PDF file to upload
+   * @param title The title of the file
+   * @param description The description of the file
+   * @param creatorName The creator's name
+   * @returns Observable containing the uploaded PDF data
+   */
   uploadPdf(file: File, title: string, description: string, creatorName: string): Observable<Pdf> {
+    // Validate file size
+    if (file.size > this.MAX_FILE_SIZE) {
+      return throwError(() => new Error('حجم الملف يتجاوز الحد الأقصى (5 ميجابايت)'));
+    }
+
+    // Validate file type
+    if (file.type !== 'application/pdf') {
+      return throwError(() => new Error('الملفات المسموح بها هي: PDF فقط'));
+    }
+
     const formData = new FormData();
     formData.append('pdfFile', file);
     formData.append('title', title);
     formData.append('description', description);
     formData.append('creatorName', creatorName);
 
-    return this.http.post<ApiResponse<Pdf>>(ApiEndpoints.pdf.upload, formData, {
+    return this.http.post<UploadResponse>(ApiEndpoints.pdf.upload, formData, {
       headers: this.getAuthHeaders()
     }).pipe(
-      map(response => response.pdf!),
-      catchError(error => {
-        console.error('Error uploading PDF:', error);
-        return throwError(() => new Error(error.error.message || 'Server error'));
-      })
+      map(response => response.pdf),
+      catchError(error => this.handleError(error))
     );
   }
 
+  /**
+   * Fetch the list of PDFs
+   * @returns Observable containing an array of PDFs
+   */
   getPdfs(): Observable<Pdf[]> {
-    return this.http.get<ApiResponse<Pdf[]>>(ApiEndpoints.pdf.list, {
+    return this.http.get<ListResponse>(ApiEndpoints.pdf.list, {
       headers: this.getAuthHeaders()
     }).pipe(
-      map(response => response.pdfs || []),
-      catchError(error => {
-        console.error('Error fetching PDFs:', error);
-        return throwError(() => new Error(error.error.message || 'Server error'));
-      })
+      map(response => response.pdfs),
+      catchError(error => this.handleError(error))
     );
   }
 
+  /**
+   * Delete a PDF by ID
+   * @param id The ID of the PDF to delete
+   * @returns Observable containing a confirmation message
+   */
   deletePdf(id: string): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(ApiEndpoints.pdf.delete(id), {
+    return this.http.delete<DeleteResponse>(ApiEndpoints.pdf.delete(id), {
       headers: this.getAuthHeaders()
     }).pipe(
-      catchError(error => {
-        console.error('Error deleting PDF:', error);
-        return throwError(() => new Error(error.error.message || 'Server error'));
-      })
+      catchError(error => this.handleError(error))
     );
   }
 
-  getPdfDetails(id: string): Observable<Pdf> {
-    return this.http.get<Pdf>(ApiEndpoints.pdf.view(id), {
-      headers: this.getAuthHeaders()
+  /**
+   * Fetch binary PDF data for viewing
+   * @param id The ID of the PDF
+   * @returns Observable containing a Blob for the PDF
+   */
+  getPdfDetails(id: string): Observable<Blob> {
+    return this.http.get(ApiEndpoints.pdf.view(id), {
+      headers: this.getAuthHeaders(),
+      responseType: 'blob'
     }).pipe(
-      catchError(error => {
-        console.error('Error fetching PDF details:', error);
-        return throwError(() => new Error(error.error.message || 'Server error'));
-      })
+      catchError(error => this.handleError(error))
     );
+  }
+
+  /**
+   * Handle HTTP errors
+   * @param error The HTTP error response
+   * @returns Observable with a user-friendly error message
+   */
+  private handleError(error: any): Observable<never> {
+    let errorMessage = 'خطأ في الخادم';
+    if (error.status === 400) {
+      errorMessage = error.error.message || 'طلب غير صالح';
+    } else if (error.status === 401) {
+      errorMessage = error.error.message || 'الوصول مرفوض، يرجى تسجيل الدخول';
+    } else if (error.status === 404) {
+      errorMessage = error.error.message || 'الملف غير موجود';
+    } else if (error.status === 500) {
+      errorMessage = error.error.message || 'خطأ داخلي في الخادم';
+    }
+    console.error(`Error ${error.status}:`, error);
+    return throwError(() => new Error(errorMessage));
   }
 }

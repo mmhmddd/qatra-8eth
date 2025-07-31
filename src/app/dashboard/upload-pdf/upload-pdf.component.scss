@@ -1,3 +1,4 @@
+// Variables
 $primary-color: #00adb5;
 $secondary-color: #0097b2;
 $accent-color: #ff914d;
@@ -7,221 +8,367 @@ $light-gray: #f8f9fa;
 $white: #ffffff;
 $black: #000;
 
-.dashboard-wrapper {
+// Container Layout
+.container {
   display: flex;
   min-height: 100vh;
-  font-family: 'Noto Kufi Arabic', sans-serif;
-  direction: rtl;
+  background-color: $light-gray;
+  direction: rtl; // RTL support for Arabic
 }
 
-app-sidebar {
-  width: 220px;
-  flex-shrink: 0;
-  background-color: $dark-color;
-  color: $white;
-}
-
-.main-content {
+// Main Content Area
+.content {
   flex: 1;
-  background: $light-gray;
-  padding: 1.5rem;
-  overflow-y: auto;
-  margin-right: 220px; /* Match sidebar width */
-}
+  padding: 2rem;
+  margin-right: 180px !important; // Space for sidebar (adjust based on sidebar width)
+  background-color: $white;
+  border-radius: 12px;
+  margin: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
-.upload-container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-
-  h1 {
-    font-size: 1.8rem;
-    color: $dark-color;
+  @media (max-width: 768px) {
+    margin-right: 0;
+    margin: 0.5rem;
+    padding: 1rem;
   }
 }
 
-.form-group {
-  margin-bottom: 15px;
+// Upload Section
+.upload-section {
+  background: linear-gradient(135deg, $white 0%, $light-gray 100%);
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  border: 1px solid rgba($primary-color, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
-  label {
-    display: block;
-    margin-bottom: 5px;
-    color: $neutral-color;
-    font-weight: 500;
-    font-size: 1rem;
-  }
-
-  input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid $neutral-color;
-    border-radius: 4px;
-    font-size: 1rem;
-    background-color: $white;
+  h2 {
     color: $dark-color;
-    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    position: relative;
 
-    &:focus {
-      outline: none;
-      border-color: $primary-color;
-      box-shadow: 0 0 5px rgba($primary-color, 0.3);
+    &::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, $primary-color, $secondary-color);
+      margin: 0.5rem auto;
+      border-radius: 2px;
     }
   }
-
-  input[type="file"] {
-    padding: 5px;
-  }
 }
 
-button {
-  background-color: $primary-color;
-  color: $white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-family: 'Noto Kufi Arabic', sans-serif;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: $secondary-color;
-  }
-
-  &:disabled {
-    background-color: lighten($neutral-color, 20%);
-    cursor: not-allowed;
-  }
+// Messages
+.success-message,
+.error-message {
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  text-align: center;
+  animation: slideIn 0.3s ease-out;
 }
 
-.error {
-  color: red;
-  margin-top: 10px;
-  font-size: 0.9rem;
+.success-message {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  color: #155724;
+  border: 1px solid #c3e6cb;
 }
 
-.pdf-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Enforce 3 cards per row */
-  gap: 1.5rem;
-  margin-top: 1.5rem;
+.error-message {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+  color: #721c24;
+  border: 1px solid #f5c6cb;
 }
 
-.dashboard-card {
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  border: none;
-  background: $white;
-  min-width: 200px; /* Ensure cards don't get too narrow */
+// Form Styling
+.upload-form {
+  .form-group {
+    margin-bottom: 1.5rem;
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba($black, 0.1);
-  }
-
-  .card-body {
-    padding: 1.5rem;
-
-    .card-title {
-      font-size: 1.2rem;
-      font-weight: bold;
+    label {
+      display: block;
+      font-weight: 600;
       color: $dark-color;
-      margin: 0 0 10px;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
     }
 
-    .card-text {
-      color: $neutral-color;
-      font-size: 0.9rem;
-      margin: 5px 0;
-    }
+    input[type="text"],
+    input[type="file"],
+    textarea {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background-color: $white;
 
-    a {
-      color: $accent-color;
-      text-decoration: none;
-      font-weight: 500;
-      display: inline-block;
-      margin-top: 10px;
-      font-size: 0.9rem;
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+        transform: translateY(-1px);
+      }
 
-      &:hover {
-        text-decoration: underline;
+      &::placeholder {
+        color: #6c757d;
+        opacity: 0.8;
       }
     }
 
-    .delete-btn {
-      background-color: $accent-color;
-      margin-top: 10px;
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+      font-family: inherit;
+    }
 
-      &:hover {
-        background-color: darken($accent-color, 10%);
+    input[type="file"] {
+      padding: 0.5rem;
+      cursor: pointer;
+
+      &::file-selector-button {
+        background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+        color: $white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        margin-left: 0.5rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+        }
       }
+    }
+  }
+
+  button[type="submit"] {
+    background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+    color: $white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba($primary-color, 0.3);
+
+      &::before {
+        left: 100%;
+      }
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 }
 
-.loader-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 200px;
-  gap: 10px;
+// PDF List Section
+.pdf-list-section {
+  background: $white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 
-  p {
-    color: $neutral-color;
-    font-size: 1rem;
-    font-family: 'Noto Kufi Arabic', sans-serif;
-  }
-}
+  h2 {
+    color: $dark-color;
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    position: relative;
 
-.loader {
-  border: 4px solid $light-gray;
-  border-top: 4px solid $primary-color;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@media (max-width: 768px) {
-  .main-content {
-    margin-right: 0; /* Remove margin for smaller screens */
+    &::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, $accent-color, #ff7f50);
+      margin: 0.5rem auto;
+      border-radius: 2px;
+    }
   }
 
-  .dashboard-header h1 {
-    font-size: 1.4rem;
-  }
-}
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: $white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
-@media (max-width: 576px) {
-  .dashboard-card {
-    .card-body {
-      padding: 1rem;
+    thead {
+      background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
 
-      .card-title {
+      th {
+        padding: 1rem;
+        text-align: right;
+        font-weight: 600;
+        color: $white;
         font-size: 1rem;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    tbody {
+      tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid #f1f3f4;
+
+        &:hover {
+          background: linear-gradient(135deg, rgba($primary-color, 0.02) 0%, rgba($secondary-color, 0.02) 100%);
+          transform: translateX(-2px);
+          box-shadow: 4px 0 8px rgba($primary-color, 0.1);
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
       }
 
-      .card-text,
-      a,
-      .delete-btn {
-        font-size: 0.8rem;
+      td {
+        padding: 1rem;
+        text-align: right;
+        color: $neutral-color;
+        font-size: 0.95rem;
+        vertical-align: middle;
       }
     }
   }
 
-  app-sidebar {
-    width: 180px;
+  // Action Buttons
+  .view-btn,
+  .delete-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0 0.25rem;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+
+  .view-btn {
+    background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+    color: $white;
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+    }
+  }
+
+  .delete-btn {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: $white;
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(#dc3545, 0.3);
+    }
+  }
+
+  // No PDFs Message
+  p {
+    text-align: center;
+    color: $neutral-color;
+    font-size: 1.1rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, $light-gray 0%, rgba($primary-color, 0.05) 100%);
+    border-radius: 8px;
+    border: 2px dashed rgba($primary-color, 0.2);
+  }
+}
+
+// Animations
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .content {
+    margin-right: 0;
+    padding: 1rem;
+  }
+
+  .upload-section,
+  .pdf-list-section {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  table {
+    font-size: 0.875rem;
+
+    th,
+    td {
+      padding: 0.75rem 0.5rem;
+    }
+  }
+
+  .view-btn,
+  .delete-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    margin: 0.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .upload-form {
+    button[type="submit"] {
+      font-size: 1rem;
+      padding: 0.875rem 1.5rem;
+    }
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
   }
 }
