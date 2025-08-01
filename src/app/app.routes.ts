@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './core/guards/auth.guard';
+import { AdminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -27,11 +29,12 @@ export const routes: Routes = [
   },
   {
     path: 'library',
-    loadComponent: () => import('./features/library/library.component').then(m => m.LibraryComponent)
+    loadComponent: () => import('./features/library/library.component').then(m => m.LibraryComponent),
+    canActivate: [AuthGuard]
   },
   {
     path: 'dashboard',
-    loadComponent: () => import('./dashboard/dashboard/dashboard.component').then(m => m.DashboardComponent)
+    loadComponent: () => import('./dashboard/dashboard/dashboard.component').then(m => m.DashboardComponent),canActivate:[AdminGuard]
   },
   {
     path: 'all-join-request',
