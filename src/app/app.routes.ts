@@ -34,7 +34,7 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    loadComponent: () => import('./dashboard/dashboard/dashboard.component').then(m => m.DashboardComponent),canActivate:[AdminGuard]
+    loadComponent: () => import('./dashboard/dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
   {
     path: 'all-join-request',

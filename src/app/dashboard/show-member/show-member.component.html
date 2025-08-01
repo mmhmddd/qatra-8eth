@@ -3,13 +3,8 @@
 
   <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="container-fluid mt-4">
-      <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{ error }}
-        <button type="button" class="btn-close" (click)="clearMessages()">×</button>
-      </div>
-      <div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ success }}
-        <button type="button" class="btn-close" (click)="clearMessages()">×</button>
+      <div *ngIf="toastMessage" class="toast" [ngClass]="{'toast-success': toastMessage.type === 'success', 'toast-error': toastMessage.type === 'error'}">
+        {{ toastMessage.message }}
       </div>
 
       <div *ngIf="member" class="card shadow-sm">
@@ -36,10 +31,8 @@
               <dl class="row">
                 <dt class="col-sm-4">الحالة:</dt>
                 <dd class="col-sm-8">{{ member.status }}</dd>
-                <dt class="col-sm-4">كلمة المرور:</dt>
-                <dd class="col-sm-8">{{ password }}</dd>
                 <dt class="col-sm-4">تاريخ الإنشاء:</dt>
-                <dd class="col-sm-8">{{ member.createdAt | date:'medium':'ar' }}</dd>
+                <dd class="col-sm-8">{{ member.createdAt }}</dd>
                 <dt class="col-sm-4">ساعات التطوع:</dt>
                 <dd class="col-sm-8">{{ editMode ? '' : member.volunteerHours }}</dd>
                 <dt class="col-sm-4">عدد الطلاب:</dt>

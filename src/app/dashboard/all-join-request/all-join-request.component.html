@@ -21,10 +21,10 @@
               </span>
             </td>
             <td>
-              <button class="btn btn-success" (click)="confirmApproveRequest(request._id)" [disabled]="request.status !== 'Pending' || isLoading">
+              <button class="btn btn-success" (click)="confirmApproveRequest(request.id)" [disabled]="request.status !== 'Pending' || isLoading || !request.id">
                 <i class="fas fa-check"></i> موافقة
               </button>
-              <button class="btn btn-danger" (click)="confirmRejectRequest(request._id)" [disabled]="request.status !== 'Pending' || isLoading">
+              <button class="btn btn-danger" (click)="confirmRejectRequest(request.id)" [disabled]="request.status !== 'Pending' || isLoading || !request.id">
                 <i class="fas fa-times"></i> رفض
               </button>
             </td>
@@ -40,6 +40,9 @@
         <div class="loading-spinner"></div>
         <p>جاري التحميل...</p>
       </div>
+    </div>
+    <div *ngIf="toastMessage" class="toast" [ngClass]="{'toast-success': toastMessage.type === 'success', 'toast-error': toastMessage.type === 'error'}">
+      {{ toastMessage.message }}
     </div>
   </div>
 </main>

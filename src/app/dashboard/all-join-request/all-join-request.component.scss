@@ -128,6 +128,38 @@ main {
     margin: 0 auto 0.5rem;
   }
 
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 300px;
+    padding: 1rem;
+    border-radius: 6px;
+    color: $white;
+    z-index: 2000;
+    box-shadow: 0 2px 8px rgba($black, 0.2);
+    animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-out 2.7s forwards;
+
+    &.toast-success {
+      background: $success-color;
+    }
+
+    &.toast-error {
+      background: $danger-color;
+    }
+  }
+
+  @keyframes slideIn {
+    from { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+  }
+
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
   @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }

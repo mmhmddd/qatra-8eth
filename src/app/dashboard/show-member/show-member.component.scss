@@ -5,6 +5,8 @@ $neutral-color: #545454;
 $dark-color: #1a1a1a;
 $light-gray: #f8f9fa;
 $white: #ffffff;
+$success-color: #28a745;
+$danger-color: #dc3545;
 
 .container {
   display: flex;
@@ -62,6 +64,28 @@ $white: #ffffff;
     &:hover {
       opacity: 1;
     }
+  }
+}
+
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 300px;
+  padding: 1rem;
+  border-radius: 6px;
+  color: $white;
+  z-index: 2000;
+  box-shadow: 0 2px 8px rgba($dark-color, 0.2);
+  animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-out 2.7s forwards;
+
+  &.toast-success {
+    background: $success-color;
+  }
+
+  &.toast-error {
+    background: $danger-color;
   }
 }
 
@@ -335,6 +359,11 @@ dl {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 @media (max-width: 768px) {

@@ -14,10 +14,8 @@ import { SidebarComponent } from '../../shared/sidebar/sidebar.component';
 })
 export class ShowMemberComponent implements OnInit {
   member: JoinRequest | null = null;
-  error: string | null = null;
-  success: string | null = null;
+  toastMessage: { message: string; type: 'success' | 'error' } | null = null;
   memberId: string | null = null;
-  password: string | null = null; // Store password if available
   newStudent = { name: '', email: '', phone: '' };
   editMode = false;
   editedVolunteerHours: number = 0;
@@ -31,11 +29,19 @@ export class ShowMemberComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.checkAuth();
     this.memberId = this.route.snapshot.paramMap.get('id');
     if (this.memberId) {
       this.loadMemberDetails(this.memberId);
     } else {
-      this.error = 'معرف العضو غير موجود';
+      this.showToast('معرف العضو غير موجود', 'error');
+    }
+  }
+
+  checkAuth() {
+    if (!localStorage.getItem('token')) {
+      this.showToast('يرجى تسجيل الدخول للوصول إلى تفاصيل العضو', 'error');
+      this.router.navigate(['/login']);
     }
   }
 
@@ -44,26 +50,42 @@ export class ShowMemberComponent implements OnInit {
       next: (response: JoinRequestResponse) => {
         console.log('Member response:', response);
         if (response.success && response.member) {
-          this.member = response.member;
+          this.member = {
+            ...response.member,
+            id: response.member.id || response.member.id, // Ensure id compatibility
+            createdAt: new Date(response.member.createdAt).toLocaleString('ar-SA') // Format date
+          };
           this.editedVolunteerHours = this.member.volunteerHours;
           this.editedSubjects = [...this.member.subjects];
           this.editedStudents = [...this.member.students];
-          // Password might be included in response if available
-          this.password = response.password || 'غير متوفرة';
+          this.showToast('تم جلب بيانات العضو بنجاح', 'success');
         } else {
-          this.error = response.message || 'فشل في جلب بيانات العضو';
+          this.showToast(response.message || 'فشل في جلب بيانات العضو', 'error');
         }
       },
       error: (err) => {
-        this.error = err.message || 'حدث خطأ أثناء جلب بيانات العضو';
+        this.showToast(err.message || 'حدث خطأ أثناء جلب بيانات العضو', 'error');
         console.error('Member loading error:', err);
       }
     });
   }
 
+  isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
   addStudent(): void {
-    if (!this.memberId || !this.newStudent.name || !this.newStudent.email || !this.newStudent.phone) {
-      this.error = 'يرجى إدخال جميع تفاصيل الطالب';
+    if (!this.memberId) {
+      this.showToast('معرف العضو غير موجود', 'error');
+      return;
+    }
+    if (!this.newStudent.name || !this.newStudent.email || !this.newStudent.phone) {
+      this.showToast('يرجى إدخال جميع تفاصيل الطالب', 'error');
+      return;
+    }
+    if (!this.isValidEmail(this.newStudent.email)) {
+      this.showToast('البريد الإلكتروني للطالب غير صالح', 'error');
       return;
     }
     this.joinRequestService.addStudent(
@@ -78,14 +100,13 @@ export class ShowMemberComponent implements OnInit {
           this.member.numberOfStudents = response.data.numberOfStudents;
           this.editedStudents = [...this.member.students];
           this.newStudent = { name: '', email: '', phone: '' };
-          this.success = response.message;
-          this.error = null;
+          this.showToast(response.message || 'تم إضافة الطالب بنجاح', 'success');
         } else {
-          this.error = response.message || 'فشل في إضافة الطالب';
+          this.showToast(response.message || 'فشل في إضافة الطالب', 'error');
         }
       },
       error: (err) => {
-        this.error = err.message || 'حدث خطأ أثناء إضافة الطالب';
+        this.showToast(err.message || 'حدث خطأ أثناء إضافة الطالب', 'error');
         console.error('Add student error:', err);
       }
     });
@@ -94,7 +115,6 @@ export class ShowMemberComponent implements OnInit {
   toggleEditMode(): void {
     this.editMode = !this.editMode;
     if (!this.editMode && this.member) {
-      // Reset edited values if canceling
       this.editedVolunteerHours = this.member.volunteerHours;
       this.editedSubjects = [...this.member.subjects];
       this.editedStudents = [...this.member.students];
@@ -103,11 +123,15 @@ export class ShowMemberComponent implements OnInit {
 
   saveChanges(): void {
     if (!this.memberId) {
-      this.error = 'معرف العضو غير موجود';
+      this.showToast('معرف العضو غير موجود', 'error');
       return;
     }
     if (this.editedVolunteerHours < 0 || !Number.isInteger(this.editedVolunteerHours)) {
-      this.error = 'يجب أن تكون ساعات التطوع رقمًا صحيحًا غير سالب';
+      this.showToast('يجب أن تكون ساعات التطوع رقمًا صحيحًا غير سالب', 'error');
+      return;
+    }
+    if (this.editedStudents.some(student => !student.name || !student.email || !student.phone || !this.isValidEmail(student.email))) {
+      this.showToast('بيانات الطلاب يجب أن تحتوي على الاسم، البريد الإلكتروني الصحيح، والهاتف', 'error');
       return;
     }
     this.joinRequestService.updateMemberDetails(
@@ -124,14 +148,13 @@ export class ShowMemberComponent implements OnInit {
           this.member.students = response.data.students;
           this.member.subjects = response.data.subjects;
           this.editMode = false;
-          this.success = response.message;
-          this.error = null;
+          this.showToast(response.message || 'تم تحديث تفاصيل العضو بنجاح', 'success');
         } else {
-          this.error = response.message || 'فشل في تحديث تفاصيل العضو';
+          this.showToast(response.message || 'فشل في تحديث تفاصيل العضو', 'error');
         }
       },
       error: (err) => {
-        this.error = err.message || 'حدث خطأ أثناء تحديث تفاصيل العضو';
+        this.showToast(err.message || 'حدث خطأ أثناء تحديث تفاصيل العضو', 'error');
         console.error('Update member error:', err);
       }
     });
@@ -153,8 +176,10 @@ export class ShowMemberComponent implements OnInit {
     this.editedSubjects.splice(index, 1);
   }
 
-  clearMessages(): void {
-    this.error = null;
-    this.success = null;
+  showToast(message: string, type: 'success' | 'error') {
+    this.toastMessage = { message, type };
+    setTimeout(() => {
+      this.toastMessage = null;
+    }, 3000); // Hide toast after 3 seconds
   }
 }

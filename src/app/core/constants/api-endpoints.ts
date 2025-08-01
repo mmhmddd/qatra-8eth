@@ -6,7 +6,7 @@ export const ApiEndpoints = {
   auth: {
     login: `${base}/login`,
   },
-  joinRequests: {
+joinRequests: {
     create: `${base}/join-requests`,
     getAll: `${base}/join-requests`,
     approve: (id: string) => `${base}/join-requests/${id}/approve`,
