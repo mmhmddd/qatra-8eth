@@ -1,0 +1,157 @@
+$primary-color: #00adb5;
+$secondary-color: #0097b2;
+$accent-color: #ff914d;
+$neutral-color: #545454;
+$dark-color: #1a1a1a;
+$light-gray: #f8f9fa;
+$white: #ffffff;
+$success-color: #28a745;
+$danger-color: #dc3545;
+$pending-color: #ffc107;
+$black: #000;
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: $light-gray;
+  border-radius: 8px;
+  margin-top: 120px;
+}
+
+h2 {
+  color: $primary-color;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.alert {
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.alert.success {
+  background-color: $success-color;
+  color: $white;
+}
+
+.alert.error {
+  background-color: $danger-color;
+  color: $white;
+}
+
+.add-user-form {
+  margin-bottom: 30px;
+}
+
+.add-user-form h3 {
+  color: $neutral-color;
+  margin-bottom: 10px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  color: $dark-color;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid $neutral-color;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.form-group input.invalid,
+.form-group select.invalid {
+  border-color: $danger-color;
+}
+
+.error-message {
+  color: $danger-color;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.btn.primary {
+  background-color: $primary-color;
+  color: $white;
+}
+
+.btn.success {
+  background-color: $success-color;
+  color: $white;
+}
+
+.btn.danger {
+  background-color: $danger-color;
+  color: $white;
+}
+
+.btn:disabled {
+  background-color: $neutral-color;
+  cursor: not-allowed;
+}
+
+.leaderboard-table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: $white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: right;
+  border-bottom: 1px solid $light-gray;
+}
+
+th {
+  background-color: $secondary-color;
+  color: $white;
+  font-weight: bold;
+}
+
+td input,
+td select {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid $neutral-color;
+  border-radius: 4px;
+}
+
+.user-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+p {
+  text-align: center;
+  color: $neutral-color;
+  font-size: 16px;
+}

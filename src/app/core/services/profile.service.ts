@@ -45,7 +45,7 @@ interface MeetingResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProfileService {
   constructor(
@@ -64,8 +64,8 @@ export class ProfileService {
       throw new Error('No token found. Redirecting to login.');
     }
     return new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
     });
   }
 
@@ -91,15 +91,15 @@ export class ProfileService {
               title: meeting.title,
               date: typeof meeting.date === 'string' ? meeting.date : new Date(meeting.date).toISOString().split('T')[0],
               startTime: meeting.startTime,
-              endTime: meeting.endTime
+              endTime: meeting.endTime,
             })),
             name: response.data.joinRequest?.name || '',
             phone: response.data.joinRequest?.phone || '',
             address: response.data.joinRequest?.address || '',
             academicSpecialization: response.data.joinRequest?.academicSpecialization || '',
             volunteerHours: response.data.joinRequest?.volunteerHours || 0,
-            status: response.data.joinRequest?.status || 'Pending'
-          }
+            status: response.data.joinRequest?.status || 'Pending',
+          },
         };
       }),
       catchError(error => {
@@ -107,7 +107,51 @@ export class ProfileService {
         return throwError(() => ({
           success: false,
           message: error.message || 'خطأ في جلب بيانات الملف الشخصي',
-          error: error.message
+          error: error.message,
+        }));
+      })
+    );
+  }
+
+  getProfileByEmail(email: string): Observable<JoinRequestResponse> {
+    return this.http.get<ProfileResponse>(`${ApiEndpoints.profile.get}/email/${email}`, { headers: this.getHeaders() }).pipe(
+      map(response => {
+        console.log('Server response for getProfileByEmail:', response);
+        if (!response.success || !response.data || !response.data.user) {
+          throw new Error(response.message || 'Invalid profile data');
+        }
+        return {
+          success: true,
+          message: response.message || 'تم جلب بيانات الملف الشخصي بنجاح',
+          data: {
+            id: response.data.user.id,
+            email: response.data.user.email,
+            profileImage: response.data.user.profileImage,
+            numberOfStudents: response.data.user.numberOfStudents,
+            subjects: response.data.user.subjects,
+            students: response.data.user.students,
+            meetings: response.data.user.meetings.map(meeting => ({
+              id: meeting._id || meeting.id || '',
+              title: meeting.title,
+              date: typeof meeting.date === 'string' ? meeting.date : new Date(meeting.date).toISOString().split('T')[0],
+              startTime: meeting.startTime,
+              endTime: meeting.endTime,
+            })),
+            name: response.data.joinRequest?.name || '',
+            phone: response.data.joinRequest?.phone || '',
+            address: response.data.joinRequest?.address || '',
+            academicSpecialization: response.data.joinRequest?.academicSpecialization || '',
+            volunteerHours: response.data.joinRequest?.volunteerHours || 0,
+            status: response.data.joinRequest?.status || 'Pending',
+          },
+        };
+      }),
+      catchError(error => {
+        console.error('Error fetching profile by email:', error);
+        return throwError(() => ({
+          success: false,
+          message: error.message || 'خطأ في جلب بيانات الملف الشخصي',
+          error: error.message,
         }));
       })
     );
@@ -117,14 +161,14 @@ export class ProfileService {
     return this.http.put<UpdatePasswordResponse>(ApiEndpoints.profile.updatePassword, { currentPassword, newPassword }, { headers: this.getHeaders() }).pipe(
       map(response => ({
         success: response.success,
-        message: response.message || 'تم تحديث كلمة المرور بنجاح'
+        message: response.message || 'تم تحديث كلمة المرور بنجاح',
       })),
       catchError(error => {
         console.error('Error updating password:', error);
         return throwError(() => ({
           success: false,
           message: error.error?.message || 'خطأ في تحديث كلمة المرور',
-          error: error.message
+          error: error.message,
         }));
       })
     );
@@ -135,7 +179,7 @@ export class ProfileService {
       return throwError(() => ({
         success: false,
         message: 'يرجى اختيار صورة للرفع',
-        error: 'No file selected'
+        error: 'No file selected',
       }));
     }
     const formData = new FormData();
@@ -150,7 +194,7 @@ export class ProfileService {
         return throwError(() => ({
           success: false,
           message: 'No token found. Redirecting to login.',
-          error: 'No token found'
+          error: 'No token found',
         }));
       }
     }
@@ -160,7 +204,7 @@ export class ProfileService {
         return {
           success: response.success,
           message: response.message || 'تم رفع الصورة الشخصية بنجاح',
-          data: { profileImage: response.data.profileImage }
+          data: { profileImage: response.data.profileImage },
         };
       }),
       catchError(error => {
@@ -168,7 +212,7 @@ export class ProfileService {
         return throwError(() => ({
           success: false,
           message: error.error?.message || 'خطأ في رفع الصورة الشخصية',
-          error: error.message
+          error: error.message,
         }));
       })
     );
@@ -179,14 +223,14 @@ export class ProfileService {
       return throwError(() => ({
         success: false,
         message: 'جميع الحقول (العنوان، التاريخ، وقت البدء، وقت الانتهاء) مطلوبة',
-        error: 'Missing required fields'
+        error: 'Missing required fields',
       }));
     }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       return throwError(() => ({
         success: false,
         message: 'صيغة التاريخ غير صالحة، يجب أن تكون YYYY-MM-DD',
-        error: 'Invalid date format'
+        error: 'Invalid date format',
       }));
     }
     return this.http.post<MeetingResponse>(ApiEndpoints.profile.addMeeting, { title, date, startTime, endTime }, { headers: this.getHeaders() }).pipe(
@@ -201,9 +245,9 @@ export class ProfileService {
               title: meeting.title,
               date: typeof meeting.date === 'string' ? meeting.date : new Date(meeting.date).toISOString().split('T')[0],
               startTime: meeting.startTime,
-              endTime: meeting.endTime
-            }))
-          }
+              endTime: meeting.endTime,
+            })),
+          },
         };
       }),
       catchError(error => {
@@ -211,7 +255,7 @@ export class ProfileService {
         return throwError(() => ({
           success: false,
           message: error.error?.message || 'خطأ في إضافة الموعد',
-          error: error.message
+          error: error.message,
         }));
       })
     );
@@ -222,14 +266,14 @@ export class ProfileService {
       return throwError(() => ({
         success: false,
         message: 'جميع الحقول (العنوان، التاريخ، وقت البدء، وقت الانتهاء) مطلوبة',
-        error: 'Missing required fields'
+        error: 'Missing required fields',
       }));
     }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       return throwError(() => ({
         success: false,
         message: 'صيغة التاريخ غير صالحة، يجب أن تكون YYYY-MM-DD',
-        error: 'Invalid date format'
+        error: 'Invalid date format',
       }));
     }
     return this.http.put<MeetingResponse>(ApiEndpoints.profile.updateMeeting(meetingId), { title, date, startTime, endTime }, { headers: this.getHeaders() }).pipe(
@@ -242,16 +286,16 @@ export class ProfileService {
             title: meeting.title,
             date: typeof meeting.date === 'string' ? meeting.date : new Date(meeting.date).toISOString().split('T')[0],
             startTime: meeting.startTime,
-            endTime: meeting.endTime
-          }))
-        }
+            endTime: meeting.endTime,
+          })),
+        },
       })),
       catchError(error => {
         console.error('Error updating meeting:', error);
         return throwError(() => ({
           success: false,
           message: error.error?.message || 'خطأ في تحديث الموعد',
-          error: error.message
+          error: error.message,
         }));
       })
     );
@@ -262,7 +306,7 @@ export class ProfileService {
       return throwError(() => ({
         success: false,
         message: 'معرف الموعد مطلوب',
-        error: 'Missing meetingId'
+        error: 'Missing meetingId',
       }));
     }
     console.log('Deleting meeting with ID:', meetingId);
@@ -278,9 +322,9 @@ export class ProfileService {
               title: meeting.title,
               date: typeof meeting.date === 'string' ? meeting.date : new Date(meeting.date).toISOString().split('T')[0],
               startTime: meeting.startTime,
-              endTime: meeting.endTime
-            }))
-          }
+              endTime: meeting.endTime,
+            })),
+          },
         };
       }),
       catchError(error => {
@@ -288,7 +332,7 @@ export class ProfileService {
         return throwError(() => ({
           success: false,
           message: error.error?.message || 'خطأ في حذف الموعد',
-          error: error.message
+          error: error.message,
         }));
       })
     );

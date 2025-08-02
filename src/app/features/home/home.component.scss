@@ -776,20 +776,6 @@ $black: #000000;
   padding: 80px 0;
   overflow: hidden;
 
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
-    height: 3px;
-    background: linear-gradient(90deg, $primary-color, $accent-color);
-    border-radius: 2px;
-    box-shadow: 0 0 5px rgba($accent-color, 0.5), 0 0 25px rgba($primary-color, 0.3);
-    animation: shimmer 3s infinite linear;
-  }
-
   .container {
     max-width: 1200px;
     margin: 0 auto;

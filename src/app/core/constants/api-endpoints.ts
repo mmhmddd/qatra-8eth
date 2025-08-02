@@ -6,7 +6,7 @@ export const ApiEndpoints = {
   auth: {
     login: `${base}/login`,
   },
-joinRequests: {
+  joinRequests: {
     create: `${base}/join-requests`,
     getAll: `${base}/join-requests`,
     approve: (id: string) => `${base}/join-requests/${id}/approve`,
@@ -18,6 +18,7 @@ joinRequests: {
   },
   profile: {
     get: `${base}/profile`,
+    getByEmail: '/api/profile/email', // Add this
     updatePassword: `${base}/profile/password`,
     uploadImage: `${base}/profile/image`,
     addMeeting: `${base}/profile/meetings`,
@@ -29,5 +30,11 @@ joinRequests: {
     list: `${base}/pdf/list`,
     delete: (id: string) => `${base}/pdf/${id}`,
     view: (id: string) => `${base}/pdf/view/${id}`,
+  },
+  leaderboard: {
+    add: `${base}/leaderboard/add`,
+    get: `${base}/leaderboard`,
+    edit: `${base}/leaderboard/edit`,
+    remove: `${base}/leaderboard/remove`,
   },
 };

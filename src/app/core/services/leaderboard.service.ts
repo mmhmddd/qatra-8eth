@@ -1,0 +1,134 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { ApiEndpoints } from '../constants/api-endpoints';
+
+// Interface for leaderboard user data
+export interface LeaderboardUser {
+  id: string;
+  name: string;
+  email: string;
+  type: 'متطوع' | 'قاده';
+  rank: string | null; // or number, depending on your backend
+  image: string | null;
+  volunteerHours: number;
+  numberOfStudents: number;
+  subjects: string[];
+  score: number;
+}
+
+// Interface for API responses
+interface ApiResponse<T> {
+  message: string;
+  data: T;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class LeaderboardService {
+  constructor(private http: HttpClient) {}
+
+  // Helper to get auth headers
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token'); // Adjust based on how you store the JWT token
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+  }
+
+  // Add a user to the leaderboard (volunteer or leader)
+  addUserToLeaderboard(
+    email: string,
+    type: 'متطوع' | 'قاده',
+    name?: string,
+    rank?: string,
+    image?: File
+  ): Observable<LeaderboardUser> {
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('type', type);
+    if (name) formData.append('name', name);
+    if (rank) formData.append('rank', rank);
+    if (image) formData.append('image', image);
+
+    return this.http
+      .post<ApiResponse<LeaderboardUser>>(
+        ApiEndpoints.leaderboard.add,
+        formData,
+        { headers: this.getAuthHeaders() } // No Content-Type for FormData
+      )
+      .pipe(
+        map(response => response.data),
+        catchError(error => {
+          const errorMsg = error.error?.message || 'خطأ في الخادم';
+          return throwError(() => new Error(errorMsg));
+        })
+      );
+  }
+
+  // Get the leaderboard
+  getLeaderboard(): Observable<LeaderboardUser[]> {
+    return this.http
+      .get<ApiResponse<LeaderboardUser[]>>(ApiEndpoints.leaderboard.get)
+      .pipe(
+        map(response => response.data),
+        catchError(error => {
+          const errorMsg = error.error?.message || 'خطأ في الخادم';
+          return throwError(() => new Error(errorMsg));
+        })
+      );
+  }
+
+  // Edit a user in the leaderboard
+  editUserInLeaderboard(
+    email: string,
+    name?: string,
+    rank?: string,
+    volunteerHours?: number,
+    numberOfStudents?: number,
+    subjects?: string[],
+    image?: File
+  ): Observable<LeaderboardUser> {
+    const formData = new FormData();
+    formData.append('email', email);
+    if (name) formData.append('name', name);
+    if (rank) formData.append('rank', rank);
+    if (volunteerHours !== undefined) formData.append('volunteerHours', volunteerHours.toString());
+    if (numberOfStudents !== undefined) formData.append('numberOfStudents', numberOfStudents.toString());
+    if (subjects) formData.append('subjects', JSON.stringify(subjects));
+    if (image) formData.append('image', image);
+
+    return this.http
+      .put<ApiResponse<LeaderboardUser>>(
+        ApiEndpoints.leaderboard.edit,
+        formData,
+        { headers: this.getAuthHeaders() }
+      )
+      .pipe(
+        map(response => response.data),
+        catchError(error => {
+          const errorMsg = error.error?.message || 'خطأ في الخادم';
+          return throwError(() => new Error(errorMsg));
+        })
+      );
+  }
+
+  // Remove a user from the leaderboard
+  removeUserFromLeaderboard(email: string): Observable<{ message: string; email: string }> {
+    const body = { email };
+    return this.http
+      .delete<ApiResponse<{ email: string }>>(
+        ApiEndpoints.leaderboard.remove,
+        { headers: this.getAuthHeaders(), body }
+      )
+      .pipe(
+        map(response => ({ message: response.message, email: response.data.email })),
+        catchError(error => {
+          const errorMsg = error.error?.message || 'خطأ في الخادم';
+          return throwError(() => new Error(errorMsg));
+        })
+      );
+  }
+}

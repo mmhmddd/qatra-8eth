@@ -45,6 +45,10 @@ export const routes: Routes = [
     loadComponent: () => import('./dashboard/all-members/all-members.component').then(m => m.AllMembersComponent)
   },
   {
+    path: 'add-leaderboards',
+    loadComponent: () => import('./dashboard/add-leaderboards/add-leaderboards.component').then(m => m.AddLeaderboardsComponent)
+  },
+  {
     path: 'upload-pdf',
     loadComponent: () => import('./dashboard/upload-pdf/upload-pdf.component').then(m => m.UploadPdfComponent)
   },
