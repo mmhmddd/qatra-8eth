@@ -4,8 +4,8 @@
     <div class="carousel-inner">
       <div class="carousel-item active">
         <div class="carousel-img-wrapper">
-          <img src="../../../assets/images/home/student1.png" 
-               class="d-block w-100 carousel-img" 
+          <img src="../../../assets/images/home/student1.png"
+               class="d-block w-100 carousel-img"
                alt="Student 1"
                loading="eager">
           <div class="carousel-overlay"></div>
@@ -13,8 +13,8 @@
       </div>
       <div class="carousel-item">
         <div class="carousel-img-wrapper">
-          <img src="../../../assets/images/home/student2.png" 
-               class="d-block w-100 carousel-img" 
+          <img src="../../../assets/images/home/student2.png"
+               class="d-block w-100 carousel-img"
                alt="Student 2"
                loading="lazy">
           <div class="carousel-overlay"></div>
@@ -22,8 +22,8 @@
       </div>
       <div class="carousel-item">
         <div class="carousel-img-wrapper">
-          <img src="../../../assets/images/home/student3.png" 
-               class="d-block w-100 carousel-img" 
+          <img src="../../../assets/images/home/student3.png"
+               class="d-block w-100 carousel-img"
                alt="Student 3"
                loading="lazy">
           <div class="carousel-overlay"></div>
@@ -31,8 +31,8 @@
       </div>
       <div class="carousel-item">
         <div class="carousel-img-wrapper">
-          <img src="../../../assets/images/home/student4.png" 
-               class="d-block w-100 carousel-img" 
+          <img src="../../../assets/images/home/student4.png"
+               class="d-block w-100 carousel-img"
                alt="Student 4"
                loading="lazy">
           <div class="carousel-overlay"></div>
@@ -81,26 +81,26 @@
   <div class="container">
     <div class="about-us-img-wrapper" data-aos="fade-left">
       <div class="image-frame">
-        <img src="../../../assets/images/home/student1.png" 
+        <img src="../../../assets/images/home/student1.png"
              alt="About Us Image"
              class="about-image">
         <div class="image-decoration"></div>
       </div>
     </div>
-    
+
     <div class="about-us-content" data-aos="fade-right" data-aos-delay="200">
       <div class="section-badge">من نحن</div>
       <h2 class="section-title">لمحة عننا</h2>
-      
+
       <div class="content-text">
         <p class="lead-text">
           نحن عمل خيري تأسست عام 2020 هدفها مساعدة الطلاب اللذين بحاجة لدراسة خاصة ولا تتوفر لهم الإمكانيات من خلال استقطاب طلاب جامعيين او خريجين للقيام بالمهمه.
         </p>
-        
+
         <p class="description-text">
           حيث أنها توفر بيئه تعليمية عن بعد لمساعدة جميع الصفوف وبجميع المواد الدراسيه الى جانب التأسيس لمن هو بحاجة.
         </p>
-        
+
         <p class="description-text">
           والتعليم عن بعد يكون من خلال الأنترنت مثل تطبيقات الزوم والتيمز وغيرُهما حيث تكون الحصص مباشرة ويتم تسجيلها من قبل المتطوع ومراجعتها من مختصين لتأكيد سير عملية التعليم بنجاح.
         </p>
@@ -150,13 +150,13 @@
       <h2 class="section-title"> إنجازات</h2>
       <p class="section-description">أرقام تتحدث عن رحلتنا في خدمة التعليم</p>
     </div>
-    
+
     <div class="achievements-container">
-      <div *ngFor="let achievement of achievements; let i = index" 
+      <div *ngFor="let achievement of achievements; let i = index"
            class="achievement-card"
            data-aos="fade-up"
            [attr.data-aos-delay]="i * 100">
-        
+
         <div class="achievement-icon">
           <div class="icon-wrapper">
             <ng-container [ngSwitch]="i">
@@ -186,26 +186,26 @@
             </ng-container>
           </div>
         </div>
-        
+
         <div class="achievement-number" [id]="'counter-' + i">
           <span class="number-prefix">{{ achievement.prefix || '' }}</span>
           <span class="number-value">{{ formatNumber(achievement.count) }}</span>
           <span class="number-suffix">{{ achievement.suffix || '' }}</span>
         </div>
-        
+
         <div class="achievement-label">{{ achievement.label }}</div>
-        
+
         <div class="progress-ring" aria-hidden="true">
           <svg class="progress-ring-svg" width="80" height="80">
-            <circle class="progress-ring-background" 
-                    cx="40" cy="40" r="36" 
-                    fill="transparent" 
-                    stroke="rgba(255,255,255,0.1)" 
+            <circle class="progress-ring-background"
+                    cx="40" cy="40" r="36"
+                    fill="transparent"
+                    stroke="rgba(255,255,255,0.1)"
                     stroke-width="3"/>
-            <circle class="progress-ring-fill" 
-                    cx="40" cy="40" r="36" 
-                    fill="transparent" 
-                    stroke="#005670" 
+            <circle class="progress-ring-fill"
+                    cx="40" cy="40" r="36"
+                    fill="transparent"
+                    stroke="#005670"
                     stroke-width="3"
                     stroke-linecap="round"
                     [style.stroke-dasharray]="ringDasharray"
@@ -228,18 +228,6 @@
     <div class="help-actions" data-aos="fade-up" data-aos-delay="400">
       <a href="/donate" (click)="navigateToDonate($event)" class="help-btn btn-donate" data-aos="zoom-in" data-aos-delay="500">التبرع</a>
       <a href="/join-us" (click)="navigateToJoinUs($event)" class="help-btn btn-join" data-aos="zoom-in" data-aos-delay="600">الانضمام إلينا</a>
-    </div>
-  </div>
-</section>
-<!-- WhatsApp Section -->
-<section class="whatsapp-section py-5" dir="rtl">
-  <div class="container">
-    <h2 class="section-title text-center mb-4">تواصلوا معنا عبر الواتساب</h2>
-    <div class="text-center">
-      <button class="btn whatsapp-button" (click)="openWhatsApp()">
-        <i class="fab fa-whatsapp"></i> تواصلوا معنا الآن
-      </button>
-      <p class="mt-3 text-white">نحن متاحون للرد على استفساراتكم من الساعة 8:00 ص إلى 4:00 م</p>
     </div>
   </div>
 </section>
@@ -281,18 +269,20 @@
 
           <p class="info-item" data-aos="fade-right" data-aos-delay="600">
             <svg class="contact-icon" width="24" height="24" fill="none" stroke="#00adb5" stroke-width="2"><path d="M4 4h16v12H4z"/><polyline points="22,6 12,13 2,6"/></svg>
-            البريد: <a href="mailto:info@qatra.org">infoqatra.org</a>
+            البريد: <a href="mailto:qatrahghaith@gmail.com">qatrahghaith&#64;gmail.com</a>
           </p>
 
           <p class="info-item" data-aos="fade-right" data-aos-delay="700">
             <svg class="contact-icon" width="24" height="24" fill="none" stroke="#00adb5" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.18 6 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.95.4 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.3 1.86.57 2.81.7A2 2 0 0122 16.92z"/></svg>
-            الهاتف: <a href="tel:+1234567890">{{ formatPhoneNumber('+1234567890') }}</a>
+            الهاتف: <a href="tel:+962795686452">{{ formatPhoneNumber('962795686452+') }}</a>
           </p>
 
           <p class="info-item" data-aos="fade-right" data-aos-delay="800">
             <svg class="contact-icon" width="24" height="24" fill="none" stroke="#00adb5" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
             العنوان:عمان
           </p>
+                <p class="mt-3 text">نحن متاحون للرد على استفساراتكم من الساعة 8:00 ص إلى 4:00 م</p>
+
         </div>
       </div>
     </div>

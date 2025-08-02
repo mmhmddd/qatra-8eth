@@ -18,7 +18,7 @@ export const ApiEndpoints = {
   },
   profile: {
     get: `${base}/profile`,
-    getByEmail: '/api/profile/email', // Add this
+    getByEmail: '/api/profile/email',
     updatePassword: `${base}/profile/password`,
     uploadImage: `${base}/profile/image`,
     addMeeting: `${base}/profile/meetings`,
@@ -36,5 +36,11 @@ export const ApiEndpoints = {
     get: `${base}/leaderboard`,
     edit: `${base}/leaderboard/edit`,
     remove: `${base}/leaderboard/remove`,
+  },
+  testimonials: {
+    create: `${base}/testimonials/create`,
+    list: `${base}/testimonials/list`,
+    edit: (id: string) => `${base}/testimonials/edit/${id}`,
+    delete: (id: string) => `${base}/testimonials/delete/${id}`,
   },
 };

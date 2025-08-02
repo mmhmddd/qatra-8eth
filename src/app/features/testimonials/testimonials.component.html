@@ -7,8 +7,8 @@
       <div class="col-md-6 text-container" dir="rtl">
         <h1 class="hero-title">آراء المستفيدين</h1>
         <p class="hero-description">
-          اكتشف كيف ساهمت مؤسستنا التعليمية الخيرية في تغيير حياة الكثيرين. 
-          تجارب المستفيدين تعكس رسالتنا في نشر العلم وبناء مستقبل أفضل. 
+          اكتشف كيف ساهمت مؤسستنا التعليمية الخيرية في تغيير حياة الكثيرين.
+          تجارب المستفيدين تعكس رسالتنا في نشر العلم وبناء مستقبل أفضل.
           اقرأ شهاداتهم لتتعرف على أثر دعمكم في مسيرتهم التعليمية.
         </p>
         <button class="hero-button btn" (click)="scrollToSwiper()">عرض جميع الآراء</button>
@@ -18,106 +18,46 @@
 </section>
 
 <div class="swiper-container" id="swiper_container">
-  <div class="swiper-wrapper">
-    <div class="swiper-slide">
-      <div class="testimonial-card card">
-        <div class="card-body">
-          <div class="profile-container d-flex align-items-center">
-            <img src="assets/images/testimonials/testimonials-1.jpg" alt="Profile" class="profile-image">
-            <h3 class="name">أحمد محمد</h3>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <div class="swiper-wrapper" *ngIf="testimonialChunks.length; else noTestimonials">
+    <div class="swiper-slide" *ngFor="let slideTestimonials of testimonialChunks">
+      <div class="cards-wrapper">
+        <div class="testimonial-card card" *ngFor="let testimonial of slideTestimonials">
+          <div class="card-body">
+          <div class="profile-container d-flex">
+            <img [src]="environment.apiBaseUrl + testimonial.image" alt="Profile" class="profile-image" (error)="handleImageError($event)">
+            <div class="profile-text">
+              <h3 class="name">{{ testimonial.name }}</h3>
+              <span class="role" *ngIf="testimonial.major">{{ testimonial.major }}</span>
+            </div>
           </div>
-          <div class="rating">
-            <span class="star">★</span>
-            <span class="star">★</span>
-            <span class="star">★</span>
-            <span class="star">★</span>
-            <span class="star">★</span>
+            <div class="rating">
+              <span *ngFor="let star of [1,2,3,4,5]" [ngClass]="getStarClass(testimonial.rating, star)">★</span>
+            </div>
+            <p class="comment" lang="ar" dir="rtl">{{ testimonial.reviewText }}</p>
           </div>
-          <p class="comment" lang="ar" dir="rtl">
-            المبادرة التعليمية الخيرية غيرت حياتي! البرامج التعليمية المقدمة ساعدتني على اكتساب مهارات جديدة وبناء مستقبل مشرق.
-          </p>
         </div>
-      </div>
-    </div>
-    <div class="swiper-slide">
-      <div class="testimonial-card card">
-        <div class="card-body">
-          <div class="profile-container d-flex align-items-center">
-            <img src="assets/images/testimonials/testimonials-4.jpg" alt="Profile" class="profile-image">
-            <h3 class="name">فاطمة علي</h3>
+        <!-- Add placeholder card if only one testimonial in chunk -->
+        <div class="testimonial-card card placeholder" *ngIf="slideTestimonials.length === 1">
+          <div class="card-body">
+            <div class="profile-container d-flex align-items-center">
+              <div class="profile-image placeholder-image"></div>
+              <h3 class="name placeholder-text">...</h3>
+            </div>
+            <div class="rating">
+              <span class="star placeholder-text">...</span>
+            </div>
+            <p class="comment placeholder-text">...</p>
           </div>
-          <div class="rating">
-            <span class="star">★</span>
-            <span class="star">★</span>
-            <span class="star">★</span>
-            <span class="star">★</span>
-            <span class="star">★</span>
-          </div>
-          <p class="comment" lang="ar" dir="rtl">
-            بفضل هذه المبادرة، أصبح التعليم متاحًا للجميع. الدعم المستمر والمواد التعليمية الممتازة جعلت التعلم ممتعًا ومفيدًا.
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="swiper-slide">
-      <div class="testimonial-card card">
-        <div class="card-body">
-          <div class="profile-container d-flex align-items-center">
-            <img src="assets/images/testimonials/testimonials-3.jpg" alt="Profile" class="profile-image">
-            <h3 class="name">خالد سعيد</h3>
-          </div>
-          <div class="rating">
-            <span class="star">★</span>
-            <span class="star">★</span>
-            <span class="star">★</span>
-            <span class="star">★</span>
-            <span class="star">★</span>
-          </div>
-          <p class="comment" lang="ar" dir="rtl">
-            هذه المبادرة أعطتني فرصة للتعلم والتطور. المعلمون والموارد ساعدوني على تحقيق أحلامي الأكاديمية.
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="swiper-slide">
-      <div class="testimonial-card card">
-        <div class="card-body">
-          <div class="profile-container d-flex align-items-center">
-            <img src="assets/images/testimonials/testimonials-2.jpg" alt="Profile" class="profile-image">
-            <h3 class="name">مريم حسن</h3>
-          </div>
-          <div class="rating">
-            <span class="star">★</span>
-            <span class="star">★</span>
-            <span class="star">★</span>
-            <span class="star">★</span>
-            <span class="star">★</span>
-          </div>
-          <p class="comment" lang="ar" dir="rtl">
-            المبادرة التعليمية قدمت دعمًا رائعًا لمجتمعنا. التعليم الجيد هو أساس مستقبل أفضل، وهم يحققون ذلك.
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="swiper-slide">
-      <div class="testimonial-card card">
-        <div class="card-body">
-          <div class="profile-container d-flex align-items-center">
-            <img src="assets/images/testimonials/testimonials-2.jpg" alt="Profile" class="profile-image">
-            <h3 class="name">مريم حسن</h3>
-          </div>
-          <div class="rating">
-            <span class="star">★</span>
-            <span class="star">★</span>
-            <span class="star">★</span>
-            <span class="star">★</span>
-            <span class="star">★</span>
-          </div>
-          <p class="comment" lang="ar" dir="rtl">
-            بفضل هذه المبادرة، حصلت على فرصة تعليمية غيرت نظرتي للمستقبل. الدورات التدريبية كانت ملهمة جدًا.
-          </p>
         </div>
       </div>
     </div>
   </div>
+  <div class="swiper-pagination"></div>
 </div>
+
+<ng-template #noTestimonials>
+  <div class="alert alert-info">
+    لا توجد شهادات متاحة حاليًا
+  </div>
+</ng-template>

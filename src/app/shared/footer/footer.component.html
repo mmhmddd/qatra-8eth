@@ -1,59 +1,73 @@
-<footer class="footer py-5">
-  <div class="container">
-    <div class="row gy-4">
-      <!-- Company Info -->
-      <div class="col-lg-4 col-md-6 text-center text-md-start">
-        <a class="footer-brand mb-3 d-inline-block" href="#">
-          <img src="/assets/images/home/logo.png" alt="Logo" height="60">
-        </a>
-        <p class="tagline mb-3">تواصلوا معنا لتجربة مميزة</p>
-        <div class="contact-info">
-          <p class="mb-2">
-            <i class="bi bi-envelope me-2"></i>
-            <a href="mailto:info@example.com" class="contact-link">infoexample.com</a>
-          </p>
-          <p class="mb-2">
-            <i class="bi bi-telephone me-2"></i>
-            <a href="tel:+1234567890" class="contact-link">+123-456-7890</a>
-          </p>
+<footer class="footer text-center text-md-start">
+  <section>
+    <div class="container">
+      <div class="row mt-2" style="display: flex; justify-content: space-between;">
+        <!-- Logo and Description Section -->
+        <div class="col-md-3 col-lg-4 col-xl-3 mb-3">
+          <div class="contact-info">
+            <div class="logo-container">
+              <img src="../../../assets/images/home/footerlogo.png" alt="نحب لنحيا Logo" class="footer-logo">
+            </div>
+            <div class="contact-details">
+              <p>انضم إلينا لتكون جزءًا من رحلتنا في نشر الحب والإيجابية.</p>
+            </div>
+          </div>
         </div>
-      </div>
-      <!-- Navigation Links -->
-      <div class="col-lg-4 col-md-6 text-center">
-        <h5 class="footer-heading mb-3">روابط سريعة</h5>
-        <ul class="list-unstyled footer-nav">
-          <li><a class="footer-link" routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">الرئيسية</a></li>
-          <li><a class="footer-link" routerLink="/about" routerLinkActive="active">من نحن</a></li>
-          <li><a class="footer-link" routerLink="/reviews" routerLinkActive="active">الآراء</a></li>
-          <li><a class="footer-link" routerLink="/library" routerLinkActive="active">المكتبة</a></li>
-          <li><a class="footer-link" routerLink="/join" routerLinkActive="active">انضم إلينا</a></li>
-          <li><a class="footer-link" routerLink="/contact" routerLinkActive="active">تواصل معنا</a></li>
-        </ul>
-      </div>
-      <!-- Social Media -->
-      <div class="col-lg-4 col-md-12 text-center">
-        <h5 class="footer-heading mb-3">تابعنا</h5>
-        <div class="social-icons d-flex justify-content-center gap-3">
-          <a href="https://facebook.com" target="_blank" class="social-link" title="Facebook">
-            <i class="bi bi-facebook"></i>
-          </a>
-          <a href="https://instagram.com" target="_blank" class="social-link" title="Instagram">
-            <i class="bi bi-instagram"></i>
-          </a>
-          <a href="https://tiktok.com" target="_blank" class="social-link" title="TikTok">
-            <i class="bi bi-tiktok"></i>
-          </a>
-          <a href="https://linkedin.com" target="_blank" class="social-link" title="LinkedIn">
-            <i class="bi bi-linkedin"></i>
-          </a>
+
+        <!-- Useful Links Section -->
+        <div class="col-md-2 col-lg-2 col-xl-2 mb-3" id="useful-links">
+          <h6 class="footer-heading">روابط مفيدة</h6>
+          <div class="footer-nav">
+            <p><a href="/home" class="footer-link">الرئيسية</a></p>
+            <p><a href="/about" class="footer-link">من نحن</a></p>
+            <p><a href="/reviews" class="footer-link">الآراء</a></p>
+            <p><a href="/join" class="footer-link">انضم إلينا</a></p>
+          </div>
+        </div>
+
+        <!-- Additional Links Section -->
+        <div class="col-md-3 col-lg-2 col-xl-2 mb-3">
+          <h6 class="footer-heading">روابط إضافية</h6>
+          <div class="footer-nav">
+            <p><a href="/pricing" class="footer-link">معرض الصور</a></p>
+            <p><a href="/settings" class="footer-link">اخر الاخبار</a></p>
+            <p><a href="/orders" class="footer-link">الملف الشخصي</a></p>
+          </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="col-md-4 col-lg-3 col-xl-3 mb-md-0 mb-3">
+          <h6 class="footer-heading">تواصل معنا</h6>
+          <div class="contact-details">
+            <p><i class="bi bi-home ms-3"></i> عمان، شارع الجامعة الاردنية</p>
+            <p><i class="bi bi-envelope ms-3"></i> <a href="mailto:info@nahblnahya.com" class="contact-link">infonahblnahya.com</a></p>
+            <p><i class="bi bi-phone ms-3"></i> +962 123 456 789</p>
+          </div>
         </div>
       </div>
     </div>
-    <!-- Line Separator -->
-    <hr class="separator my-4">
-    <!-- Copyright -->
-    <div class="text-center">
-      <p class="copyright">© 2025 جميع الحقوق محفوظة</p>
-    </div>
+  </section>
+
+  <!-- Social Media Section -->
+  <div class="container p-3 pb-0">
+    <section class="mb-3 social-icons">
+      <a href="https://facebook.com" target="_blank" class="social-link facebook" title="Facebook">
+        <i class="bi bi-facebook"></i>
+      </a>
+      <a href="https://twitter.com" target="_blank" class="social-link twitter" title="Twitter">
+        <i class="bi bi-twitter"></i>
+      </a>
+      <a href="https://instagram.com" target="_blank" class="social-link instagram" title="Instagram">
+        <i class="bi bi-instagram"></i>
+      </a>
+      <a href="https://linkedin.com" target="_blank" class="social-link linkedin" title="LinkedIn">
+        <i class="bi bi-linkedin"></i>
+      </a>
+    </section>
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer-bottom text-center">
+    <p class="copyright">© 2025 جميع الحقوق محفوظة: <a href="https://nahblnahya.com">نحب لنحيا</a></p>
   </div>
 </footer>

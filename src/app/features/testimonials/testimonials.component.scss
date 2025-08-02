@@ -1,4 +1,3 @@
-// Color Variables
 $primary-color: #00adb5;
 $secondary-color: #0097b2;
 $accent-color: #ff914d;
@@ -8,123 +7,322 @@ $light-gray: #f8f9fa;
 $white: #ffffff;
 $black: #000000;
 
-// Import Amiri font for Arabic text
 @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
 
-// Enable smooth scrolling for the entire page
+* {
+  box-sizing: border-box;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 .hero-section {
-  background-color: $light-gray;
-  padding: 4rem 0;
+  padding: 5rem 1rem;
   margin-top: 100px;
+  background: linear-gradient(135deg, $light-gray 0%, $white 100%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.hero-container {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .hero-title {
   color: $dark-color;
   font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  animation: fadeIn 1s ease-in-out;
+  text-align: right;
 }
 
 .hero-description {
   color: $neutral-color;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
 .hero-button {
-  background-color: $primary-color;
+  background: linear-gradient(45deg, $primary-color, $secondary-color);
   color: $white;
-  transition: background-color 0.3s ease;
+  font-family: 'Amiri', serif;
+  padding: 12px 30px;
+  border-radius: 25px;
+  border: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba($primary-color, 0.3);
+  display: block;
+  margin: 0 auto;
 
   &:hover {
-    background-color: $secondary-color;
+    background: linear-gradient(45deg, $secondary-color, $primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba($primary-color, 0.5);
   }
 }
 
 .hero-image {
   border-radius: 50% 10% 50% 50%;
   border: 3px dotted $accent-color;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.hero-image:hover {
+  transform: scale(1.05);
 }
 
 .swiper-container {
-  padding: 20px 10px;
-  background-color: $light-gray;
+  padding: 30px 10px;
   overflow: hidden;
-  touch-action: pan-x;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .swiper-slide {
-  padding: 5px;
+  display: flex;
+  justify-content: center;
+}
+
+.cards-wrapper {
+  display: flex;
+  gap: 25px;
+  width: 100%;
+  max-width: 1200px;
+  justify-content: center;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
 }
 
 .testimonial-card {
-  max-width: 520px;
-  min-height: 230px;
+  flex: 1;
+  max-width: 560px;
+  min-height: 260px;
+  min-width: 0;
+  background: $white;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.testimonial-card.placeholder {
+  visibility: hidden;
 }
 
 .profile-container {
-  gap: 10px;
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.profile-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .profile-image {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
-  border: 2px solid $accent-color;
+  border: 3px solid $accent-color;
+  object-fit: cover;
+  transition: border-color 0.3s ease;
+}
+
+.profile-image:hover {
+  border-color: $primary-color;
+}
+
+.profile-image.placeholder-image {
+  background: linear-gradient(45deg, $light-gray, $white);
+  border: 3px solid $neutral-color;
 }
 
 .name {
   color: $dark-color;
   font-family: 'Amiri', serif;
-  font-weight: 600;
-  font-size: 1.2rem;
+  font-weight: 700;
+  font-size: 1.5rem;
   margin: 0;
 }
 
+.role {
+  color: $neutral-color;
+  font-family: 'Amiri', serif;
+  font-size: 1.3rem;
+  margin-top: 0.3rem;
+}
+
+.name.placeholder-text,
+.role.placeholder-text {
+  color: $neutral-color;
+}
+
 .rating {
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 }
 
 .star {
-  color: $accent-color;
-  font-size: 1.2rem;
+  color: $neutral-color;
+  font-size: 1.3rem;
+  transition: color 0.3s ease;
+
+  &.filled {
+    color: $accent-color;
+  }
+}
+
+.star.placeholder-text {
+  color: $neutral-color;
 }
 
 .comment {
   color: $neutral-color;
   font-family: 'Amiri', serif;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.comment.placeholder-text {
+  color: $neutral-color;
+}
+
+.swiper-pagination {
+  position: relative;
+  margin-top: 30px;
+}
+
+.swiper-pagination-bullet {
+  background: $neutral-color;
+  opacity: 0.5;
+  width: 12px;
+  height: 12px;
+  margin: 0 6px;
+  transition: background 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+  background: $primary-color;
+  opacity: 1;
+}
+
+.alert {
+  font-family: 'Amiri', serif;
+  margin: 20px auto;
+  max-width: 1200px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.alert-danger {
+  background: linear-gradient(45deg, #f8d7da, #f5c6cb);
+  color: #721c24;
+  border: none;
+}
+
+.alert-info {
+  background: linear-gradient(45deg, #d1ecf1, #bee5eb);
+  color: #0c5460;
+  border: none;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 992px) {
+  .hero-section {
+    padding: 3rem 1rem;
+  }
+
+  .hero-title {
+    font-size: 2.2rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+  }
+
+  .hero-image {
+    margin-bottom: 1.5rem;
+  }
+
+  .text-container {
+    text-align: center;
+  }
 }
 
 @media (max-width: 768px) {
-  .swiper-container {
-    padding: 10px 5px;
+  .cards-wrapper {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
   }
 
   .testimonial-card {
     max-width: 90vw;
+  }
+
+  .testimonial-card.placeholder {
+    display: none;
+  }
+
+  .swiper-container {
+    padding: 20px 5px;
   }
 }
 
 @media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .hero-description {
+    font-size: 0.95rem;
+  }
+
+  .hero-button {
+    padding: 10px 25px;
+  }
+
   .swiper-container {
-    padding: 10px 0;
+    padding: 15px 0;
   }
 
   .testimonial-card {
-    max-width: 90vw;
+    max-width: 95vw;
     min-height: 300px;
   }
 
   .profile-image {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
   }
 
   .name {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+  }
+
+  .role {
+    font-size: 0.9rem;
   }
 
   .comment {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
 }

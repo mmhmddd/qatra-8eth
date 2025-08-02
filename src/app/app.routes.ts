@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin.guard';
 
+
 export const routes: Routes = [
   {
     path: 'about',
@@ -47,6 +48,10 @@ export const routes: Routes = [
   {
     path: 'add-leaderboards',
     loadComponent: () => import('./dashboard/add-leaderboards/add-leaderboards.component').then(m => m.AddLeaderboardsComponent)
+  },
+  {
+    path: 'add-testimonials',
+    loadComponent: () => import('./dashboard/add-testimonials/add-testimonials.component').then(m => m.AddTestimonialsComponent)
   },
   {
     path: 'upload-pdf',
