@@ -5,7 +5,6 @@ import { catchError, map } from 'rxjs/operators';
 import { ApiEndpoints } from '../constants/api-endpoints';
 
 export interface Testimonial {
-role: any;
   id: string;
   image: string;
   rating: number;
@@ -64,12 +63,11 @@ export class TestimonialsService {
 
   getTestimonials(): Observable<Testimonial[]> {
     return this.http.get<ApiResponse<Testimonial>>(
-      ApiEndpoints.testimonials.list,
-      { headers: this.getAuthHeaders() }
+      ApiEndpoints.testimonials.list
     ).pipe(
       map(response => response.testimonials!),
       catchError(error => {
-        const errorMsg = error.error?.message || 'خطأ في الخادم';
+        const errorMsg = error.error?.message || 'خطأ في جلب الشهادات';
         return throwError(() => new Error(errorMsg));
       })
     );
