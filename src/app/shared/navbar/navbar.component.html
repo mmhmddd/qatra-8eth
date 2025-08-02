@@ -46,8 +46,8 @@
           <a class="nav-link" routerLink="/contact" routerLinkActive="active" (click)="closeNavbar()">تواصل معنا</a>
         </li>
       </ul>
-      <div class="d-flex flex-column align-items-end buttons-container">
-        <button *ngIf="isLoggedIn()" class="btn btn-profile mb-2" (click)="navigateToProfile()" title="الملف الشخصي">
+      <div class="buttons-container d-flex flex-column flex-lg-row align-items-end align-items-lg-center gap-2">
+        <button *ngIf="isLoggedIn()" class="btn btn-profile" (click)="navigateToProfile()" title="الملف الشخصي">
           <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
