@@ -15,6 +15,8 @@ export interface UserProfile {
   subjects: string[];
   students: { name: string; email: string; phone: string }[];
   meetings: { _id?: string; id?: string; title: string; date: string | Date; startTime: string; endTime: string }[];
+  lectures: { _id: string; link: string; createdAt: string }[];
+  lectureCount: number;
 }
 
 export interface ProfileResponse {
@@ -93,6 +95,8 @@ export class ProfileService {
               startTime: meeting.startTime,
               endTime: meeting.endTime,
             })),
+            lectures: response.data.user.lectures || [],
+            lectureCount: response.data.user.lectureCount || 0,
             name: response.data.joinRequest?.name || '',
             phone: response.data.joinRequest?.phone || '',
             address: response.data.joinRequest?.address || '',
@@ -113,225 +117,82 @@ export class ProfileService {
     );
   }
 
-  getProfileByEmail(email: string): Observable<JoinRequestResponse> {
-    return this.http.get<ProfileResponse>(`${ApiEndpoints.profile.get}/email/${email}`, { headers: this.getHeaders() }).pipe(
-      map(response => {
-        console.log('Server response for getProfileByEmail:', response);
-        if (!response.success || !response.data || !response.data.user) {
-          throw new Error(response.message || 'Invalid profile data');
-        }
-        return {
-          success: true,
-          message: response.message || 'تم جلب بيانات الملف الشخصي بنجاح',
-          data: {
-            id: response.data.user.id,
-            email: response.data.user.email,
-            profileImage: response.data.user.profileImage,
-            numberOfStudents: response.data.user.numberOfStudents,
-            subjects: response.data.user.subjects,
-            students: response.data.user.students,
-            meetings: response.data.user.meetings.map(meeting => ({
-              id: meeting._id || meeting.id || '',
-              title: meeting.title,
-              date: typeof meeting.date === 'string' ? meeting.date : new Date(meeting.date).toISOString().split('T')[0],
-              startTime: meeting.startTime,
-              endTime: meeting.endTime,
-            })),
-            name: response.data.joinRequest?.name || '',
-            phone: response.data.joinRequest?.phone || '',
-            address: response.data.joinRequest?.address || '',
-            academicSpecialization: response.data.joinRequest?.academicSpecialization || '',
-            volunteerHours: response.data.joinRequest?.volunteerHours || 0,
-            status: response.data.joinRequest?.status || 'Pending',
-          },
-        };
-      }),
-      catchError(error => {
-        console.error('Error fetching profile by email:', error);
-        return throwError(() => ({
-          success: false,
-          message: error.message || 'خطأ في جلب بيانات الملف الشخصي',
-          error: error.message,
-        }));
-      })
-    );
-  }
-
-  updatePassword(currentPassword: string, newPassword: string): Observable<JoinRequestResponse> {
-    return this.http.put<UpdatePasswordResponse>(ApiEndpoints.profile.updatePassword, { currentPassword, newPassword }, { headers: this.getHeaders() }).pipe(
-      map(response => ({
-        success: response.success,
-        message: response.message || 'تم تحديث كلمة المرور بنجاح',
-      })),
-      catchError(error => {
-        console.error('Error updating password:', error);
-        return throwError(() => ({
-          success: false,
-          message: error.error?.message || 'خطأ في تحديث كلمة المرور',
-          error: error.message,
-        }));
-      })
-    );
-  }
-
-  uploadProfileImage(file: File): Observable<JoinRequestResponse> {
-    if (!file) {
-      return throwError(() => ({
-        success: false,
-        message: 'يرجى اختيار صورة للرفع',
-        error: 'No file selected',
-      }));
-    }
+  uploadProfileImage(file: File): Observable<UploadImageResponse> {
     const formData = new FormData();
-    formData.append('profileImage', file);
-    let headers = new HttpHeaders();
-    if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem('token');
-      if (token) {
-        headers = headers.set('Authorization', `Bearer ${token}`);
-      } else {
-        this.router.navigate(['/login']);
-        return throwError(() => ({
-          success: false,
-          message: 'No token found. Redirecting to login.',
-          error: 'No token found',
-        }));
-      }
-    }
-    return this.http.post<UploadImageResponse>(ApiEndpoints.profile.uploadImage, formData, { headers }).pipe(
-      map(response => {
-        console.log('Upload image response:', response);
-        return {
-          success: response.success,
-          message: response.message || 'تم رفع الصورة الشخصية بنجاح',
-          data: { profileImage: response.data.profileImage },
-        };
-      }),
+    formData.append('file', file);
+    return this.http.post<UploadImageResponse>(ApiEndpoints.profile.uploadImage, formData, { headers: this.getHeaders() }).pipe(
       catchError(error => {
         console.error('Error uploading profile image:', error);
         return throwError(() => ({
           success: false,
-          message: error.error?.message || 'خطأ في رفع الصورة الشخصية',
+          message: error.message || 'فشل في رفع الصورة',
           error: error.message,
         }));
       })
     );
   }
 
-  addMeeting(title: string, date: string, startTime: string, endTime: string): Observable<JoinRequestResponse> {
+  updatePassword(currentPassword: string, newPassword: string): Observable<UpdatePasswordResponse> {
+    if (!currentPassword || !newPassword) {
+      return throwError(() => ({
+        success: false,
+        message: 'كلمة المرور الحالية والجديدة مطلوبة',
+      }));
+    }
+    return this.http.put<UpdatePasswordResponse>(ApiEndpoints.profile.updatePassword, { currentPassword, newPassword }, { headers: this.getHeaders() }).pipe(
+      catchError(error => {
+        console.error('Error updating password:', error);
+        return throwError(() => ({
+          success: false,
+          message: error.message || 'فشل في تغيير كلمة المرور',
+          error: error.message,
+        }));
+      })
+    );
+  }
+
+  addMeeting(title: string, date: string, startTime: string, endTime: string): Observable<{ success: boolean; data: { meetings: any }; message?: string }> {
     if (!title || !date || !startTime || !endTime) {
       return throwError(() => ({
         success: false,
-        message: 'جميع الحقول (العنوان، التاريخ، وقت البدء، وقت الانتهاء) مطلوبة',
-        error: 'Missing required fields',
-      }));
-    }
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-      return throwError(() => ({
-        success: false,
-        message: 'صيغة التاريخ غير صالحة، يجب أن تكون YYYY-MM-DD',
-        error: 'Invalid date format',
+        message: 'جميع تفاصيل الموعد مطلوبة',
       }));
     }
     return this.http.post<MeetingResponse>(ApiEndpoints.profile.addMeeting, { title, date, startTime, endTime }, { headers: this.getHeaders() }).pipe(
-      map(response => {
-        console.log('Add meeting response:', response);
-        return {
-          success: true,
-          message: response.message || 'تم إضافة الموعد بنجاح',
-          data: {
-            meetings: response.meetings.map(meeting => ({
-              id: meeting._id,
-              title: meeting.title,
-              date: typeof meeting.date === 'string' ? meeting.date : new Date(meeting.date).toISOString().split('T')[0],
-              startTime: meeting.startTime,
-              endTime: meeting.endTime,
-            })),
-          },
-        };
-      }),
+      map(response => ({
+        success: true,
+        data: { meetings: response.meetings },
+        message: response.message || 'تم إضافة الموعد بنجاح',
+      })),
       catchError(error => {
         console.error('Error adding meeting:', error);
         return throwError(() => ({
           success: false,
-          message: error.error?.message || 'خطأ في إضافة الموعد',
+          message: error.message || 'فشل في إضافة الموعد',
           error: error.message,
         }));
       })
     );
   }
 
-  updateMeeting(meetingId: string, title: string, date: string, startTime: string, endTime: string): Observable<JoinRequestResponse> {
-    if (!title || !date || !startTime || !endTime) {
-      return throwError(() => ({
-        success: false,
-        message: 'جميع الحقول (العنوان، التاريخ، وقت البدء، وقت الانتهاء) مطلوبة',
-        error: 'Missing required fields',
-      }));
-    }
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-      return throwError(() => ({
-        success: false,
-        message: 'صيغة التاريخ غير صالحة، يجب أن تكون YYYY-MM-DD',
-        error: 'Invalid date format',
-      }));
-    }
-    return this.http.put<MeetingResponse>(ApiEndpoints.profile.updateMeeting(meetingId), { title, date, startTime, endTime }, { headers: this.getHeaders() }).pipe(
-      map(response => ({
-        success: true,
-        message: response.message || 'تم تحديث الموعد بنجاح',
-        data: {
-          meetings: response.meetings.map(meeting => ({
-            id: meeting._id,
-            title: meeting.title,
-            date: typeof meeting.date === 'string' ? meeting.date : new Date(meeting.date).toISOString().split('T')[0],
-            startTime: meeting.startTime,
-            endTime: meeting.endTime,
-          })),
-        },
-      })),
-      catchError(error => {
-        console.error('Error updating meeting:', error);
-        return throwError(() => ({
-          success: false,
-          message: error.error?.message || 'خطأ في تحديث الموعد',
-          error: error.message,
-        }));
-      })
-    );
-  }
-
-  deleteMeeting(meetingId: string): Observable<JoinRequestResponse> {
+  deleteMeeting(meetingId: string): Observable<{ success: boolean; data: { meetings: any }; message?: string }> {
     if (!meetingId) {
       return throwError(() => ({
         success: false,
         message: 'معرف الموعد مطلوب',
-        error: 'Missing meetingId',
       }));
     }
-    console.log('Deleting meeting with ID:', meetingId);
     return this.http.delete<MeetingResponse>(ApiEndpoints.profile.deleteMeeting(meetingId), { headers: this.getHeaders() }).pipe(
-      map(response => {
-        console.log('Delete meeting response:', response);
-        return {
-          success: true,
-          message: response.message || 'تم حذف الموعد بنجاح',
-          data: {
-            meetings: response.meetings.map(meeting => ({
-              id: meeting._id,
-              title: meeting.title,
-              date: typeof meeting.date === 'string' ? meeting.date : new Date(meeting.date).toISOString().split('T')[0],
-              startTime: meeting.startTime,
-              endTime: meeting.endTime,
-            })),
-          },
-        };
-      }),
+      map(response => ({
+        success: true,
+        data: { meetings: response.meetings },
+        message: response.message || 'تم حذف الموعد بنجاح',
+      })),
       catchError(error => {
         console.error('Error deleting meeting:', error);
         return throwError(() => ({
           success: false,
-          message: error.error?.message || 'خطأ في حذف الموعد',
+          message: error.message || 'فشل في حذف الموعد',
           error: error.message,
         }));
       })

@@ -5,19 +5,22 @@ import { RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { JoinRequest, JoinRequestService } from '../../core/services/join-request.service';
 import { SidebarComponent } from "../../shared/sidebar/sidebar.component";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-all-members',
   standalone: true,
-  imports: [CommonModule, RouterModule, SidebarComponent],
+  imports: [CommonModule, RouterModule, SidebarComponent, FormsModule],
   templateUrl: './all-members.component.html',
   styleUrls: ['./all-members.component.scss']
 })
 export class AllMembersComponent implements OnInit, OnDestroy {
   approvedMembers: JoinRequest[] = [];
+  filteredMembers: JoinRequest[] = [];
   errorMessage: string | null = null;
   isLoading = false;
   isSidebarVisible = true;
+  searchTerm: string = '';
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -56,12 +59,13 @@ export class AllMembersComponent implements OnInit, OnDestroy {
   fetchApprovedMembers(): void {
     this.isLoading = true;
     this.errorMessage = null;
-    
+
     this.joinRequestService.getApprovedMembers()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (members) => {
           this.approvedMembers = members;
+          this.filteredMembers = members;
           this.errorMessage = null;
           this.isLoading = false;
         },
@@ -71,6 +75,18 @@ export class AllMembersComponent implements OnInit, OnDestroy {
           console.error('Error fetching approved members:', error);
         }
       });
+  }
+
+  filterMembers(): void {
+    const searchLower = this.searchTerm.toLowerCase().trim();
+    if (!searchLower) {
+      this.filteredMembers = [...this.approvedMembers];
+    } else {
+      this.filteredMembers = this.approvedMembers.filter(member =>
+        (member.name?.toLowerCase().includes(searchLower) || false) ||
+        (member.email?.toLowerCase().includes(searchLower) || false)
+      );
+    }
   }
 
   retryFetch(): void {

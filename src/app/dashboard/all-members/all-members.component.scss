@@ -79,7 +79,7 @@ $black: #000;
   bottom: 0;
   background: rgba($black, 0.5);
   z-index: 999;
-  
+
   &.visible {
     display: block;
   }
@@ -119,6 +119,10 @@ main {
 }
 
 .page-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
   .refresh-btn {
     display: flex;
     align-items: center;
@@ -235,6 +239,28 @@ main {
   background: $light-gray;
   border-bottom: 1px solid #ddd;
 
+  .search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    background: $white;
+    color: $dark-color;
+    direction: rtl;
+    margin-bottom: 10px;
+
+    &::placeholder {
+      color: $neutral-color;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 5px rgba($primary-color, 0.3);
+    }
+  }
+
   h3 {
     margin: 0;
     color: $dark-color;
@@ -298,5 +324,9 @@ main {
     color: $white;
     border-radius: 12px;
     font-size: 12px;
+  }
+
+  .member-lectures {
+    text-align: center;
   }
 }

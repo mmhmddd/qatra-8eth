@@ -62,6 +62,14 @@
                   {{ isUploading ? 'جاري الرفع...' : 'رفع الصورة' }}
                 </button>
               </div>
+              <!-- Add Lecture Section -->
+              <div class="upload-section mt-4">
+                <input type="url" class="form-control mb-2" placeholder="أدخل رابط المحاضرة" [(ngModel)]="lectureLink" (ngModelChange)="checkLectureCount()">
+                <button class="btn btn-success" [disabled]="isUploadingLecture || !isValidLink()" (click)="uploadLecture()">رفع المحاضرة</button>
+                <div *ngIf="showLectureWarning" class="alert alert-warning mt-2">
+                  تحذير: لقد قمت برفع أقل من 2 محاضرة هذا الشهر. يرجى زيادة المحاضرات!
+                </div>
+              </div>
             </div>
             <div class="col-md-8">
               <h4 class="mb-3">المعلومات الشخصية</h4>
@@ -82,6 +90,8 @@
                 <dd class="col-sm-8">{{ profile.numberOfStudents }}</dd>
                 <dt class="col-sm-4">المواد:</dt>
                 <dd class="col-sm-8">{{ profile.subjects.join(', ') }}</dd>
+                <dt class="col-sm-4">عدد المحاضرات:</dt>
+                <dd class="col-sm-8">{{ profile.lectureCount }}</dd>
               </dl>
             </div>
           </div>
@@ -169,7 +179,7 @@
         <div class="modal-body">
           <div class="mb-3">
             <label for="currentPassword" class="form-label">كلمة المرور الحالية</label>
-           -pink            <input type="password" class="form-control" id="currentPassword" [(ngModel)]="currentPassword">
+            <input type="password" class="form-control" id="currentPassword" [(ngModel)]="currentPassword">
           </div>
           <div class="mb-3">
             <label for="newPassword" class="form-label">كلمة المرور الجديدة</label>

@@ -15,6 +15,7 @@ export const ApiEndpoints = {
     getMember: (id: string) => `${base}/members/${id}`,
     updateMemberDetails: (id: string) => `${base}/members/${id}/update-details`,
     addStudent: (id: string) => `${base}/members/${id}/add-student`,
+    markNotificationRead: (id: string) => `${base}/members/${id}/mark-notification-read`,
   },
   profile: {
     get: `${base}/profile`,
@@ -24,6 +25,13 @@ export const ApiEndpoints = {
     addMeeting: `${base}/profile/meetings`,
     updateMeeting: (meetingId: string) => `${base}/profile/meetings/${meetingId}`,
     deleteMeeting: (meetingId: string) => `${base}/profile/meetings/${meetingId}`,
+  },
+  lectures: {
+    upload: `${base}/lectures`,
+    delete: (lectureId: string) => `${base}/lectures/${lectureId}`,
+  },
+  notifications: {
+    get: `${base}/lectures/notifications`,
   },
   pdf: {
     upload: `${base}/pdf/upload`,

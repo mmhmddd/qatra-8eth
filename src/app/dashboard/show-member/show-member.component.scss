@@ -53,6 +53,11 @@ $danger-color: #dc3545;
     color: #0c5460;
   }
 
+  &.alert-warning {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+    color: #856404;
+  }
+
   .btn-close {
     background: none;
     border: none;
@@ -295,6 +300,17 @@ dl {
     color: $neutral-color;
     border-bottom: 1px solid #f1f3f4;
     vertical-align: middle;
+  }
+
+  a {
+    color: $primary-color;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: $secondary-color;
+      text-decoration: underline;
+    }
   }
 }
 

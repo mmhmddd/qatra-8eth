@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProfileService} from '../../core/services/profile.service';
+import { ProfileService } from '../../core/services/profile.service';
 import { Router } from '@angular/router';
-import { JoinRequestService , JoinRequestResponse  } from '../../core/services/join-request.service';
-
+import { JoinRequestService, JoinRequestResponse } from '../../core/services/join-request.service';
+import { LectureService } from '../../core/services/lecture.service';
+import { NotificationService } from '../../core/services/Notification.service';
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -13,9 +14,6 @@ import { JoinRequestService , JoinRequestResponse  } from '../../core/services/j
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-setActiveSection(arg0: string) {
-throw new Error('Method not implemented.');
-}
   profile: JoinRequestResponse['data'] | null = null;
   error: string | null = null;
   currentPassword: string = '';
@@ -37,11 +35,16 @@ throw new Error('Method not implemented.');
   isUploading: boolean = false;
   showUploadField: boolean = true;
   backendUrl: string = 'http://localhost:5000';
-activeSection: any;
+  activeSection: string = 'profile';
+  lectureLink: string = '';
+  isUploadingLecture: boolean = false;
+  showLectureWarning: boolean = false;
 
   constructor(
     private profileService: ProfileService,
     private joinRequestService: JoinRequestService,
+    private lectureService: LectureService,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
 
@@ -55,19 +58,17 @@ activeSection: any;
         console.log('Profile response:', response);
         if (response.success && response.data) {
           this.profile = response.data;
-          // Prepend backend URL to profileImage if it exists
           if (this.profile.profileImage) {
             this.profile.profileImage = `${this.backendUrl}${this.profile.profileImage}`;
           }
-          this.showUploadField = !this.profile.profileImage; // Hide upload field if image exists
-          // Log students data for debugging
+          this.showUploadField = !this.profile.profileImage;
           console.log('Students:', this.profile.students);
           console.log('Number of Students:', this.profile.numberOfStudents);
-          // Check for data inconsistency
           if (this.profile.numberOfStudents > 0 && this.profile.students.length === 0) {
             this.error = 'يوجد تناقض في بيانات الطلاب. يرجى التواصل مع الإدارة.';
             console.warn(this.error);
           }
+          this.checkLectureCount();
         } else {
           this.error = response.message || 'فشل في جلب بيانات الملف الشخصي';
         }
@@ -99,22 +100,19 @@ activeSection: any;
         console.log('Upload image response:', response);
         if (response.success && response.data && this.profile) {
           this.profile.profileImage = `${this.backendUrl}${response.data.profileImage}`;
-          this.showUploadField = false; // Hide upload field after successful upload
-          this.selectedFile = null; // Clear selected file
+          this.showUploadField = false;
+          this.selectedFile = null;
           this.error = null;
           alert(response.message);
-          // Reset the file input field
           const fileInput = document.getElementById('profileImageInput') as HTMLInputElement;
-          if (fileInput) {
-            fileInput.value = '';
-          }
+          if (fileInput) fileInput.value = '';
         }
       },
       error: (err) => {
         this.isUploading = false;
         this.error = err.message || 'فشل في رفع الصورة';
-        console.error('Upload image error:', err);
         alert(this.error);
+        console.error('Upload image error:', err);
       },
       complete: () => {
         this.isUploading = false;
@@ -123,7 +121,7 @@ activeSection: any;
   }
 
   changeImage(): void {
-    this.showUploadField = true; // Show upload field to allow changing the image
+    this.showUploadField = true;
   }
 
   openPasswordModal(): void {
@@ -173,7 +171,7 @@ activeSection: any;
         next: (response) => {
           if (response.success && response.data && this.profile) {
             this.profile.meetings = response.data.meetings;
-            alert(response.message);
+            alert(response.message || 'تم إضافة الموعد بنجاح');
             this.closeMeetingModal();
           }
         },
@@ -193,7 +191,7 @@ activeSection: any;
         next: (response) => {
           if (response.success && response.data && this.profile) {
             this.profile.meetings = response.data.meetings;
-            alert(response.message);
+            alert(response.message || 'تم حذف الموعد بنجاح');
           }
         },
         error: (err) => {
@@ -202,5 +200,53 @@ activeSection: any;
         }
       });
     }
+  }
+
+  setActiveSection(section: string): void {
+    this.activeSection = section;
+  }
+
+  isValidLink(): boolean {
+    const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/;
+    return urlPattern.test(this.lectureLink);
+  }
+
+  checkLectureCount(): void {
+    if (this.profile && this.profile.lectures) {
+      const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+      const monthlyLectures = this.profile.lectures.filter((lecture: { createdAt: string | number | Date; }) => new Date(lecture.createdAt) >= startOfMonth).length;
+      this.showLectureWarning = monthlyLectures < 2;
+    }
+  }
+
+  uploadLecture(): void {
+    if (!this.isValidLink()) {
+      alert('يرجى إدخال رابط صالح');
+      return;
+    }
+    this.isUploadingLecture = true;
+    this.lectureService.uploadLecture(this.lectureLink).subscribe({
+      next: (response) => {
+        if (response.success && this.profile) {
+          this.profile.lectures.push({ _id: '', link: this.lectureLink, createdAt: new Date().toISOString() });
+          this.profile.lectureCount = (this.profile.lectureCount || 0) + 1;
+          this.lectureLink = '';
+          alert(response.message || 'تم رفع المحاضرة بنجاح');
+          this.checkLectureCount();
+          this.notificationService.getNotifications().subscribe({
+            next: () => alert('تم إرسال إشعار إلى الإدارة'),
+            error: (err) => console.error('Notification error:', err)
+          });
+        }
+      },
+      error: (err) => {
+        this.error = err.message || 'فشل في رفع المحاضرة';
+        alert(this.error);
+        console.error('Upload lecture error:', err);
+      },
+      complete: () => {
+        this.isUploadingLecture = false;
+      }
+    });
   }
 }

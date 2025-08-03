@@ -25,7 +25,11 @@ export interface JoinRequest {
   numberOfStudents: number;
   subjects: string[];
   students: { name: string; email: string; phone: string }[];
+  lectures: { _id: string; link: string; createdAt: string }[];
+  lectureCount: number;
   createdAt: string;
+  showLectureWarning?: boolean; // Added as an optional property
+  hasNewLecture?: boolean; // Added to track new lecture notifications
 }
 
 interface CreateJoinRequestResponse {
@@ -44,6 +48,8 @@ interface UpdateMemberDetailsResponse {
   numberOfStudents: number;
   students: { name: string; email: string; phone: string }[];
   subjects: string[];
+  lectures?: { _id: string; link: string; createdAt: string }[];
+  lectureCount?: number;
 }
 
 interface AddStudentResponse {
@@ -57,6 +63,11 @@ interface RejectJoinRequestResponse {
   message: string;
 }
 
+interface MarkNotificationResponse {
+  success: boolean;
+  message: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -65,13 +76,11 @@ export class JoinRequestService {
 
   constructor(private http: HttpClient) {}
 
-  // Helper function to get auth headers
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
+    const token = localStorage.getItem('token');
     return token ? this.headers.set('Authorization', `Bearer ${token}`) : this.headers;
   }
 
-  // Helper function to validate email
   private isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -160,6 +169,8 @@ export class JoinRequestService {
           numberOfStudents: response.numberOfStudents || 0,
           subjects: response.subjects || [],
           students: response.students || [],
+          lectures: response.lectures || [],
+          lectureCount: response.lectureCount || 0,
           createdAt: response.createdAt
         }
       })),
@@ -201,7 +212,9 @@ export class JoinRequestService {
           volunteerHours: response.volunteerHours,
           numberOfStudents: response.numberOfStudents,
           students: response.students,
-          subjects: response.subjects
+          subjects: response.subjects,
+          lectures: response.lectures || [],
+          lectureCount: response.lectureCount || 0
         }
       })),
       catchError(error => {
@@ -296,6 +309,23 @@ export class JoinRequestService {
         return throwError(() => ({
           success: false,
           message: error.error?.message || 'فشل في رفض الطلب، تحقق من المعرف أو الاتصال بالخادم',
+          error: error.statusText || error.message
+        }));
+      })
+    );
+  }
+
+  markNotificationAsRead(memberId: string): Observable<MarkNotificationResponse> {
+    return this.http.post<MarkNotificationResponse>(ApiEndpoints.joinRequests.markNotificationRead(memberId), { memberId }, { headers: this.getAuthHeaders() }).pipe(
+      map(response => ({
+        success: true,
+        message: response.message || 'تم تحديث حالة الإشعار بنجاح'
+      })),
+      catchError(error => {
+        console.error('خطأ في تحديث حالة الإشعار:', error);
+        return throwError(() => ({
+          success: false,
+          message: error.error?.message || 'فشل في تحديث حالة الإشعار، تحقق من الاتصال بالخادم',
           error: error.statusText || error.message
         }));
       })

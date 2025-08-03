@@ -37,6 +37,8 @@
                 <dd class="col-sm-8">{{ editMode ? '' : member.volunteerHours }}</dd>
                 <dt class="col-sm-4">عدد الطلاب:</dt>
                 <dd class="col-sm-8">{{ member.numberOfStudents }}</dd>
+                <dt class="col-sm-4">عدد المحاضرات:</dt>
+                <dd class="col-sm-8">{{ member.lectureCount }}</dd>
               </dl>
             </div>
           </div>
@@ -142,6 +144,36 @@
                   <td>{{ student.name }}</td>
                   <td>{{ student.email }}</td>
                   <td>{{ student.phone }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mt-4" *ngIf="member">
+        <div class="card-header bg-secondary text-white">
+          <h4 class="mb-0">المحاضرات</h4>
+        </div>
+        <div class="card-body">
+          <div *ngIf="member.showLectureWarning" class="alert alert-warning">
+            تحذير: لقد قمت برفع أقل من 2 محاضرة هذا الشهر. يرجى زيادة المحاضرات!
+          </div>
+          <div *ngIf="member.lectures.length === 0" class="alert alert-info">لا توجد محاضرات مسجلة.</div>
+          <div class="table-responsive" *ngIf="member.lectures.length > 0">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>الرابط</th>
+                  <th>تاريخ الإنشاء</th>
+                  <th>الإجراءات</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let lecture of member.lectures; let i = index">
+                  <td><a [href]="lecture.link" target="_blank" class="text-primary">{{ lecture.link }}</a></td>
+                  <td>{{ lecture.createdAt | date:'yyyy-MM-dd' }}</td>
+                  <td><button class="btn btn-danger btn-sm" (click)="deleteLecture(i)">حذف</button></td>
                 </tr>
               </tbody>
             </table>
