@@ -5,6 +5,8 @@ import { Component, AfterViewInit, ElementRef, ViewChild, OnDestroy, PLATFORM_ID
      import { isPlatformBrowser } from '@angular/common';
      import AOS from 'aos';
      import { NgForm } from '@angular/forms';
+     import { NewSectionComponent } from '../../shared/new-section/new-section.component';
+     import { ImageSectionComponent } from '../../shared/image-section/image-section.component';
 
      interface Achievement {
        value: number;
@@ -25,7 +27,7 @@ import { Component, AfterViewInit, ElementRef, ViewChild, OnDestroy, PLATFORM_ID
      @Component({
        selector: 'app-home',
        standalone: true,
-       imports: [RouterModule, CommonModule, FormsModule], // تأكد من وجود FormsModule هنا
+       imports: [RouterModule, CommonModule, FormsModule , NewSectionComponent, ImageSectionComponent],
        templateUrl: './home.component.html',
        styleUrls: ['./home.component.scss']
      })
@@ -36,41 +38,41 @@ import { Component, AfterViewInit, ElementRef, ViewChild, OnDestroy, PLATFORM_ID
        readonly ringDasharray = 2 * Math.PI * 36;
 
        achievements: Achievement[] = [
-         { 
-           value: 11, 
-           label: 'سنة خبرة', 
+         {
+           value: 11,
+           label: 'سنة خبرة',
            count: 0,
            animationDuration: 2000,
            ringOffset: this.ringDasharray
          },
-         { 
-           value: 40, 
-           label: 'نشاط وخدمة', 
-           count: 0, 
+         {
+           value: 40,
+           label: 'نشاط وخدمة',
+           count: 0,
            prefix: '+',
            animationDuration: 1800,
            ringOffset: this.ringDasharray
          },
-         { 
-           value: 12000, 
-           label: 'متطوع', 
-           count: 0, 
+         {
+           value: 12000,
+           label: 'متطوع',
+           count: 0,
            prefix: '+',
            animationDuration: 2500,
            ringOffset: this.ringDasharray
          },
-         { 
-           value: 90, 
-           label: 'شريك وداعم', 
-           count: 0, 
+         {
+           value: 90,
+           label: 'شريك وداعم',
+           count: 0,
            prefix: '+',
            animationDuration: 2200,
            ringOffset: this.ringDasharray
          },
-         { 
-           value: 70000, 
-           label: 'مستفيد', 
-           count: 0, 
+         {
+           value: 70000,
+           label: 'مستفيد',
+           count: 0,
            prefix: '+',
            animationDuration: 3000,
            ringOffset: this.ringDasharray
@@ -111,12 +113,12 @@ import { Component, AfterViewInit, ElementRef, ViewChild, OnDestroy, PLATFORM_ID
          if (this.observer) {
            this.observer.disconnect();
          }
-         
+
          this.countingAnimationFrames.forEach(frameId => {
            cancelAnimationFrame(frameId);
          });
          this.countingAnimationFrames = [];
-         
+
          if (this.carousel && this.carouselElement?.nativeElement) {
            this.carousel.dispose();
          }
@@ -154,7 +156,7 @@ import { Component, AfterViewInit, ElementRef, ViewChild, OnDestroy, PLATFORM_ID
          if (!carouselElement) return;
 
          const carouselItems = carouselElement.querySelectorAll('.carousel-item');
-         
+
          carouselItems.forEach((item: HTMLElement) => {
            const img = item.querySelector('.carousel-img') as HTMLImageElement;
            if (img) {
@@ -181,7 +183,7 @@ import { Component, AfterViewInit, ElementRef, ViewChild, OnDestroy, PLATFORM_ID
          carouselElement.addEventListener('touchend', () => {
            if (!isDragging) return;
            isDragging = false;
-           
+
            const diffX = startX - currentX;
            const threshold = 50;
 
@@ -217,7 +219,7 @@ import { Component, AfterViewInit, ElementRef, ViewChild, OnDestroy, PLATFORM_ID
                }
              });
            },
-           { 
+           {
              threshold: 0.2,
              rootMargin: '0px 0px -50px 0px'
            }
@@ -248,7 +250,7 @@ import { Component, AfterViewInit, ElementRef, ViewChild, OnDestroy, PLATFORM_ID
              const progress = Math.min(elapsed / duration, 1);
              const easeOutQuart = 1 - Math.pow(1 - progress, 4);
              const currentValue = Math.floor(startValue + (endValue - startValue) * easeOutQuart);
-             
+
              achievement.count = currentValue;
              achievement.ringOffset = ringDasharray - (currentValue / endValue) * ringDasharray;
 
@@ -256,7 +258,7 @@ import { Component, AfterViewInit, ElementRef, ViewChild, OnDestroy, PLATFORM_ID
                const counterElement = document.querySelector(`#counter-${index}`) as HTMLElement;
                if (counterElement) {
                  counterElement.style.transform = `scale(${1 + (Math.sin(progress * Math.PI) * 0.05)})`;
-                 
+
                  if (progress === 1) {
                    counterElement.style.transform = 'scale(1)';
                  }
@@ -309,5 +311,5 @@ import { Component, AfterViewInit, ElementRef, ViewChild, OnDestroy, PLATFORM_ID
              window.open(whatsappUrl, '_blank');
            }
          }
-       
+
      }

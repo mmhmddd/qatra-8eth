@@ -1,0 +1,206 @@
+$primary-color: #00adb5;
+$secondary-color: #0097b2;
+$accent-color: #ff914d;
+$neutral-color: #545454;
+$dark-color: #1a1a1a;
+$light-gray: #f8f9fa;
+$white: #ffffff;
+$black: #000;
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  margin-top: 200px;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: $dark-color;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.add-form {
+  background: $light-gray;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 4px rgba($black, 0.1);
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: $neutral-color;
+  margin-bottom: 1rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-size: 1rem;
+    color: $neutral-color;
+  }
+
+  input[type="text"],
+  textarea {
+    padding: 0.5rem;
+    border: 1px solid $neutral-color;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  input[type="file"] {
+    padding: 0.5rem 0;
+  }
+}
+
+.preview-section {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.preview-image {
+  max-width: 200px;
+  height: auto;
+  border-radius: 4px;
+  border: 1px solid $light-gray;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &.btn-primary {
+    background: $primary-color;
+    color: $white;
+    &:hover {
+      background: darken($primary-color, 10%);
+    }
+    &:disabled {
+      background: lighten($primary-color, 20%);
+      cursor: not-allowed;
+    }
+  }
+
+  &.btn-secondary {
+    background: $secondary-color;
+    color: $white;
+    &:hover {
+      background: darken($secondary-color, 10%);
+    }
+  }
+
+  &.btn-accent {
+    background: $accent-color;
+    color: $white;
+    &:hover {
+      background: darken($accent-color, 10%);
+    }
+  }
+
+  &.btn-danger {
+    background: #dc3545;
+    color: $white;
+    &:hover {
+      background: darken(#dc3545, 10%);
+    }
+  }
+}
+
+.message {
+  margin-top: 1rem;
+  font-size: 1rem;
+
+  &.success {
+    color: $primary-color;
+  }
+
+  &.error {
+    color: #dc3545;
+  }
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.image-card {
+  background: $white;
+  border: 1px solid $light-gray;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba($black, 0.1);
+}
+
+.image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.image-details {
+  h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $dark-color;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: $neutral-color;
+    margin-bottom: 0.5rem;
+  }
+
+  .meta {
+    font-size: 0.8rem;
+    color: lighten($neutral-color, 20%);
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.no-images {
+  text-align: center;
+  font-size: 1rem;
+  color: $neutral-color;
+  margin-top: 2rem;
+}

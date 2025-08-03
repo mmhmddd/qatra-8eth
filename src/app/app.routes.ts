@@ -1,3 +1,4 @@
+import { GalleryComponent } from './features/gallery/gallery.component';
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin.guard';
@@ -29,6 +30,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/testimonials/testimonials.component').then(m => m.TestimonialsComponent)
   },
   {
+    path: 'gallery',
+    loadComponent: () => import('./features/gallery/gallery.component').then(m => m.GalleryComponent)
+  },
+  {
     path: 'library',
     loadComponent: () => import('./features/library/library.component').then(m => m.LibraryComponent),
   },
@@ -51,6 +56,10 @@ export const routes: Routes = [
   {
     path: 'add-testimonials',
     loadComponent: () => import('./dashboard/add-testimonials/add-testimonials.component').then(m => m.AddTestimonialsComponent)
+  },
+  {
+    path: 'add-gallery',
+    loadComponent: () => import('./dashboard/add-gallery/add-gallery.component').then(m => m.AddGalleryComponent)
   },
   {
     path: 'upload-pdf',

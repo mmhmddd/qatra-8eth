@@ -1,0 +1,94 @@
+<div class="gallery-container" dir="rtl">
+  <header class="gallery-header">
+    <h1 class="gallery-title">معرض الصور</h1>
+    <p class="gallery-subtitle">صور ملهمة من مبادراتنا التعليمية والإنسانية لمساعدة أطفال غزة ومرضى السرطان، بمشاركة متطوعين ملتزمين بالتعليم والدعم النفسي.</p>
+  </header>
+
+  <!-- Hero Slider Section -->
+  <section class="hero-section">
+    <h2 class="section-title">أنشطة مميزة</h2>
+    <swiper-container class="hero-swiper"
+                     [attr.slides-per-view]="5"
+                     [attr.space-between]="10"
+                     [attr.loop]="true"
+                     [attr.autoplay]="{ delay: 2000, disableOnInteraction: false }"
+                     [attr.speed]="600"
+                     navigation="true"
+                     pagination="true">
+      <swiper-slide *ngFor="let image of featuredImages">
+        <div class="hero-slide">
+          <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="hero-image">
+          <div class="hero-caption">
+            <h3>{{ image.title }}</h3>
+            <p>{{ image.description || 'لا يوجد وصف' }}</p>
+          </div>
+        </div>
+      </swiper-slide>
+    </swiper-container>
+  </section>
+
+  <!-- Latest Images Section -->
+  <section class="gallery-section">
+    <h2 class="section-title">أحدث الفعاليات</h2>
+    <p class="section-description">لقطات حية من دروس الدعم المجانية، والأنشطة الترفيهية والتعليمية لأطفال غزة ومرضى السرطان.</p>
+    <div class="gallery-grid">
+      <div *ngFor="let image of latestImages" class="gallery-card">
+        <div class="image-wrapper">
+          <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="gallery-image">
+          <div class="image-overlay">
+            <h3 class="image-title">{{ image.title }}</h3>
+            <p class="image-description">{{ image.description || 'لا يوجد وصف' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Images Section -->
+  <section class="gallery-section popular-section">
+    <h2 class="section-title">الأنشطة المؤثرة</h2>
+    <p class="section-description">لقطات من أكثر الفعاليات تأثيراً، والتي أبرزت أهمية التعليم والدعم النفسي للأطفال والمرضى.</p>
+    <div class="row">
+      <div class="col-md-6">
+        <swiper-container class="vertical-swiper"
+                         [attr.slides-per-view]="1"
+                         [attr.loop]="true"
+                         [attr.autoplay]="{ delay: 4000 }"
+                         direction="vertical"
+                         navigation="true">
+          <swiper-slide *ngFor="let image of popularImages">
+            <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="popular-image">
+            <div class="popular-caption">
+              <h3>{{ image.title }}</h3>
+              <p>{{ image.description || 'لا يوجد وصف' }}</p>
+            </div>
+          </swiper-slide>
+        </swiper-container>
+      </div>
+      <div class="col-md-6">
+        <div class="popular-text">
+          <h3>رسالة إنسانية وتعليمية</h3>
+          <p>تُظهر هذه الصور جهود المؤسسة في توفير بيئة تعليمية آمنة ومحفزة لأطفال غزة ومرضى السرطان، عبر متطوعين مخلصين يقدمون الوقت والجهد من أجل مستقبل أفضل.</p>
+          <p>كل صورة تروي قصة أمل، وتعكس قوة العمل الجماعي وروح العطاء في سبيل مساعدة الآخرين.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- All Images Section -->
+  <section class="gallery-section">
+    <h2 class="section-title">جميع الصور</h2>
+    <p class="section-description">استعرض مجموعتنا الشاملة من الصور التي توثق رحلتنا التعليمية والإنسانية في دعم الأطفال والمرضى.</p>
+    <div class="gallery-grid">
+      <div *ngFor="let image of allImages" class="gallery-card">
+        <div class="image-wrapper">
+          <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="gallery-image">
+          <div class="image-overlay">
+            <h3 class="image-title">{{ image.title }}</h3>
+            <p class="image-description">{{ image.description || 'لا يوجد وصف' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

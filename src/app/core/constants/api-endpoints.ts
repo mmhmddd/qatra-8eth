@@ -51,4 +51,11 @@ export const ApiEndpoints = {
     edit: (id: string) => `${base}/testimonials/edit/${id}`,
     delete: (id: string) => `${base}/testimonials/delete/${id}`,
   },
+  gallery: {
+    getAll: `${base}/gallery/images`,
+    getById: (id: string) => `${base}/gallery/images/${id}`,
+    add: `${base}/gallery/images`,
+    edit: (id: string) => `${base}/gallery/images/${id}`,
+    delete: (id: string) => `${base}/gallery/images/${id}`,
+  },
 };
