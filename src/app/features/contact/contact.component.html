@@ -1,32 +1,42 @@
-<section class="hero-section">
-  <div class="container hero-container d-flex flex-column align-items-center justify-content-center text-center" dir="rtl">
-    <h1 class="hero-title" @fadeInUp>تواصلوا معنا</h1>
-    <p class="hero-description" @fadeInUp>
-      انضموا إلى مبادرتنا التعليمية الخيرية لنشر العلم وبناء مستقبل أفضل.
-      تواصلوا معنا لمعرفة المزيد عن برامجنا أو لتقديم الدعم والاستفسارات.
-    </p>
-    <div class="container contact-info-container">
-      <h2 class="section-title">معلومات التواصل</h2>
-      <div class="row justify-content-center">
-        <div class="col-md-4 col-sm-6 mb-4" @scaleIn>
-          <div class="card contact-card glass-card">
-            <div class="card-body">
-              <h3>عنوان المكتب</h3>
-              <p>عمان - الأردن<br>شارع الملكة رانيا العبدالله</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 mb-4" @scaleIn>
-          <div class="card contact-card glass-card">
-            <div class="card-body">
-              <h3>أرقام الهواتف</h3>
-              <p>الهاتف: <a href="tel:+96261234567">+962 6 123 4567</a></p>
-            </div>
-          </div>
+<!-- Hero Section -->
+<section class="hero-section" dir="rtl" aria-label="مبادرة التعليم - تواصلوا معنا">
+  <!-- Map Content -->
+  <div class="map-container">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3384.916644078917!2d35.930358999999996!3d31.963158000000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzHCsDU3JzQ3LjQiTiAzNcKwNTUnNDkuMyJF!5e0!3m2!1sen!2seg!4v1754238407960!5m2!1sen!2seg" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"      style="border:0; border-radius: 0; width: 100%; height: 100vh;"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      title="موقع المبادرة التعليمية على خرائط Google"
+    ></iframe>
+
+<iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3384.916644078917!2d35.930358999999996!3d31.963158000000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzHCsDU3JzQ3LjQiTiAzNcKwNTUnNDkuMyJF!5e0!3m2!1sen!2seg!4v1754238407960!5m2!1sen!2seg" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+  </div>
+  <!-- Text Content -->
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 hero-content text-center">
+        <h1 class="hero-title fade-in-up">مرحبًا بكم في مبادرتنا التعليمية</h1>
+        <p class="hero-description fade-in-up" data-delay="0.2s">
+          اكتشف موقعنا في عمان، الأردن، وانضم إلينا لدعم التعليم والتطوع. تواصلوا معنا اليوم لمعرفة المزيد عن برامجنا وفعالياتنا!
+        </p>
+        <div class="hero-actions fade-in-up" data-delay="0.4s">
+          <a href="#contact-form" class="hero-button btn btn-submit" role="button" aria-label="تواصلوا معنا عبر النموذج">
+            <i class="fas fa-paper-plane me-2"></i>
+            تواصلوا معنا الآن
+          </a>
+          <a href="https://api.whatsapp.com/send?phone=+96279876543" target="_blank" rel="noopener noreferrer" class="hero-button btn btn-whatsapp ms-3" role="button" aria-label="تواصلوا عبر واتساب">
+            <i class="fab fa-whatsapp me-2"></i>
+            تواصلوا عبر واتساب
+          </a>
+          <a href="https://www.google.com/maps?q=31.963158,35.930359" target="_blank" rel="noopener noreferrer" class="btn btn-outline-dark ms-3" role="button" aria-label="افتح في خرائط Google">
+            <i class="fas fa-external-link-alt me-2"></i>
+            افتح في خرائط Google
+          </a>
         </div>
       </div>
     </div>
-    <button class="hero-button btn" (click)="scrollToForm()" @fadeInUp>أرسل رسالتك الآن</button>
   </div>
 </section>
 
@@ -34,7 +44,7 @@
 <section class="contact-details" dir="rtl">
   <div class="container">
     <h2 class="section-title text-center mb-4">معلومات التواصل التفصيلية</h2>
-    <div class="row g-4 justify-content-center">
+    <div class="row g-4 justify-content-center equal-height-row">
       <div class="col-md-4 col-sm-6">
         <div class="card glass-card p-4 text-center hover-scale">
           <i class="fas fa-map-marker-alt"></i>
@@ -252,30 +262,7 @@
   </div>
 </section>
 
-<!-- Map Section -->
-<section class="map-section" dir="rtl">
-  <div class="container">
-    <h2 class="section-title text-center mb-4">موقعنا على الخريطة</h2>
-    <!-- <p class="text-center mb-4">
-      حجز موعد عن طريق جوجل ميتينج
-      <a href="https://www.google.com/maps?q=31.963158,35.930359" target="_blank" rel="noopener noreferrer">
-        <i class="fas fa-external-link-alt me-2"></i>
-        افتح في خرائط Google
-      </a>
-    </p> -->
-    <div class="map-container glass-map">
-      <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3384.143859288373!2d35.92815931513084!3d31.963158981246284!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151ca1c726c22fa7%3A0x5f8c0b8d8b8b8b8b!2sAmman%2C%20Jordan!5e0!3m2!1sen!2sus!4v1678886400000!5m2!1sen!2sus"
-        height="400"
-        style="border:0; border-radius: 15px; width: 100%;"
-        allowfullscreen=""
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        title="موقع المبادرة التعليمية على خرائط Google"
-      ></iframe>
-    </div>
-  </div>
-</section>
+
 
 <!-- Social Media Section -->
 <section class="social-media-section py-5" dir="rtl" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">

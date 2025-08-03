@@ -5,7 +5,6 @@
   <main class="main-content">
     <header class="dashboard-header">
       <h1>لوحة التحكم</h1>
-
     </header>
     <section class="content-area">
       <!-- Error Message -->
@@ -17,8 +16,8 @@
       <!-- Dashboard Cards -->
       <div class="row g-4">
         <!-- Card 1: All Members -->
-        <div class="col-md-6 col-lg-3">
-          <div class="card shadow-sm dashboard-card" (click)="navigateTo('/all-members')">
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card shadow-sm dashboard-card card-members" (click)="navigateTo('/all-members')">
             <div class="card-body text-center">
               <i class="fas fa-users fa-3x mb-3"></i>
               <h5 class="card-title">عرض جميع الأعضاء</h5>
@@ -28,8 +27,8 @@
         </div>
 
         <!-- Card 2: Join Requests -->
-        <div class="col-md-6 col-lg-3">
-          <div class="card shadow-sm dashboard-card" (click)="navigateTo('/all-join-request')">
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card shadow-sm dashboard-card card-requests" (click)="navigateTo('/all-join-request')">
             <div class="card-body text-center">
               <i class="fas fa-file-alt fa-3x mb-3"></i>
               <h5 class="card-title">عرض جميع الطلبات</h5>
@@ -39,8 +38,8 @@
         </div>
 
         <!-- Card 3: Members Count -->
-        <div class="col-md-6 col-lg-3">
-          <div class="card shadow-sm dashboard-card">
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card shadow-sm dashboard-card card-count no-hover">
             <div class="card-body text-center">
               <i class="fas fa-user-check fa-3x mb-3"></i>
               <h5 class="card-title">عدد الأعضاء</h5>
@@ -50,8 +49,8 @@
         </div>
 
         <!-- Card 4: Add Book -->
-        <div class="col-md-6 col-lg-3">
-          <div class="card shadow-sm dashboard-card" (click)="navigateTo('/upload-pdf')">
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card shadow-sm dashboard-card card-book" (click)="navigateTo('/upload-pdf')">
             <div class="card-body text-center">
               <i class="fas fa-book fa-3x mb-3"></i>
               <h5 class="card-title">إضافة كتاب</h5>
@@ -60,21 +59,23 @@
           </div>
         </div>
 
-        <div class="col-md-6 col-lg-3">
-          <div class="card shadow-sm dashboard-card" (click)="navigateTo('/upload-pdf')">
+        <!-- Card 5: Add Opinion -->
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card shadow-sm dashboard-card card-opinion" (click)="navigateTo('/upload-opinion')">
             <div class="card-body text-center">
-              <i class="fas fa-book fa-3x mb-3"></i>
+              <i class="fas fa-comment-dots fa-3x mb-3"></i>
               <h5 class="card-title">إضافة رأي</h5>
-              <p class="card-text">إضافة رأي عميل </p>
+              <p class="card-text">إضافة رأي عميل</p>
             </div>
           </div>
         </div>
 
-        <div class="col-md-6 col-lg-3">
-          <div class="card shadow-sm dashboard-card" (click)="navigateTo('/upload-pdf')">
+        <!-- Card 6: Add Leaderboard -->
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card shadow-sm dashboard-card card-leaderboard" (click)="navigateTo('/add-leaderboard')">
             <div class="card-body text-center">
-              <i class="fas fa-book fa-3x mb-3"></i>
-              <h5 class="card-title">إضافة متصدر </h5>
+              <i class="fas fa-trophy fa-3x mb-3"></i>
+              <h5 class="card-title">إضافة متصدر</h5>
               <p class="card-text">إضافة متصدر جديد</p>
             </div>
           </div>

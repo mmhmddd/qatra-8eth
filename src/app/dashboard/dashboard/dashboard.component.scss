@@ -27,7 +27,7 @@ $black: #000;
     margin-bottom: 1.5rem;
 
     h1 {
-      font-size: 1.8rem;
+      font-size: clamp(1.4rem, 4vw, 1.8rem);
       color: $dark-color;
     }
 
@@ -49,40 +49,78 @@ $black: #000;
 
   .dashboard-card {
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     border: none;
-    background: $white;
+    border-radius: 12px;
+    overflow: hidden;
+
+    &.card-members {
+      background: #E6F7FA; /* Soft teal */
+      .card-body i { color: #007A87; }
+      .card-title, .card-text { color: $dark-color; }
+    }
+
+    &.card-requests {
+      background: #E6F0FA; /* Light blue */
+      .card-body i { color: #005B99; }
+      .card-title, .card-text { color: $dark-color; }
+    }
+
+    &.card-count {
+      background: #FFF4E6; /* Pale orange */
+      .card-body i { color: #CC5F00; }
+      .card-title, .card-text { color: $dark-color; }
+    }
+
+    &.card-book {
+      background: #E8F5E9; /* Light gray-green */
+      .card-body i { color: #2E7D32; }
+      .card-title, .card-text { color: $dark-color; }
+    }
+
+    &.card-opinion {
+      background: #F3E5F5; /* Soft lavender */
+      .card-body i { color: #6A1B9A; }
+      .card-title, .card-text { color: $dark-color; }
+    }
+
+    &.card-leaderboard {
+      background: #FFE6E6; /* Light coral */
+      .card-body i { color: #C62828; }
+      .card-title, .card-text { color: $dark-color; }
+    }
 
     &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 8px rgba($black, 0.1);
+      transform: translateY(-8px);
+      box-shadow: 0 6px 12px rgba($black, 0.15);
     }
 
     .card-body {
-      padding: 1.5rem;
-
-      i {
-        color: $primary-color;
-      }
+      padding: clamp(1rem, 3vw, 1.5rem);
+      transition: background-color 0.3s ease;
 
       .card-title {
-        font-size: 1.2rem;
-        font-weight: bold;
-        color: $dark-color;
+        font-size: clamp(1rem, 2.5vw, 1.2rem);
+        font-weight: 700;
+        margin-bottom: 0.75rem;
       }
 
       .card-text {
-        color: $neutral-color;
+        font-size: clamp(0.8rem, 2vw, 0.9rem);
+      }
+
+      i {
+        transition: color 0.3s ease;
       }
     }
-  }
 
-  .dashboard-card.no-hover {
-    cursor: default;
+    &.no-hover {
+      cursor: default;
 
-    &:hover {
-      transform: none;
-      box-shadow: none;
+      &:hover {
+        transform: none;
+        box-shadow: none;
+      }
     }
   }
 }
@@ -90,24 +128,29 @@ $black: #000;
 @media (max-width: 768px) {
   .main-content {
     margin-right: 0;
+    padding: 1rem;
   }
 
   .dashboard-header h1 {
-    font-size: 1.4rem;
+    font-size: clamp(1.2rem, 3.5vw, 1.4rem);
   }
 }
 
 @media (max-width: 576px) {
   .dashboard-card {
     .card-body {
-      padding: 1rem;
+      padding: 0.8rem;
 
       i {
-        font-size: 2.5rem;
+        font-size: clamp(2rem, 6vw, 2.5rem);
       }
 
       .card-title {
-        font-size: 1rem;
+        font-size: clamp(0.9rem, 2.5vw, 1rem);
+      }
+
+      .card-text {
+        font-size: clamp(0.75rem, 2vw, 0.85rem);
       }
     }
   }

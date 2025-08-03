@@ -51,7 +51,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 })
 export class ContactComponent implements AfterViewInit {
   @ViewChildren('faqAnswer') faqAnswers!: QueryList<ElementRef>;
-  
+
   contactForm: FormGroup;
   submitted = false;
   activeFaq: number | null = null;
@@ -231,10 +231,10 @@ export class ContactComponent implements AfterViewInit {
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         const formValue = this.contactForm.value;
-        
+
         // Create WhatsApp message
         const whatsappMessage = this.createWhatsAppMessage(formValue);
-        
+
         // Open WhatsApp
         if (isPlatformBrowser(this.platformId)) {
           const whatsappUrl = `https://wa.me/+96279876543?text=${encodeURIComponent(whatsappMessage)}`;
@@ -243,7 +243,7 @@ export class ContactComponent implements AfterViewInit {
 
         // Show success message
         this.formSubmissionMessage = 'تم إرسال الرسالة بنجاح! سيتم تحويلك إلى WhatsApp.';
-        
+
         // Reset form after successful submission
         setTimeout(() => {
           this.contactForm.reset();
@@ -252,7 +252,7 @@ export class ContactComponent implements AfterViewInit {
         }, 3000);
 
         console.log('Form Submitted:', formValue);
-        
+
       } catch (error) {
         console.error('Form submission error:', error);
         this.formSubmissionMessage = 'حدث خطأ أثناء إرسال الرسالة. يرجى المحاولة مرة أخرى.';
@@ -292,9 +292,9 @@ ${formValue.message}
       setTimeout(() => {
         const firstErrorField = document.querySelector('.form-control.is-invalid');
         if (firstErrorField) {
-          firstErrorField.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'center' 
+          firstErrorField.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
           });
           (firstErrorField as HTMLElement).focus();
         }
@@ -306,17 +306,17 @@ ${formValue.message}
   getFieldClasses(fieldName: string): string {
     const baseClasses = 'form-control';
     const field = this.contactForm.get(fieldName);
-    
+
     if (!field) return baseClasses;
-    
+
     if (this.isFieldInvalid(fieldName)) {
       return `${baseClasses} is-invalid`;
     }
-    
+
     if (this.isFieldValid(fieldName)) {
       return `${baseClasses} is-valid`;
     }
-    
+
     return baseClasses;
   }
 

@@ -19,15 +19,15 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: lighten($neutral-color, 45%); 
+  background: lighten($neutral-color, 45%);
   border-radius: 10px;
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); 
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, $primary-color, $secondary-color); 
+  background: linear-gradient(135deg, $primary-color, $secondary-color);
   border-radius: 10px;
-  border: 2px solid lighten($neutral-color, 45%); 
+  border: 2px solid lighten($neutral-color, 45%);
   transition: background 0.3s ease;
 }
 
