@@ -32,6 +32,7 @@ export const ApiEndpoints = {
   },
   notifications: {
     get: `${base}/lectures/notifications`,
+    markRead: `${base}/lectures/notifications/mark-read`,
   },
   pdf: {
     upload: `${base}/pdf/upload`,

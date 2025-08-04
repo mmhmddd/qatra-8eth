@@ -25,11 +25,11 @@ export interface JoinRequest {
   numberOfStudents: number;
   subjects: string[];
   students: { name: string; email: string; phone: string }[];
-  lectures: { _id: string; link: string; createdAt: string }[];
+  lectures: { _id: string; link: string; name: string; subject: string; createdAt: string; hasNewLecture: boolean }[];
   lectureCount: number;
   createdAt: string;
-  showLectureWarning?: boolean; // Added as an optional property
-  hasNewLecture?: boolean; // Added to track new lecture notifications
+  showLectureWarning?: boolean;
+  hasNewLecture: boolean; // Changed from optional to required with default false
 }
 
 interface CreateJoinRequestResponse {
@@ -48,7 +48,7 @@ interface UpdateMemberDetailsResponse {
   numberOfStudents: number;
   students: { name: string; email: string; phone: string }[];
   subjects: string[];
-  lectures?: { _id: string; link: string; createdAt: string }[];
+  lectures?: { _id: string; link: string; name: string; subject: string; createdAt: string; hasNewLecture: boolean }[];
   lectureCount?: number;
 }
 
@@ -169,9 +169,13 @@ export class JoinRequestService {
           numberOfStudents: response.numberOfStudents || 0,
           subjects: response.subjects || [],
           students: response.students || [],
-          lectures: response.lectures || [],
+          lectures: (response.lectures || []).map(lecture => ({
+            ...lecture,
+            hasNewLecture: lecture.hasNewLecture ?? false // Ensure hasNewLecture is set
+          })),
           lectureCount: response.lectureCount || 0,
-          createdAt: response.createdAt
+          createdAt: response.createdAt,
+          hasNewLecture: response.hasNewLecture ?? false // Ensure hasNewLecture is set
         }
       })),
       catchError(error => {
@@ -213,7 +217,10 @@ export class JoinRequestService {
           numberOfStudents: response.numberOfStudents,
           students: response.students,
           subjects: response.subjects,
-          lectures: response.lectures || [],
+          lectures: (response.lectures || []).map(lecture => ({
+            ...lecture,
+            hasNewLecture: lecture.hasNewLecture ?? false // Ensure hasNewLecture is set
+          })),
           lectureCount: response.lectureCount || 0
         }
       })),

@@ -129,7 +129,7 @@ $black: #000;
     box-shadow: 0 4px 8px rgba($black, 0.1);
 
     .counter {
-      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      font-size: clamp(1rem, 3vw, 1rem);
       color: $dark-color;
       font-weight: 600;
       display: flex;

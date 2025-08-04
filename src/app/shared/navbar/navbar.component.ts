@@ -43,10 +43,11 @@ export class NavbarComponent {
   }
 
   isLoggedIn(): boolean {
-    if (isPlatformBrowser(this.platformId)) {
-      return !!localStorage.getItem('token');
-    }
-    return false;
+    return this.authService.isLoggedIn();
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 
   handleAuthAction() {
@@ -60,6 +61,11 @@ export class NavbarComponent {
 
   navigateToProfile() {
     this.router.navigate(['/profile']);
+    this.closeNavbar();
+  }
+
+  navigateToDashboard() {
+    this.router.navigate(['/dashboard']);
     this.closeNavbar();
   }
 }

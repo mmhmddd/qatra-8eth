@@ -7,7 +7,7 @@ import { ApiEndpoints } from '../constants/api-endpoints';
 export interface LectureResponse {
   success: boolean;
   message: string;
-  lecture?: { link: string; createdAt: string };
+  lecture?: { link: string; name: string; subject: string; createdAt: string; _id?: string };
   lectureCount?: number;
 }
 
@@ -24,17 +24,17 @@ export class LectureService {
     return token ? this.headers.set('Authorization', `Bearer ${token}`) : this.headers;
   }
 
-  uploadLecture(link: string): Observable<LectureResponse> {
-    if (!link) {
+  uploadLecture(link: string, name: string, subject: string): Observable<LectureResponse> {
+    if (!link || !name || !subject) {
       return throwError(() => ({
         success: false,
-        message: 'رابط المحاضرة مطلوب',
+        message: 'رابط المحاضرة، الاسم، والمادة مطلوبة',
       }));
     }
-    return this.http.post<LectureResponse>(ApiEndpoints.lectures.upload, { link }, { headers: this.getAuthHeaders() }).pipe(
+    return this.http.post<LectureResponse>(ApiEndpoints.lectures.upload, { link, name, subject }, { headers: this.getAuthHeaders() }).pipe(
       map(response => ({
         success: true,
-        message: response.message || 'تم إضافة رابط المحاضرة بنجاح',
+        message: response.message || 'تم إضافة المحاضرة بنجاح',
         lecture: response.lecture,
         lectureCount: response.lectureCount,
       })),
@@ -42,7 +42,7 @@ export class LectureService {
         console.error('Error uploading lecture:', error);
         return throwError(() => ({
           success: false,
-          message: error.error?.message || 'خطأ في إضافة رابط المحاضرة',
+          message: error.error?.message || 'خطأ في إضافة المحاضرة',
           error: error.message,
         }));
       })

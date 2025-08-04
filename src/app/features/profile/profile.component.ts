@@ -1,21 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProfileService } from '../../core/services/profile.service';
 import { Router } from '@angular/router';
 import { JoinRequestService, JoinRequestResponse } from '../../core/services/join-request.service';
-import { LectureService } from '../../core/services/lecture.service';
-import { NotificationService } from '../../core/services/Notification.service';
+import { LectureService, LectureResponse } from '../../core/services/lecture.service';
+import { NotificationService, NotificationResponse } from '../../core/services/Notification.service'
+
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
   profile: JoinRequestResponse['data'] | null = null;
   error: string | null = null;
+  successMessage: string | null = null;
+  lectureForm: FormGroup;
+  isUploadingLecture: boolean = false;
+  showLectureWarning: boolean = false;
   currentPassword: string = '';
   newPassword: string = '';
   showPasswordModal: boolean = false;
@@ -36,17 +41,21 @@ export class ProfileComponent implements OnInit {
   showUploadField: boolean = true;
   backendUrl: string = 'http://localhost:5000';
   activeSection: string = 'profile';
-  lectureLink: string = '';
-  isUploadingLecture: boolean = false;
-  showLectureWarning: boolean = false;
 
   constructor(
     private profileService: ProfileService,
     private joinRequestService: JoinRequestService,
     private lectureService: LectureService,
     private notificationService: NotificationService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private fb: FormBuilder
+  ) {
+    this.lectureForm = this.fb.group({
+      link: ['', [Validators.required, Validators.pattern('https?://.+')]],
+      name: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
+      subject: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]]
+    });
+  }
 
   ngOnInit(): void {
     this.loadProfile();
@@ -208,30 +217,41 @@ export class ProfileComponent implements OnInit {
 
   isValidLink(): boolean {
     const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/;
-    return urlPattern.test(this.lectureLink);
+    return urlPattern.test(this.lectureForm.get('link')?.value || '');
   }
 
   checkLectureCount(): void {
     if (this.profile && this.profile.lectures) {
       const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-      const monthlyLectures = this.profile.lectures.filter((lecture: { createdAt: string | number | Date; }) => new Date(lecture.createdAt) >= startOfMonth).length;
+      const monthlyLectures = this.profile.lectures.filter((lecture: { createdAt: string | number | Date }) => new Date(lecture.createdAt) >= startOfMonth).length;
       this.showLectureWarning = monthlyLectures < 2;
     }
   }
 
   uploadLecture(): void {
-    if (!this.isValidLink()) {
-      alert('يرجى إدخال رابط صالح');
+    if (this.lectureForm.invalid) {
+      this.error = 'يرجى ملء جميع الحقول بشكل صحيح';
+      this.lectureForm.markAllAsTouched();
       return;
     }
+
     this.isUploadingLecture = true;
-    this.lectureService.uploadLecture(this.lectureLink).subscribe({
-      next: (response) => {
+    const { link, name, subject } = this.lectureForm.value;
+
+    this.lectureService.uploadLecture(link, name, subject).subscribe({
+      next: (response: LectureResponse) => {
         if (response.success && this.profile) {
-          this.profile.lectures.push({ _id: '', link: this.lectureLink, createdAt: new Date().toISOString() });
+          this.profile.lectures.push({
+            _id: response.lecture?._id || '',
+            link: response.lecture?.link || '',
+            name: response.lecture?.name || '',
+            subject: response.lecture?.subject || '',
+            createdAt: response.lecture?.createdAt || new Date().toISOString()
+          });
           this.profile.lectureCount = (this.profile.lectureCount || 0) + 1;
-          this.lectureLink = '';
-          alert(response.message || 'تم رفع المحاضرة بنجاح');
+          this.successMessage = response.message || 'تم رفع المحاضرة بنجاح';
+          this.error = null;
+          this.lectureForm.reset();
           this.checkLectureCount();
           this.notificationService.getNotifications().subscribe({
             next: () => alert('تم إرسال إشعار إلى الإدارة'),

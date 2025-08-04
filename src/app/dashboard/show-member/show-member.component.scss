@@ -1,371 +1,361 @@
-$primary-color: #00adb5;
-$secondary-color: #0097b2;
-$accent-color: #ff914d;
-$neutral-color: #545454;
-$dark-color: #1a1a1a;
-$light-gray: #f8f9fa;
-$white: #ffffff;
-$success-color: #28a745;
-$danger-color: #dc3545;
+$primary-color: #007bff; // Soft blue for primary elements
+$secondary-color: #6c757d; // Neutral gray for secondary elements
+$success-color: #28a745; // Green for success states
+$danger-color: #dc3545; // Red for error states
+$neutral-color: #495057; // Dark gray for text
+$background-color: #f4f6f9; // Light background for the page
+$white: #ffffff; // White for cards and clean elements
+$border-color: #e0e4e8; // Subtle border color
+$info-color: #17a2b8; // Blue for info states (used for badge)
 
+// Global container styles
 .container {
   display: flex;
   min-height: 100vh;
-  background-color: $light-gray;
+  background-color: $background-color;
   direction: rtl;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+// Main content area
 .col-md-9 {
   flex: 1;
-  padding: 2rem;
+  padding: 1.5rem;
   background-color: $white;
-  border-radius: 12px;
-  margin-right: 120px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin-right: 100px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
   @media (max-width: 768px) {
     margin-right: 0;
-    margin: 0.5rem;
     padding: 1rem;
   }
 }
 
-.alert {
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-  font-weight: 500;
-  border: none;
-  animation: slideIn 0.3s ease-out;
-
-  &.alert-danger {
-    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-    color: #721c24;
-  }
-
-  &.alert-success {
-    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-    color: #155724;
-  }
-
-  &.alert-info {
-    background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
-    color: #0c5460;
-  }
-
-  &.alert-warning {
-    background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
-    color: #856404;
-  }
-
-  .btn-close {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    opacity: 0.7;
-    cursor: pointer;
-    transition: opacity 0.3s ease;
-
-    &:hover {
-      opacity: 1;
-    }
-  }
-}
-
+// Toast notifications
 .toast {
   position: fixed;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  min-width: 300px;
-  padding: 1rem;
+  min-width: 280px;
+  padding: 0.75rem 1.25rem;
   border-radius: 6px;
   color: $white;
+  text-align: center; // Center toast message
   z-index: 2000;
-  box-shadow: 0 2px 8px rgba($dark-color, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-out 2.7s forwards;
 
   &.toast-success {
-    background: $success-color;
+    background-color: $success-color;
   }
 
   &.toast-error {
-    background: $danger-color;
+    background-color: $danger-color;
   }
 }
 
+// Alert styles
+.alert {
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.25rem;
+  font-weight: 500;
+  border: 1px solid $border-color;
+  background-color: $white;
+  color: $neutral-color;
+  text-align: center; // Center alert text
+
+  &.alert-info {
+    background-color: #e7f3fe;
+    border-color: #b8daff;
+    color: #004085;
+  }
+
+  &.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    color: #856404;
+  }
+}
+
+// Badge styles
+.badge {
+  display: inline-block;
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  font-weight: 700;
+  line-height: 1;
+  color: $white;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+
+  &.bg-info {
+    background-color: $info-color;
+  }
+}
+
+// Card styles
 .card {
   background: $white;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   border: none;
-  margin-bottom: 2rem;
-  overflow: hidden;
+  margin-bottom: 1.5rem;
 
   .card-header {
-    background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
-    color: $white;
-    padding: 1.5rem;
-    border: none;
-
-    &.bg-primary {
-      background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
-    }
-
-    &.bg-secondary {
-      background: linear-gradient(135deg, $accent-color 0%, #ff7f50 100%);
-    }
+    background: $white;
+    color: $neutral-color;
+    padding: 1rem;
+    border-bottom: 1px solid $border-color;
+    text-align: center; // Center card header text
 
     h3, h4 {
       margin: 0;
-      font-weight: 600;
-      font-size: 1.5rem;
+      font-weight: 500;
+      font-size: 1.25rem;
+      text-align: center; // Center headers
     }
   }
 
   .card-body {
-    padding: 2rem;
+    padding: 1.5rem;
+    text-align: center; // Center card body text
   }
 }
 
-dl {
-  &.row {
-    margin-bottom: 0;
+// Definition list styles
+dl.row {
+  margin-bottom: 0;
 
-    dt {
-      font-weight: 600;
-      color: $dark-color;
-      padding-bottom: 0.5rem;
-    }
+  dt {
+    font-weight: 500;
+    color: $neutral-color;
+    padding-bottom: 0.5rem;
+    text-align: right; // Keep right-aligned for RTL
+  }
 
-    dd {
-      color: $neutral-color;
-      padding-bottom: 0.5rem;
-    }
+  dd {
+    color: $neutral-color;
+    padding-bottom: 0.5rem;
+    text-align: right; // Keep right-aligned for RTL
   }
 }
 
+// Form label and input styles
 .form-label {
-  font-weight: 600;
-  color: $dark-color;
+  font-weight: 500;
+  color: $neutral-color;
   margin-bottom: 0.5rem;
+  text-align: center; // Center form labels
 }
 
 .form-control {
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  transition: all 0.3s ease;
+  border: 1px solid $border-color;
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  text-align: center; // Center input text
 
   &:focus {
-    outline: none;
     border-color: $primary-color;
     box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
-    transform: translateY(-1px);
+    outline: none;
   }
 
   &::placeholder {
-    color: #6c757d;
-    opacity: 0.8;
+    color: #adb5bd;
+    text-align: center; // Center placeholder text
   }
 }
 
+// Button group for centered buttons
+.button-group {
+  display: flex;
+  justify-content: center; // Center buttons
+  gap: 0.75rem; // Space between buttons
+}
+
+// Button styles
 .btn {
-  border-radius: 8px;
+  border-radius: 6px;
   font-weight: 500;
-  padding: 0.75rem 1.5rem;
+  padding: 0.6rem 1.2rem;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
-  }
+  transition: background-color 0.2s ease, transform 0.1s ease;
 
   &:hover {
-    transform: translateY(-2px);
-
-    &::before {
-      left: 100%;
-    }
+    transform: translateY(-1px);
   }
 
   &.btn-primary {
-    background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+    background-color: $primary-color;
     color: $white;
 
     &:hover {
-      box-shadow: 0 6px 16px rgba($primary-color, 0.3);
+      background-color: darken($primary-color, 10%);
     }
   }
 
   &.btn-secondary {
-    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+    background-color: $secondary-color;
     color: $white;
 
     &:hover {
-      box-shadow: 0 6px 16px rgba(#6c757d, 0.3);
+      background-color: darken($secondary-color, 10%);
     }
   }
 
   &.btn-success {
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    background-color: $success-color;
     color: $white;
 
     &:hover {
-      box-shadow: 0 6px 16px rgba(#28a745, 0.3);
+      background-color: darken($success-color, 10%);
     }
   }
 
   &.btn-danger {
-    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    background-color: $danger-color;
     color: $white;
 
     &:hover {
-      box-shadow: 0 6px 16px rgba(#dc3545, 0.3);
+      background-color: darken($danger-color, 10%);
     }
   }
 
   &.btn-outline-secondary {
     background: transparent;
-    border: 2px solid #6c757d;
-    color: #6c757d;
+    border: 1px solid $secondary-color;
+    color: $secondary-color;
 
     &:hover {
-      background: #6c757d;
+      background: $secondary-color;
       color: $white;
     }
   }
 
   &.btn-sm {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
   }
 }
 
+// Input group styles
 .input-group {
   display: flex;
-  border-radius: 8px;
-  overflow: hidden;
+  border-radius: 6px;
+  justify-content: center; // Center input group
 
   .form-control {
-    border-radius: 0;
     border-right: none;
+    text-align: center; // Center input text
   }
 
   .btn {
-    border-radius: 0;
-    padding: 0.75rem 1rem;
+    border-radius: 0 6px 6px 0;
   }
 }
 
+// Table styles
 .table {
-  border-collapse: collapse;
   width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
 
   &.table-bordered {
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    overflow: hidden;
+    border: 1px solid $border-color;
+    border-radius: 6px;
   }
 
   &.table-hover {
     tbody tr:hover {
-      background: linear-gradient(135deg, rgba($primary-color, 0.02) 0%, rgba($secondary-color, 0.02) 100%);
+      background-color: rgba($primary-color, 0.05);
     }
   }
 
   th {
-    background: linear-gradient(135deg, $light-gray 0%, #e9ecef 100%);
-    font-weight: 600;
-    color: $dark-color;
-    padding: 1rem;
-    text-align: right;
-    border-bottom: 2px solid #dee2e6;
+    background-color: $background-color;
+    font-weight: 500;
+    color: $neutral-color;
+    padding: 0.75rem;
+    text-align: center; // Center table headers
+    border-bottom: 1px solid $border-color;
   }
 
   td {
-    padding: 1rem;
-    text-align: right;
+    padding: 0.75rem;
+    text-align: center; // Center table data
     color: $neutral-color;
-    border-bottom: 1px solid #f1f3f4;
-    vertical-align: middle;
+    border-bottom: 1px solid $border-color;
   }
 
   a {
     color: $primary-color;
     text-decoration: none;
-    transition: color 0.3s ease;
 
     &:hover {
-      color: $secondary-color;
       text-decoration: underline;
     }
   }
 }
 
+// Table responsive wrapper
 .table-responsive {
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+// List group styles
 .list-group {
-  border-radius: 8px;
-  overflow: hidden;
+  border-radius: 6px;
 
   .list-group-item {
-    border: 1px solid #f1f3f4;
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    border: 1px solid $border-color;
+    padding: 0.75rem;
     background: $white;
-    transition: all 0.3s ease;
+    transition: background-color 0.2s ease;
+    text-align: center; // Center list group items
 
     &:hover {
-      background: linear-gradient(135deg, rgba($primary-color, 0.02) 0%, rgba($secondary-color, 0.02) 100%);
-      transform: translateX(-2px);
+      background-color: rgba($primary-color, 0.05);
     }
 
     &:first-child {
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
     }
 
     &:last-child {
-      border-bottom-left-radius: 8px;
-      border-bottom-right-radius: 8px;
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
     }
   }
 }
 
+// Margin utilities
 .mb-3 {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .mt-3 {
-  margin-top: 1.5rem;
+  margin-top: 1.25rem;
 }
 
 .mt-4 {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
 }
 
 .me-2 {
-  margin-left: 1rem;
+  margin-left: 0.75rem;
 }
 
+// Animations
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -382,13 +372,14 @@ dl {
   to { opacity: 0; }
 }
 
+// Responsive adjustments
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
   }
 
   .col-md-9 {
-    margin-right: 120px !important;
+    margin-right: 0 !important;
     padding: 1rem;
   }
 
@@ -396,21 +387,26 @@ dl {
     margin-bottom: 1rem;
 
     .card-body {
-      padding: 1.5rem;
+      padding: 1rem;
+      text-align: center; // Ensure centering on mobile
     }
   }
 
   .table {
-    font-size: 0.875rem;
+    font-size: 0.85rem;
 
-    th,
-    td {
-      padding: 0.75rem 0.5rem;
+    th, td {
+      padding: 0.5rem;
+      text-align: center; // Ensure centering on mobile
     }
   }
 
   .btn {
-    padding: 0.6rem 1.2rem;
+    padding: 0.5rem 1rem;
     font-size: 0.9rem;
+  }
+
+  .form-control {
+    text-align: center;
   }
 }

@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { JoinRequestService, JoinRequestResponse, JoinRequest } from '../../core/services/join-request.service';
-import { LectureService, LectureResponse } from '../../core/services/lecture.service'; // Import LectureService
+import { LectureService, LectureResponse } from '../../core/services/lecture.service';
+import { NotificationService, NotificationResponse } from '../../core/services/Notification.service';
 import { SidebarComponent } from '../../shared/sidebar/sidebar.component';
 
 @Component({
@@ -25,7 +26,8 @@ export class ShowMemberComponent implements OnInit {
 
   constructor(
     private joinRequestService: JoinRequestService,
-    private lectureService: LectureService, // Inject LectureService
+    private lectureService: LectureService,
+    private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -35,6 +37,7 @@ export class ShowMemberComponent implements OnInit {
     this.memberId = this.route.snapshot.paramMap.get('id');
     if (this.memberId) {
       this.loadMemberDetails(this.memberId);
+      this.loadNotifications();
     } else {
       this.showToast('معرف العضو غير موجود', 'error');
     }
@@ -57,12 +60,13 @@ export class ShowMemberComponent implements OnInit {
             id: response.member.id || response.member.id,
             createdAt: new Date(response.member.createdAt).toLocaleString('ar-SA'),
             lectureCount: response.member.lectureCount || 0,
-            lectures: response.member.lectures || []
+            lectures: response.member.lectures || [],
+            hasNewLecture: response.member.hasNewLecture || false
           };
           this.editedVolunteerHours = this.member.volunteerHours;
           this.editedSubjects = [...this.member.subjects];
           this.editedStudents = [...this.member.students];
-          this.checkMonthlyLectures(); // Check lectures for the current month
+          this.checkMonthlyLectures();
           this.showToast('تم جلب بيانات العضو بنجاح', 'success');
         } else {
           this.showToast(response.message || 'فشل في جلب بيانات العضو', 'error');
@@ -75,12 +79,61 @@ export class ShowMemberComponent implements OnInit {
     });
   }
 
+  loadNotifications(): void {
+    this.notificationService.getNotifications().subscribe({
+      next: (response: NotificationResponse) => {
+        if (response.success && response.notifications && this.member) {
+          const unreadLectureNotifications = response.notifications
+            .filter(n => n.type === 'lecture_added' && !n.read && n.lectureDetails)
+            .map(n => ({
+              link: n.lectureDetails!.link,
+              name: n.lectureDetails!.name,
+              subject: n.lectureDetails!.subject
+            }));
+
+          this.member.lectures = this.member.lectures.map(lecture => ({
+            ...lecture,
+            hasNewLecture: unreadLectureNotifications.some(n =>
+              n.link === lecture.link &&
+              n.name === lecture.name &&
+              n.subject === lecture.subject
+            )
+          }));
+
+          // Mark notifications as read after loading
+          this.markNotificationsAsRead();
+        }
+      },
+      error: (err) => {
+        console.error('Error loading notifications:', err);
+        this.showToast('خطأ في جلب الإشعارات', 'error');
+      }
+    });
+  }
+
+  markNotificationsAsRead(): void {
+    this.notificationService.markNotificationsAsRead().subscribe({
+      next: (response: NotificationResponse) => {
+        if (response.success && this.member) {
+          this.member.lectures = this.member.lectures.map(lecture => ({
+            ...lecture,
+            hasNewLecture: false
+          }));
+        }
+      },
+      error: (err) => {
+        console.error('Error marking notifications as read:', err);
+        this.showToast('خطأ في تحديد الإشعارات كمقروءة', 'error');
+      }
+    });
+  }
+
   checkMonthlyLectures(): void {
     if (this.member && this.member.lectures) {
       const now = new Date();
       const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
       const monthlyLectures = this.member.lectures.filter(lecture => new Date(lecture.createdAt) >= startOfMonth).length;
-      this.member.showLectureWarning = monthlyLectures < 2; // Add this property to trigger the warning
+      this.member.showLectureWarning = monthlyLectures < 2;
     }
   }
 
@@ -115,7 +168,7 @@ export class ShowMemberComponent implements OnInit {
           this.editedStudents = [...this.member.students];
           this.newStudent = { name: '', email: '', phone: '' };
           this.showToast(response.message || 'تم إضافة الطالب بنجاح', 'success');
-          this.checkMonthlyLectures(); // Recheck after adding a student (if it affects lectures indirectly)
+          this.checkMonthlyLectures();
         } else {
           this.showToast(response.message || 'فشل في إضافة الطالب', 'error');
         }
@@ -164,7 +217,7 @@ export class ShowMemberComponent implements OnInit {
           this.member.subjects = response.data.subjects;
           this.editMode = false;
           this.showToast(response.message || 'تم تحديث تفاصيل العضو بنجاح', 'success');
-          this.checkMonthlyLectures(); // Recheck after saving changes
+          this.checkMonthlyLectures();
         } else {
           this.showToast(response.message || 'فشل في تحديث تفاصيل العضو', 'error');
         }
@@ -202,10 +255,10 @@ export class ShowMemberComponent implements OnInit {
       this.lectureService.deleteLecture(lectureId).subscribe({
         next: (response: LectureResponse) => {
           if (response.success) {
-            this.member!.lectures.splice(index, 1); // Remove locally after successful deletion
+            this.member!.lectures.splice(index, 1);
             this.member!.lectureCount = (this.member!.lectureCount || 0) - 1;
             this.showToast(response.message || 'تم حذف المحاضرة بنجاح', 'success');
-            this.checkMonthlyLectures(); // Recheck after deletion
+            this.checkMonthlyLectures();
           } else {
             this.showToast(response.message || 'فشل في حذف المحاضرة', 'error');
           }

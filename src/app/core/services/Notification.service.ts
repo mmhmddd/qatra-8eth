@@ -7,7 +7,15 @@ import { ApiEndpoints } from '../constants/api-endpoints';
 export interface NotificationResponse {
   success: boolean;
   message: string;
-  notifications?: { _id: string; userId: { _id: string; email: string }; message: string; type: string; createdAt: string; read: boolean }[];
+  notifications?: {
+    _id: string;
+    userId: { _id: string; email: string };
+    message: string;
+    type: string;
+    createdAt: string;
+    read: boolean;
+    lectureDetails?: { link: string; name: string; subject: string };
+  }[];
 }
 
 @Injectable({
@@ -27,7 +35,7 @@ export class NotificationService {
   }
 
   getNotifications(): Observable<NotificationResponse> {
-    const url = ApiEndpoints.profile.get.replace('/profile', '/lectures/notifications');
+    const url = ApiEndpoints.notifications.get;
     console.log('Fetching notifications from:', url);
     return this.http.get<NotificationResponse>(url, { headers: this.getAuthHeaders() }).pipe(
       map(response => {
@@ -50,7 +58,7 @@ export class NotificationService {
   }
 
   markNotificationsAsRead(): Observable<NotificationResponse> {
-    const url = ApiEndpoints.profile.get.replace('/profile', '/lectures/notifications/mark-read');
+    const url = ApiEndpoints.notifications.markRead;
     console.log('Marking notifications as read at:', url);
     return this.http.post<NotificationResponse>(url, {}, { headers: this.getAuthHeaders() }).pipe(
       map(response => {

@@ -17,7 +17,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Navbar items (Center) and Login/Logout Button (Right) -->
+    <!-- Navbar items (Center) and Buttons (Right) -->
     <div
       class="collapse navbar-collapse"
       [class.show]="isNavbarExpanded"
@@ -50,6 +50,15 @@
         </li>
       </ul>
       <div class="buttons-container d-flex flex-column flex-lg-row align-items-end align-items-lg-center gap-2">
+        <button *ngIf="isAdmin()" class="btn btn-dashboard" (click)="navigateToDashboard()" title="لوحة التحكم">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+            <rect x="3" y="3" width="7" height="9"></rect>
+            <rect x="14" y="3" width="7" height="5"></rect>
+            <rect x="14" y="12" width="7" height="9"></rect>
+            <rect x="3" y="16" width="7" height="5"></rect>
+          </svg>
+          <span>لوحة التحكم</span>
+        </button>
         <button *ngIf="isLoggedIn()" class="btn btn-profile" (click)="navigateToProfile()" title="الملف الشخصي">
           <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
