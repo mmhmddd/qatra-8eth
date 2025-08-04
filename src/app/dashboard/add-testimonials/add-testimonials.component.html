@@ -5,7 +5,7 @@
   <div class="content">
     <!-- Add Testimonial Section -->
     <div class="add-testimonial-section">
-      <h2>إدارة الشهادات</h2>
+      <h2>إدارة الاراء</h2>
 
       <!-- Success and Error Messages -->
       <div *ngIf="success" class="success-message">{{ success }}</div>
@@ -13,7 +13,7 @@
 
       <!-- Add Testimonial Form -->
       <div class="add-testimonial-form">
-        <h3>إضافة شهادة</h3>
+        <h3>إضافة رأي</h3>
         <form (ngSubmit)="addTestimonial()" #addTestimonialForm="ngForm">
           <div class="form-row">
             <div class="form-group">
@@ -99,13 +99,13 @@
               نص التعليق مطلوب
             </div>
           </div>
-          <button type="submit" class="btn primary" [disabled]="addTestimonialForm.invalid">إضافة شهادة</button>
+          <button type="submit" class="btn primary" [disabled]="addTestimonialForm.invalid">إضافة رأي</button>
         </form>
       </div>
 
       <!-- Testimonials Table -->
       <div class="testimonial-table" *ngIf="testimonials.length; else noTestimonials">
-        <h3>قائمة الشهادات</h3>
+        <h3>قائمة الاراء</h3>
         <table>
           <thead>
             <tr>

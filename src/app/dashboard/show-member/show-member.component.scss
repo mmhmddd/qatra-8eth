@@ -1,14 +1,14 @@
-$primary-color: #007bff; // Soft blue for primary elements
-$secondary-color: #6c757d; // Neutral gray for secondary elements
-$success-color: #28a745; // Green for success states
-$danger-color: #dc3545; // Red for error states
-$neutral-color: #495057; // Dark gray for text
-$background-color: #f4f6f9; // Light background for the page
-$white: #ffffff; // White for cards and clean elements
-$border-color: #e0e4e8; // Subtle border color
-$info-color: #17a2b8; // Blue for info states (used for badge)
+$primary-color: #00adb5;
+$secondary-color: #0097b2;
+$accent-color: #ff914d;
+$success-color: #28a745;
+$danger-color: #dc3545;
+$neutral-color: #495057;
+$background-color: #f4f6f9;
+$white: #ffffff;
+$border-color: #e0e4e8;
+$info-color: #17a2b8;
 
-// Global container styles
 .container {
   display: flex;
   min-height: 100vh;
@@ -17,7 +17,6 @@ $info-color: #17a2b8; // Blue for info states (used for badge)
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-// Main content area
 .col-md-9 {
   flex: 1;
   padding: 1.5rem;
@@ -32,7 +31,6 @@ $info-color: #17a2b8; // Blue for info states (used for badge)
   }
 }
 
-// Toast notifications
 .toast {
   position: fixed;
   top: 20px;
@@ -56,7 +54,6 @@ $info-color: #17a2b8; // Blue for info states (used for badge)
   }
 }
 
-// Alert styles
 .alert {
   padding: 1rem;
   border-radius: 6px;
@@ -65,7 +62,7 @@ $info-color: #17a2b8; // Blue for info states (used for badge)
   border: 1px solid $border-color;
   background-color: $white;
   color: $neutral-color;
-  text-align: center; // Center alert text
+  text-align: center;
 
   &.alert-info {
     background-color: #e7f3fe;
@@ -80,7 +77,6 @@ $info-color: #17a2b8; // Blue for info states (used for badge)
   }
 }
 
-// Badge styles
 .badge {
   display: inline-block;
   padding: 0.35em 0.65em;
@@ -98,6 +94,7 @@ $info-color: #17a2b8; // Blue for info states (used for badge)
   }
 }
 
+
 // Card styles
 .card {
   background: $white;
@@ -107,8 +104,7 @@ $info-color: #17a2b8; // Blue for info states (used for badge)
   margin-bottom: 1.5rem;
 
   .card-header {
-    background: $white;
-    color: $neutral-color;
+    background: $primary-color;
     padding: 1rem;
     border-bottom: 1px solid $border-color;
     text-align: center; // Center card header text

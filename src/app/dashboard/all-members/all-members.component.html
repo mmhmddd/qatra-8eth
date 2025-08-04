@@ -35,6 +35,12 @@
         </div>
       </div>
 
+      <!-- Success Message -->
+      <div *ngIf="successMessage && !isLoading" class="success-message">
+        <span class="success-icon">✅</span>
+        <span>{{ successMessage }}</span>
+      </div>
+
       <!-- Loading State -->
       <div *ngIf="isLoading" class="loading-message">
         <div class="spinner"></div>
@@ -81,6 +87,7 @@
                 <th>ساعات التطوع</th>
                 <th>عدد المحاضرات</th>
                 <th>تاريخ الإنشاء</th>
+                <th>الإجراءات</th>
               </tr>
             </thead>
             <tbody>
@@ -102,9 +109,29 @@
                 </td>
                 <td class="member-lectures">{{ member.lectureCount || 0 }}</td>
                 <td class="member-date">{{ member.createdAt ? (member.createdAt | date:'dd/MM/yyyy') : 'غير محدد' }}</td>
+                <td class="member-actions">
+                  <button
+                    class="delete-btn"
+                    (click)="confirmDelete(member.id, $event)"
+                    title="حذف العضو">
+                    🗑️ حذف
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- Confirmation Dialog -->
+      <div *ngIf="showConfirmDialog" class="confirm-dialog">
+        <div class="dialog-content">
+          <h3>تأكيد الحذف</h3>
+          <p>هل أنت متأكد أنك تريد حذف هذا العضو؟ هذا الإجراء لا يمكن التراجع عنه.</p>
+          <div class="dialog-actions">
+            <button class="confirm-btn" (click)="deleteMember()">تأكيد</button>
+            <button class="cancel-btn" (click)="cancelDelete()">إلغاء</button>
+          </div>
         </div>
       </div>
     </div>

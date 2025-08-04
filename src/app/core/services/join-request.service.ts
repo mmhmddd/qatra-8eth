@@ -63,6 +63,10 @@ interface RejectJoinRequestResponse {
   message: string;
 }
 
+interface DeleteMemberResponse {
+  message: string;
+}
+
 interface MarkNotificationResponse {
   success: boolean;
   message: string;
@@ -316,6 +320,29 @@ export class JoinRequestService {
         return throwError(() => ({
           success: false,
           message: error.error?.message || 'فشل في رفض الطلب، تحقق من المعرف أو الاتصال بالخادم',
+          error: error.statusText || error.message
+        }));
+      })
+    );
+  }
+
+  deleteMember(id: string): Observable<JoinRequestResponse> {
+    if (!id) {
+      return throwError(() => ({
+        success: false,
+        message: 'معرف العضو مطلوب'
+      }));
+    }
+    return this.http.delete<DeleteMemberResponse>(ApiEndpoints.joinRequests.deleteMember(id), { headers: this.getAuthHeaders() }).pipe(
+      map(response => ({
+        success: true,
+        message: response.message || 'تم حذف العضو بنجاح'
+      })),
+      catchError(error => {
+        console.error('خطأ في حذف العضو:', error);
+        return throwError(() => ({
+          success: false,
+          message: error.error?.message || 'فشل في حذف العضو، تحقق من المعرف أو الاتصال بالخادم',
           error: error.statusText || error.message
         }));
       })

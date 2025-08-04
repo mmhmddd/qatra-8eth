@@ -128,13 +128,6 @@ export class ContactComponent implements AfterViewInit {
     }
   }
 
-  openWhatsApp() {
-    if (isPlatformBrowser(this.platformId)) {
-      const whatsappUrl = `https://wa.me/+96279876543?text=${encodeURIComponent('مرحبا، أود التواصل معكم بخصوص المبادرة التعليمية')}`;
-      window.open(whatsappUrl, '_blank');
-    }
-  }
-
   toggleFaq(index: number) {
     // Close currently open FAQ if clicking on the same one
     if (this.activeFaq === index) {
@@ -237,7 +230,7 @@ export class ContactComponent implements AfterViewInit {
 
         // Open WhatsApp
         if (isPlatformBrowser(this.platformId)) {
-          const whatsappUrl = `https://wa.me/+96279876543?text=${encodeURIComponent(whatsappMessage)}`;
+          const whatsappUrl = `https://wa.me/+962795686452?text=${encodeURIComponent(whatsappMessage)}`;
           window.open(whatsappUrl, '_blank');
         }
 
@@ -267,9 +260,11 @@ export class ContactComponent implements AfterViewInit {
 
   private createWhatsAppMessage(formValue: any): string {
     const serviceNames: { [key: string]: string } = {
-      'educational-programs': 'برامج تعليمية',
-      'volunteering': 'فرص تطوعية',
-      'support': 'دعم شخصي',
+      'educational-programs': 'البرامج التعليمية',
+      'volunteering': 'فرص التطوع',
+      'support': 'الدعم والمساعدة',
+      'partnership': 'الشراكات والتعاون',
+      'donation': 'التبرعات',
       'other': 'أخرى'
     };
 

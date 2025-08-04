@@ -18,9 +18,12 @@ export class AllMembersComponent implements OnInit, OnDestroy {
   approvedMembers: JoinRequest[] = [];
   filteredMembers: JoinRequest[] = [];
   errorMessage: string | null = null;
+  successMessage: string | null = null;
   isLoading = false;
   isSidebarVisible = true;
   searchTerm: string = '';
+  showConfirmDialog = false;
+  memberIdToDelete: string | null = null;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -59,6 +62,7 @@ export class AllMembersComponent implements OnInit, OnDestroy {
   fetchApprovedMembers(): void {
     this.isLoading = true;
     this.errorMessage = null;
+    this.successMessage = null;
 
     this.joinRequestService.getApprovedMembers()
       .pipe(takeUntil(this.destroy$))
@@ -95,5 +99,48 @@ export class AllMembersComponent implements OnInit, OnDestroy {
 
   trackByMemberId(index: number, member: JoinRequest): any {
     return member.id || index;
+  }
+
+  confirmDelete(memberId: string, event: Event): void {
+    event.stopPropagation(); // Prevent row click navigation
+    this.memberIdToDelete = memberId;
+    this.showConfirmDialog = true;
+  }
+
+  cancelDelete(): void {
+    this.showConfirmDialog = false;
+    this.memberIdToDelete = null;
+  }
+
+  deleteMember(): void {
+    if (!this.memberIdToDelete) {
+      this.errorMessage = 'معرف العضو غير موجود';
+      this.showConfirmDialog = false;
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.successMessage = null;
+
+    this.joinRequestService.deleteMember(this.memberIdToDelete)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.successMessage = response.message || 'تم حذف العضو بنجاح';
+          this.approvedMembers = this.approvedMembers.filter(member => member.id !== this.memberIdToDelete);
+          this.filteredMembers = this.filteredMembers.filter(member => member.id !== this.memberIdToDelete);
+          this.isLoading = false;
+          this.showConfirmDialog = false;
+          this.memberIdToDelete = null;
+        },
+        error: (error) => {
+          this.errorMessage = error.message || 'فشل في حذف العضو';
+          this.isLoading = false;
+          this.showConfirmDialog = false;
+          this.memberIdToDelete = null;
+          console.error('Error deleting member:', error);
+        }
+      });
   }
 }

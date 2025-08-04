@@ -95,6 +95,10 @@ export class LoginComponent {
     this.router.navigate(['/register']);
   }
 
+  goToForgotojoinus(): void {
+    this.router.navigate(['/join-us']);
+  }
+
   demoLogin(role: string): void {
     this.isLoading = true;
     this.loginForm.disable(); // Disable form controls

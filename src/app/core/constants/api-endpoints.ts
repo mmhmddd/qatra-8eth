@@ -5,6 +5,8 @@ const base = environment.apiBaseUrl;
 export const ApiEndpoints = {
   auth: {
     login: `${base}/login`,
+    forgotPassword: `${base}/forgot-password`,
+    resetPassword: (token: string) => `${base}/reset-password/${token}`,
   },
   joinRequests: {
     create: `${base}/join-requests`,
@@ -16,6 +18,7 @@ export const ApiEndpoints = {
     updateMemberDetails: (id: string) => `${base}/members/${id}/update-details`,
     addStudent: (id: string) => `${base}/members/${id}/add-student`,
     markNotificationRead: (id: string) => `${base}/members/${id}/mark-notification-read`,
+    deleteMember: (id: string) => `${base}/members/${id}`,
   },
   profile: {
     get: `${base}/profile`,

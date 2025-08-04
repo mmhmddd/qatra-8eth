@@ -1,10 +1,11 @@
+import { Testimonial } from './../../core/services/testimonials.service';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { SidebarComponent } from '../../shared/sidebar/sidebar.component';
 import { JoinRequestService } from '../../core/services/join-request.service';
 import { NotificationService, NotificationResponse } from '../../core/services/Notification.service';
-
+import { AddTestimonialsComponent } from '../add-testimonials/add-testimonials.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -25,9 +26,8 @@ export class DashboardComponent implements OnInit {
   navItems = [
     { label: 'عرض جميع الأعضاء', icon: 'fas fa-users', link: '/all-join-request' },
     { label: 'عرض جميع الطلبات', icon: 'fas fa-file-alt', link: '/requests' },
-    { label: 'إضافة عضو', icon: 'fas fa-user-plus', link: '/add-member' },
-    { label: 'حذف عضو', icon: 'fas fa-user-minus', link: '/delete-member' },
     { label: 'إضافة كتاب', icon: 'fas fa-book', link: '/add-book' },
+    { label: 'إضافة متصدر', icon: 'fas fa-book', link: '/add-leaderboards' },
     { label: 'إضافة صوره في معرض الصور', icon: 'fas fa-img', link: '/add-gallery' }
   ];
 
