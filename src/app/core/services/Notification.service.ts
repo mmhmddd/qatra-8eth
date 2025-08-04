@@ -20,22 +20,53 @@ export class NotificationService {
 
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found in localStorage');
+    }
     return token ? this.headers.set('Authorization', `Bearer ${token}`) : this.headers;
   }
 
   getNotifications(): Observable<NotificationResponse> {
-    return this.http.get<NotificationResponse>(ApiEndpoints.profile.get.replace('/profile', '/lectures/notifications'), { headers: this.getAuthHeaders() }).pipe(
-      map(response => ({
-        success: true,
-        message: response.message || 'تم جلب الإشعارات بنجاح',
-        notifications: response.notifications || [],
-      })),
+    const url = ApiEndpoints.profile.get.replace('/profile', '/lectures/notifications');
+    console.log('Fetching notifications from:', url);
+    return this.http.get<NotificationResponse>(url, { headers: this.getAuthHeaders() }).pipe(
+      map(response => {
+        console.log('Raw notification response:', response);
+        return {
+          success: response.success,
+          message: response.message || 'تم جلب الإشعارات بنجاح',
+          notifications: response.notifications || []
+        };
+      }),
       catchError(error => {
         console.error('Error fetching notifications:', error);
         return throwError(() => ({
           success: false,
           message: error.error?.message || 'خطأ في جلب الإشعارات',
-          error: error.message,
+          error: error.message
+        }));
+      })
+    );
+  }
+
+  markNotificationsAsRead(): Observable<NotificationResponse> {
+    const url = ApiEndpoints.profile.get.replace('/profile', '/lectures/notifications/mark-read');
+    console.log('Marking notifications as read at:', url);
+    return this.http.post<NotificationResponse>(url, {}, { headers: this.getAuthHeaders() }).pipe(
+      map(response => {
+        console.log('Mark read response:', response);
+        return {
+          success: response.success,
+          message: response.message || 'تم تحديد الإشعارات كمقروءة',
+          notifications: response.notifications || []
+        };
+      }),
+      catchError(error => {
+        console.error('Error marking notifications as read:', error);
+        return throwError(() => ({
+          success: false,
+          message: error.error?.message || 'خطأ في تحديد الإشعارات كمقروءة',
+          error: error.message
         }));
       })
     );

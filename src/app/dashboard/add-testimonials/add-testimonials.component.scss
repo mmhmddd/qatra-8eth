@@ -1,167 +1,450 @@
-@import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css');
+$primary-color: #00adb5;
+$secondary-color: #0097b2;
+$accent-color: #ff914d;
+$neutral-color: #545454;
+$dark-color: #1a1a1a;
+$light-gray: #f8f9fa;
+$white: #ffffff;
+$black: #000;
 
+// Container Layout
 .container {
-  max-width: 1200px;
-  padding: 20px;
+  display: flex;
+  min-height: 100vh;
+  background-color: $light-gray;
+  direction: rtl;
 }
 
-h2, h3 {
-  color: #333;
-  margin-bottom: 20px;
+// Main Content Area
+.content {
+  flex: 1;
+  padding: 1.5rem;
+  background-color: $white;
+  border-radius: 12px;
+  margin: 1rem;
+    margin-right: 180px;
+
+
+  @media (max-width: 768px) {
+    margin-right: 0;
+    margin: 0.5rem;
+    padding: 1rem;
+  }
 }
 
+// Add Testimonial Section
+.add-testimonial-section {
+  background: $white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba($primary-color, 0.15);
+
+  h2 {
+    color: $dark-color;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+
+    &::after {
+      content: '';
+      display: block;
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(90deg, $primary-color, $secondary-color);
+      margin: 0.5rem auto;
+      border-radius: 2px;
+    }
+  }
+}
+
+// Add Testimonial Form
 .add-testimonial-form {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 30px;
+  h3 {
+    color: $dark-color;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+
+    &::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, $primary-color, $secondary-color);
+      margin: 0.5rem auto;
+      border-radius: 2px;
+    }
+  }
+
+  .form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
+  }
+
+  .form-group {
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 1rem;
+
+    label {
+      font-weight: 600;
+      color: $dark-color;
+      margin-bottom: 0.4rem;
+      font-size: 0.95rem;
+      display: block;
+    }
+
+    input[type="text"],
+    input[type="file"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      background-color: $white;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+      }
+
+      &::placeholder {
+        color: #6c757d;
+        opacity: 0.7;
+      }
+
+      &.invalid {
+        border-color: #d32f2f;
+      }
+    }
+
+    select {
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24"><path fill="%236c757d" d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: left 0.75rem center;
+      padding-left: 2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      option {
+        padding: 0.5rem;
+        background: $white;
+        transition: background-color 0.2s ease;
+      }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .error-text {
+      color: #d32f2f;
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+      display: block;
+    }
+
+    input[type="file"] {
+      padding: 0.4rem;
+      cursor: pointer;
+
+      &::file-selector-button {
+        background: linear-gradient(135deg, $primary-color, $secondary-color);
+        color: $white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-1px);
+        }
+      }
+    }
+  }
+
+  button.primary {
+    background: linear-gradient(135deg, $primary-color, $secondary-color);
+    color: $white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 300px;
+    margin: 1rem auto 0;
+    display: block;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    &:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  }
 }
 
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
+// Messages
+.success-message,
+.error-message {
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
   font-weight: 500;
-  margin-bottom: 5px;
-  display: block;
+  text-align: center;
+  animation: slideIn 0.4s ease-out;
 }
 
-input, select, textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-textarea {
-  resize: vertical;
-}
-
-input.invalid, select.invalid, textarea.invalid {
-  border-color: #dc3545;
+.success-message {
+  background: #e6f4ea;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
 }
 
 .error-message {
-  color: #dc3545;
-  font-size: 12px;
-  margin-top: 5px;
+  background: #ffe6e6;
+  color: #d32f2f;
+  border: 1px solid #ffcdd2;
 }
 
-.alert {
-  padding: 15px;
-  border-radius: 4px;
-  margin-bottom: 20px;
-}
-
-.alert.success {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-}
-
-.alert.error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-}
-
+// Testimonials Table
 .testimonial-table {
-  margin-top: 20px;
-}
+  background: $white;
+  padding: 1.5rem;
+  border-radius: 12px;
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+  h3 {
+    color: $dark-color;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
 
-th, td {
-  padding: 12px;
-  text-align: right;
-  border-bottom: 1px solid #dee2e6;
-}
-
-th {
-  background-color: #f8f9fa;
-  font-weight: 600;
-}
-
-.testimonial-image {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 4px;
-}
-
-.btn {
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  border: none;
-  margin: 5px;
-
-}
-
-.btn.primary {
-  background-color: #007bff;
-  color: #fff;
-  &:hover {
-    background-color: #0056b3;
-  }
-}
-
-.btn.success {
-  background-color: #28a745;
-  color: #fff;
-  &:hover {
-    background-color: #218838;
-  }
-}
-
-.btn.danger {
-  background-color: #dc3545;
-  color: #fff;
-  &:hover {
-    background-color: #c82333;
-  }
-}
-
-@media (max-width: 768px) {
-  table, thead, tbody, th, td, tr {
-    display: block;
+    &::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, $accent-color, #ff7f50);
+      margin: 0.5rem auto;
+      border-radius: 2px;
+    }
   }
 
-  thead tr {
-    position: absolute;
-    top: -9999px;
-    left: -9999px;
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: $white;
+    border-radius: 12px;
+    overflow: hidden;
+
+    thead {
+      background: linear-gradient(135deg, $primary-color, $secondary-color);
+
+      th {
+        padding: 0.75rem;
+        text-align: right;
+        font-weight: 600;
+        color: $white;
+        font-size: 0.95rem;
+      }
+    }
+
+    tbody {
+      tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid #f1f3f4;
+
+        &:hover {
+          background: rgba($primary-color, 0.05);
+          transform: translateX(-2px);
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+
+      td {
+        padding: 0.75rem;
+        text-align: right;
+        color: $neutral-color;
+        font-size: 0.9rem;
+        vertical-align: middle;
+
+        input,
+        select,
+        textarea {
+          width: 100%;
+          padding: 0.5rem;
+          border: 1px solid #dee2e6;
+          border-radius: 6px;
+          font-size: 0.9rem;
+
+          &.invalid {
+            border-color: #d32f2f;
+          }
+        }
+
+        select {
+          background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24"><path fill="%236c757d" d="M7 10l5 5 5-5z"/></svg>');
+          background-repeat: no-repeat;
+          background-position: left 0.75rem center;
+          padding-left: 2rem;
+        }
+
+        textarea {
+          min-height: 80px;
+        }
+      }
+    }
   }
 
-  tr {
-    margin-bottom: 15px;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
+  .testimonial-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 6px;
   }
 
-  td {
+  .view-btn,
+  .delete-btn,
+  button.success,
+  button.danger {
+    padding: 0.4rem 0.75rem;
     border: none;
-    position: relative;
-    padding-right: 50%;
-    text-align: right;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
   }
 
-  td:before {
-    content: attr(data-label);
-    position: absolute;
-    right: 12px;
-    width: 45%;
-    padding-right: 10px;
-    font-weight: bold;
+  .view-btn,
+  button.success {
+    background: linear-gradient(135deg, $primary-color, $secondary-color);
+    color: $white;
+
+    &:hover {
+      box-shadow: 0 2px 8px rgba($primary-color, 0.2);
+    }
+  }
+
+  .delete-btn,
+  button.danger {
+    background: linear-gradient(135deg, #d32f2f, #b71c1c);
+    color: $white;
+
+    &:hover {
+      box-shadow: 0 2px 8px rgba(#d32f2f, 0.2);
+    }
+  }
+
+  p {
+    text-align: center;
+    color: $neutral-color;
+    font-size: 1rem;
+    padding: 1.5rem;
+    background: rgba($primary-color, 0.05);
+    border-radius: 8px;
+    border: 1px dashed rgba($primary-color, 0.2);
+  }
+}
+
+// Animations
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dropdownOpen {
+  from {
+    opacity: 0;
+    transform: scaleY(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1) translateY(0);
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .content {
+    margin-right: 0;
+    padding: 1rem;
+  }
+
+  .add-testimonial-section,
+  .testimonial-table {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  table {
+    font-size: 0.85rem;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+
+    th,
+    td {
+      padding: 0.5rem;
+    }
+  }
+
+  .view-btn,
+  .delete-btn,
+  button.success,
+  button.danger {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .add-testimonial-form {
+    button.primary {
+      font-size: 0.9rem;
+      padding: 0.6rem 1rem;
+    }
   }
 }

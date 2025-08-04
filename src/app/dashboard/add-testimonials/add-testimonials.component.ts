@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TestimonialsService, Testimonial } from '../../core/services/testimonials.service';
 import { environment } from '../../../environments/environment';
+import { SidebarComponent } from "../../shared/sidebar/sidebar.component";
 
 @Component({
   selector: 'app-add-testimonials',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SidebarComponent],
   templateUrl: './add-testimonials.component.html',
   styleUrls: ['./add-testimonials.component.scss']
 })

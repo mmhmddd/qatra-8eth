@@ -1,3 +1,4 @@
+import { Testimonial } from './core/services/testimonials.service';
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/navbar/navbar.component';
@@ -24,14 +25,17 @@ export class AppComponent implements OnInit {
       filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
       const url = event.urlAfterRedirects;
-      this.isDashboardRoute = 
+      this.isDashboardRoute =
         url.startsWith('/dashboard') ||
         url.startsWith('/all-join-request') ||
         url.startsWith('/all-members') ||
         url.startsWith('/upload-pdf') ||
+        url.startsWith('/add-testimonials') ||
+        url.startsWith('/add-leaderboards') ||
+        url.startsWith('/add-gallery') ||
         !!url.match(/^\/member\/[^\/]+$/) ||
         url.startsWith('/login');
-      console.log('Current route:', url, 'isDashboardRoute:', this.isDashboardRoute); 
+      console.log('Current route:', url, 'isDashboardRoute:', this.isDashboardRoute);
     });
   }
 }

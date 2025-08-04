@@ -5,7 +5,33 @@
   <main class="main-content">
     <header class="dashboard-header">
       <h1>لوحة التحكم</h1>
+      <div class="notification-area">
+        <div class="notification-icon" (click)="toggleNotifications()">
+          <i class="fas fa-bell"></i>
+          <span *ngIf="unreadNotificationsCount > 0" class="badge">{{ unreadNotificationsCount }}</span>
+        </div>
+        <div *ngIf="showNotifications" class="notifications-dropdown">
+          <div class="notifications-header">الإشعارات</div>
+          <div *ngIf="!notifications?.length" class="no-notifications">لا توجد إشعارات جديدة</div>
+          <div *ngFor="let notification of notifications" class="notification-item" [ngClass]="{'unread': !notification.read}">
+            <p>{{ notification.message }}</p>
+            <small>{{ notification.createdAt | date:'short' }}</small>
+          </div>
+        </div>
+      </div>
     </header>
+    <div class="counters-container">
+      <div class="counters">
+        <span class="counter">
+          <i class="fas fa-users me-2"></i>
+          عدد الأعضاء: {{ membersCount }}
+        </span>
+        <span class="counter">
+          <i class="fas fa-file-alt me-2"></i>
+          عدد الطلبات: {{ joinRequestsCount }}
+        </span>
+      </div>
+    </div>
     <section class="content-area">
       <!-- Error Message -->
       <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -32,23 +58,12 @@
             <div class="card-body text-center">
               <i class="fas fa-file-alt fa-3x mb-3"></i>
               <h5 class="card-title">عرض جميع الطلبات</h5>
-              <p class="card-text">عدد الطلبات: {{ joinRequestsCount }}</p>
+              <p class="card-text">عرض طلبات الانضمام</p>
             </div>
           </div>
         </div>
 
-        <!-- Card 3: Members Count -->
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <div class="card shadow-sm dashboard-card card-count no-hover">
-            <div class="card-body text-center">
-              <i class="fas fa-user-check fa-3x mb-3"></i>
-              <h5 class="card-title">عدد الأعضاء</h5>
-              <p class="card-text">إجمالي الأعضاء: {{ membersCount }}</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 4: Add Book -->
+        <!-- Card 3: Add Book -->
         <div class="col-sm-12 col-md-6 col-lg-4">
           <div class="card shadow-sm dashboard-card card-book" (click)="navigateTo('/upload-pdf')">
             <div class="card-body text-center">
@@ -59,7 +74,7 @@
           </div>
         </div>
 
-        <!-- Card 5: Add Opinion -->
+        <!-- Card 4: Add Opinion -->
         <div class="col-sm-12 col-md-6 col-lg-4">
           <div class="card shadow-sm dashboard-card card-opinion" (click)="navigateTo('/upload-opinion')">
             <div class="card-body text-center">
@@ -70,13 +85,22 @@
           </div>
         </div>
 
-        <!-- Card 6: Add Leaderboard -->
+        <!-- Card 5: Add Leaderboard -->
         <div class="col-sm-12 col-md-6 col-lg-4">
           <div class="card shadow-sm dashboard-card card-leaderboard" (click)="navigateTo('/add-leaderboard')">
             <div class="card-body text-center">
               <i class="fas fa-trophy fa-3x mb-3"></i>
               <h5 class="card-title">إضافة متصدر</h5>
               <p class="card-text">إضافة متصدر جديد</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card shadow-sm dashboard-card card-leaderboard" (click)="navigateTo('/add-gallery')">
+            <div class="card-body text-center">
+              <i class="fas fa-image fa-3x mb-3"></i>
+              <h5 class="card-title">إضافة صورة</h5>
+              <p class="card-text">إضافة صوره في معرض الصور</p>
             </div>
           </div>
         </div>

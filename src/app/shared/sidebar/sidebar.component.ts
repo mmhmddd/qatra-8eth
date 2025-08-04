@@ -19,7 +19,8 @@ export class SidebarComponent {
     { label: 'عرض جميع الطلبات', icon: 'fas fa-file-alt', link: '/all-join-request' },
     { label: 'إضافة كتاب', icon: 'fas fa-plus', link: '/upload-pdf' },
     { label: 'إضافة رأي', icon: 'fas fa-plus', link: '/add-testimonials' },
-    { label: 'إضافة متصدر', icon: 'fas fa-plus', link: '/add-leaderboards' }
+    { label: 'إضافة متصدر', icon: 'fas fa-plus', link: '/add-leaderboards' },
+    { label: 'إضافة صوره الي المعرض ', icon: 'fas fa-plus', link: '/add-gallery' }
     ];
 
   constructor(private router: Router) {

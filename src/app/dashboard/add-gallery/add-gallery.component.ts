@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { GalleryService, GalleryImage } from '../../core/services/gallery.service';
 import { Router } from '@angular/router';
+import { SidebarComponent } from "../../shared/sidebar/sidebar.component";
 
 @Component({
   selector: 'app-add-gallery',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, SidebarComponent],
   templateUrl: './add-gallery.component.html',
   styleUrls: ['./add-gallery.component.scss']
 })

@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LeaderboardService, LeaderboardUser } from '../../core/services/leaderboard.service';
 import { environment } from '../../../environments/environment';
+import { SidebarComponent } from "../../shared/sidebar/sidebar.component";
 
 @Component({
   selector: 'app-add-leaderboards',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SidebarComponent],
   templateUrl: './add-leaderboards.component.html',
   styleUrls: ['./add-leaderboards.component.scss'],
 })
