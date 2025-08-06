@@ -11,7 +11,6 @@ $success-color: #28a745;
 $warning-color: #ffc107;
 $danger-color: #dc3545;
 
-// Login Section
 .login-section {
 
   min-height: 100vh;
@@ -23,7 +22,6 @@ $danger-color: #dc3545;
   position: relative;
   overflow: hidden;
 
-  // Floating particles animation
   .floating-particle {
     position: absolute;
     width: 4px;
@@ -52,7 +50,6 @@ $danger-color: #dc3545;
     }
   }
 
-  // Background pattern overlay
   &::before {
     content: '';
     position: absolute;
@@ -74,7 +71,6 @@ $danger-color: #dc3545;
     100% { transform: translate(-50px, -50px); }
   }
 }
-// Welcome Side (Desktop)
 .welcome-side {
   background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
   position: relative;
@@ -123,7 +119,6 @@ $danger-color: #dc3545;
   opacity: 0.9;
 }
 
-// Features Grid (Modified for single row)
 .features-grid {
   display: flex;
   flex-wrap: nowrap;
@@ -181,7 +176,6 @@ $danger-color: #dc3545;
   }
 }
 
-// Login Form Side
 .login-form-side {
   position: relative;
   z-index: 2;
@@ -240,7 +234,6 @@ $danger-color: #dc3545;
     }
   }
 
-  // Shake animation for errors
   &.shake-animation {
     animation: shake 0.6s ease-in-out;
   }
@@ -302,8 +295,6 @@ $danger-color: #dc3545;
   }
 }
 
-// Form Styles
-// Form Styles
 .form-group {
   position: relative;
   margin-bottom: 1.2rem; // Added for consistent spacing

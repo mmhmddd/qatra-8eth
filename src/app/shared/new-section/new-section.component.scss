@@ -28,13 +28,7 @@ $black: #000000;
   overflow: hidden;
   padding: 50px;
   background: linear-gradient(135deg, $light-gray 0%, rgba($primary-color, 0.2) 100%);
-  box-shadow: 0 20px 40px rgba($black, 0.1);
   animation: fadeInUp 1s ease-out;
-
-  @media (max-width: 768px) {
-    padding: 30px;
-    margin-top: 30px;
-  }
 
   .left-section {
     .news-preview {
@@ -180,14 +174,25 @@ $black: #000000;
 @media (max-width: 768px) {
   .latest-news-container {
     padding: 30px;
-    .left-section .news-preview .latest-news-title {
-      font-size: 2rem;
+    margin-top: 30px;
+
+    .left-section {
+      margin-bottom: 20px;
+
+      .news-preview {
+        .latest-news-title {
+          font-size: 2rem;
+        }
+        .news-description {
+          font-size: 1rem;
+        }
+      }
     }
-    .left-section .news-preview .news-description {
-      font-size: 1rem;
-    }
-    .right-section .news-card {
-      padding: 15px;
+
+    .right-section {
+      .news-card {
+        padding: 15px;
+      }
     }
   }
 }

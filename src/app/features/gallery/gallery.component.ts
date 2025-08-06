@@ -4,11 +4,12 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { GalleryService, GalleryImage, GalleryResponse } from '../../core/services/gallery.service';
 import { Observable } from 'rxjs';
 import { register } from 'swiper/element/bundle';
+import { NewSectionComponent } from "../../shared/new-section/new-section.component";
 
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NewSectionComponent],
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.scss'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA] // Add this to suppress Web Component errors

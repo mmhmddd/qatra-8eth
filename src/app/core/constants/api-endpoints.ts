@@ -32,6 +32,7 @@ export const ApiEndpoints = {
   lectures: {
     upload: `${base}/lectures`,
     delete: (lectureId: string) => `${base}/lectures/${lectureId}`,
+    list: `${base}/lectures/list`,
   },
   notifications: {
     get: `${base}/lectures/notifications`,
@@ -61,5 +62,5 @@ export const ApiEndpoints = {
     add: `${base}/gallery/images`,
     edit: (id: string) => `${base}/gallery/images/${id}`,
     delete: (id: string) => `${base}/gallery/images/${id}`,
-  },
+  }
 };

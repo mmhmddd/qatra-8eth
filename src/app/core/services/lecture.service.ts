@@ -8,7 +8,14 @@ export interface LectureResponse {
   success: boolean;
   message: string;
   lecture?: { link: string; name: string; subject: string; createdAt: string; _id?: string };
+  lectures?: { link: string; name: string; subject: string; createdAt: string; _id: string }[];
   lectureCount?: number;
+}
+
+export interface PdfResponse {
+  success: boolean;
+  message: string;
+  pdfs?: { _id: string; title: string; description: string; creatorName: string; subject: string; semester: string; country: string; academicLevel: string; fileName: string; createdAt: string }[];
 }
 
 @Injectable({
@@ -67,6 +74,42 @@ export class LectureService {
         return throwError(() => ({
           success: false,
           message: error.error?.message || 'خطأ في حذف المحاضرة',
+          error: error.message,
+        }));
+      })
+    );
+  }
+
+  getLectures(): Observable<LectureResponse> {
+    return this.http.get<LectureResponse>(ApiEndpoints.lectures.list).pipe(
+      map(response => ({
+        success: true,
+        message: response.message || 'تم جلب المحاضرات بنجاح',
+        lectures: response.lectures,
+      })),
+      catchError(error => {
+        console.error('Error fetching lectures:', error);
+        return throwError(() => ({
+          success: false,
+          message: error.error?.message || 'خطأ في جلب المحاضرات',
+          error: error.message,
+        }));
+      })
+    );
+  }
+
+  getPdfs(): Observable<PdfResponse> {
+    return this.http.get<PdfResponse>(ApiEndpoints.pdf.list).pipe(
+      map(response => ({
+        success: true,
+        message: response.message || 'تم جلب ملفات PDF بنجاح',
+        pdfs: response.pdfs,
+      })),
+      catchError(error => {
+        console.error('Error fetching PDFs:', error);
+        return throwError(() => ({
+          success: false,
+          message: error.error?.message || 'خطأ في جلب ملفات PDF',
           error: error.message,
         }));
       })

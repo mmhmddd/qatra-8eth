@@ -552,3 +552,36 @@ dl.row {
     }
   }
 }
+// Add animation to alerts
+.alert {
+  animation: fadeIn 0.5s ease-in-out;
+  position: relative;
+  z-index: 1000;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+
+  &.alert-dismissible {
+    padding-left: 3rem;
+  }
+
+  .btn-close {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+// Fade-in animation
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

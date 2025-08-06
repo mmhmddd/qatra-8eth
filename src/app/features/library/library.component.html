@@ -28,6 +28,10 @@
         <option value="">كل السنوات الدراسية</option>
         <option *ngFor="let level of academicLevels" [value]="level">{{ level }}</option>
       </select>
+      <select [(ngModel)]="filters.country" (ngModelChange)="filterPdfs()">
+        <option value="">كل الدول</option>
+        <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
+      </select>
     </div>
   </div>
 
@@ -48,7 +52,7 @@
           <div class="pdf-description">{{ pdf.description }}</div>
         </div>
 
-        <!-- Special styling for subject and creator -->
+        <!-- Special styling for subject, creator, academic level, and country -->
         <div class="special-tags">
           <div class="subject-tag">
             <i class="fas fa-book"></i> {{ pdf.subject }}
@@ -57,8 +61,11 @@
             <i class="fas fa-user"></i> {{ pdf.creatorName }}
           </div>
           <div class="academicLevel-tag" [ngClass]="getAcademicLevelClass(pdf.academicLevel)">
-              <i class="fas fa-user"></i> {{ pdf.academicLevel }}
-            </div>
+            <i class="fas fa-graduation-cap"></i> {{ pdf.academicLevel }}
+          </div>
+          <div class="country-tag">
+            <i class="fas fa-globe"></i> {{ pdf.country }}
+          </div>
         </div>
 
         <div class="pdf-details">

@@ -19,10 +19,12 @@ export class LibraryComponent implements OnInit {
   subjects: string[] = [];
   creators: string[] = [];
   academicLevels: string[] = [];
+  countries: string[] = [];
   filters = {
     subject: '',
     creatorName: '',
-    academicLevel: ''
+    academicLevel: '',
+    country: ''
   };
 
   // Academic level-to-class mapping for CSS
@@ -73,6 +75,7 @@ export class LibraryComponent implements OnInit {
     this.subjects = [...new Set(pdfs.map(pdf => pdf.subject).filter(subject => subject))].sort();
     this.creators = [...new Set(pdfs.map(pdf => pdf.creatorName).filter(creator => creator))].sort();
     this.academicLevels = [...new Set(pdfs.map(pdf => pdf.academicLevel).filter(level => level))].sort();
+    this.countries = [...new Set(pdfs.map(pdf => pdf.country).filter(country => country))].sort();
   }
 
   /**
@@ -112,6 +115,11 @@ export class LibraryComponent implements OnInit {
       tempPdfs = tempPdfs.filter(pdf => pdf.academicLevel === this.filters.academicLevel);
     }
 
+    // Filter by country
+    if (this.filters.country) {
+      tempPdfs = tempPdfs.filter(pdf => pdf.country === this.filters.country);
+    }
+
     this.filteredPdfs = tempPdfs;
 
     // Show message if no results found
@@ -130,7 +138,8 @@ export class LibraryComponent implements OnInit {
     this.filters = {
       subject: '',
       creatorName: '',
-      academicLevel: ''
+      academicLevel: '',
+      country: ''
     };
     this.filteredPdfs = [...this.pdfs];
     this.errorMessage = this.pdfs.length === 0 ? 'لا توجد ملفات PDF لعرضها' : null;
@@ -171,9 +180,7 @@ export class LibraryComponent implements OnInit {
       });
   }
 
-  /**
-   * Share PDF by copying link to clipboard
-   */
+
   sharePdf(id: string): void {
     if (!id) {
       this.showErrorMessage('معرف الملف غير صحيح');
@@ -195,9 +202,7 @@ export class LibraryComponent implements OnInit {
     }
   }
 
-  /**
-   * Fallback method for copying text to clipboard
-   */
+
   private fallbackCopyTextToClipboard(text: string): void {
     const textArea = document.createElement('textarea');
     textArea.value = text;
@@ -218,27 +223,20 @@ export class LibraryComponent implements OnInit {
     }
   }
 
-  /**
-   * Show success message with auto-hide
-   */
+
   private showSuccessMessage(message: string): void {
     this.successMessage = message;
     this.errorMessage = null;
     this.clearMessages();
   }
 
-  /**
-   * Show error message with auto-hide
-   */
+
   private showErrorMessage(message: string): void {
     this.errorMessage = message;
     this.successMessage = null;
     this.clearMessages();
   }
 
-  /**
-   * Clear messages after delay
-   */
   private clearMessages(): void {
     setTimeout(() => {
       this.successMessage = null;
@@ -246,16 +244,11 @@ export class LibraryComponent implements OnInit {
     }, 4000);
   }
 
-  /**
-   * Get CSS class for academic level-specific styling
-   */
+
   getAcademicLevelClass(level: string): string {
     return this.academicLevelClassMap[level] || 'level-default';
   }
 
-  /**
-   * Track by function for ngFor optimization
-   */
   trackByPdfId(index: number, pdf: Pdf): string {
     return pdf.id;
   }

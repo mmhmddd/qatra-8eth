@@ -194,17 +194,137 @@ h2 {
     box-shadow: 0 4px 12px rgba($black, 0.12);
   }
 
-  // Academic level-specific styles
+  // Academic level-specific styles for card, title, and icon
   @each $level, $color in $academic-level-colors {
     &.level-#{$level} {
       border-color: $color;
-      background-color: rgba($color, 0.05); // Subtle background tint
+      background-color: rgba($color, 0.05);
+      .pdf-header h3 {
+        color: $color;
+      }
+      .pdf-icon {
+        color: $color;
+      }
+    }
+  }
+
+  // Specific academic level styles for Arabic levels
+  &.level-أول {
+    border-color: #FFE4E1;
+    .pdf-header h3 {
+      color: darken(#FFE4E1, 40%);
+    }
+    .pdf-icon {
+      color: darken(#FFE4E1, 40%);
+    }
+  }
+  &.level-ثاني {
+    border-color: #E6E6FA;
+    .pdf-header h3 {
+      color: darken(#E6E6FA, 40%);
+    }
+    .pdf-icon {
+      color: darken(#E6E6FA, 40%);
+    }
+  }
+  &.level-ثالث {
+    .pdf-header h3 {
+      color: darken(#F0FFF0, 40%);
+    }
+    .pdf-icon {
+      color: darken(#F0FFF0, 40%);
+    }
+  }
+  &.level-رابع {
+    border-color: #FFFACD;
+    .pdf-header h3 {
+      color: darken(#FFFACD, 40%);
+    }
+    .pdf-icon {
+      color: darken(#FFFACD, 40%);
+    }
+  }
+  &.level-خامس {
+    border-color: #E0FFFF;
+    .pdf-header h3 {
+      color: darken(#E0FFFF, 40%);
+    }
+    .pdf-icon {
+      color: darken(#E0FFFF, 40%);
+    }
+  }
+  &.level-سادس {
+    border-color: #F5F5DC;
+    .pdf-header h3 {
+      color: darken(#F5F5DC, 40%);
+    }
+    .pdf-icon {
+      color: darken(#F5F5DC, 40%);
+    }
+  }
+  &.level-سابع {
+    border-color: #D3D3D3;
+    .pdf-header h3 {
+      color: darken(#D3D3D3, 40%);
+    }
+    .pdf-icon {
+      color: darken(#D3D3D3, 40%);
+    }
+  }
+  &.level-ثامن {
+    border-color: #F0F8FF;
+    .pdf-header h3 {
+      color: darken(#F0F8FF, 40%);
+    }
+    .pdf-icon {
+      color: darken(#F0F8FF, 40%);
+    }
+  }
+  &.level-تاسع {
+    border-color: #FFF5EE;
+    .pdf-header h3 {
+      color: darken(#FFF5EE, 40%);
+    }
+    .pdf-icon {
+      color: darken(#FFF5EE, 40%);
+    }
+  }
+  &.level-عاشر {
+    border-color: #F5FFFA;
+    .pdf-header h3 {
+      color: darken(#F5FFFA, 40%);
+    }
+    .pdf-icon {
+      color: darken(#F5FFFA, 40%);
+    }
+  }
+  &.level-أول-ثانوي {
+    border-color: #FAFAD2;
+    .pdf-header h3 {
+      color: darken(#FAFAD2, 40%);
+    }
+    .pdf-icon {
+      color: darken(#FAFAD2, 40%);
+    }
+  }
+  &.level-ثانوي-توجيهي {
+    border-color: #EEDD82;
+    .pdf-header h3 {
+      color: darken(#EEDD82, 40%);
+    }
+    .pdf-icon {
+      color: darken(#EEDD82, 40%);
     }
   }
 
   &.level-default {
-    border-color: lighten($neutral-color, 50%);
     background-color: $white;
+    .pdf-header h3 {
+      color: $dark-color;
+    }
+    .pdf-icon {
+      color: $dark-color;
+    }
   }
 }
 
@@ -216,7 +336,7 @@ h2 {
   padding: $spacing-unit * 1.5;
   position: relative;
   overflow: hidden;
-  background: $white; // White background for all icons
+  background: $white;
 
   &::before {
     content: '';
@@ -239,7 +359,6 @@ h2 {
   font-size: 2rem;
   z-index: 1;
   transition: transform 0.2s ease;
-  color: $black; // Black icon color for all
 
   .pdf-card:hover & {
     transform: scale(1.05);
@@ -257,7 +376,6 @@ h2 {
   margin-bottom: $spacing-unit;
 
   h3 {
-    color: $dark-color;
     font-size: 1.2rem;
     font-weight: 700;
     margin: 0 0 $spacing-unit * 0.3 0;
@@ -313,7 +431,7 @@ h2 {
   margin-bottom: $spacing-unit;
   flex-wrap: wrap;
 
-  .subject-tag, .creator-tag , .academicLevel-tag {
+  .subject-tag, .creator-tag, .academicLevel-tag {
     display: flex;
     align-items: center;
     gap: $spacing-unit * 0.5;
@@ -340,7 +458,7 @@ h2 {
     }
   }
 
-  .creator-tag ,.academicLevel-tag {
+  .creator-tag {
     background: linear-gradient(90deg, rgba($secondary-color, 0.25), rgba($secondary-color, 0.15));
     color: darken($secondary-color, 10%);
     border: 1px solid rgba($secondary-color, 0.35);
@@ -352,6 +470,82 @@ h2 {
     &:hover {
       background: linear-gradient(90deg, rgba($secondary-color, 0.35), rgba($secondary-color, 0.25));
       transform: translateY(-1px);
+    }
+  }
+
+  .academicLevel-tag {
+    background: linear-gradient(90deg, rgba($secondary-color, 0.25), rgba($secondary-color, 0.15));
+    color: darken($secondary-color, 10%);
+    border: 1px solid rgba($secondary-color, 0.35);
+
+    i {
+      font-size: 0.75rem;
+    }
+
+    &:hover {
+      background: linear-gradient(90deg, rgba($secondary-color, 0.35), rgba($secondary-color, 0.25));
+      transform: translateY(-1px);
+    }
+
+    &.level-أول {
+      background: linear-gradient(90deg, rgba(#FFE4E1, 0.9), rgba(#FFE4E1, 0.7));
+      color: darken(#FFE4E1, 40%);
+      border: 1px solid rgba(#FFE4E1, 0.8);
+    }
+    &.level-ثاني {
+      background: linear-gradient(90deg, rgba(#E6E6FA, 0.9), rgba(#E6E6FA, 0.7));
+      color: darken(#E6E6FA, 40%);
+      border: 1px solid rgba(#E6E6FA, 0.8);
+    }
+    &.level-ثالث {
+      background: linear-gradient(90deg, rgba(#F0FFF0, 0.9), rgba(#F0FFF0, 0.7));
+      color: darken(#F0FFF0, 40%);
+      border: 1px solid rgba(#F0FFF0, 0.8);
+    }
+    &.level-رابع {
+      background: linear-gradient(90deg, rgba(#FFFACD, 0.9), rgba(#FFFACD, 0.7));
+      color: darken(#FFFACD, 40%);
+      border: 1px solid rgba(#FFFACD, 0.8);
+    }
+    &.level-خامس {
+      background: linear-gradient(90deg, rgba(#E0FFFF, 0.9), rgba(#E0FFFF, 0.7));
+      color: darken(#E0FFFF, 40%);
+      border: 1px solid rgba(#E0FFFF, 0.8);
+    }
+    &.level-سادس {
+      background: linear-gradient(90deg, rgba(#F5F5DC, 0.9), rgba(#F5F5DC, 0.7));
+      color: darken(#F5F5DC, 40%);
+      border: 1px solid rgba(#F5F5DC, 0.8);
+    }
+    &.level-سابع {
+      background: linear-gradient(90deg, rgba(#D3D3D3, 0.9), rgba(#D3D3D3, 0.7));
+      color: darken(#D3D3D3, 40%);
+      border: 1px solid rgba(#D3D3D3, 0.8);
+    }
+    &.level-ثامن {
+      background: linear-gradient(90deg, rgba(#F0F8FF, 0.9), rgba(#F0F8FF, 0.7));
+      color: darken(#F0F8FF, 40%);
+      border: 1px solid rgba(#F0F8FF, 0.8);
+    }
+    &.level-تاسع {
+      background: linear-gradient(90deg, rgba(#FFF5EE, 0.9), rgba(#FFF5EE, 0.7));
+      color: darken(#FFF5EE, 40%);
+      border: 1px solid rgba(#FFF5EE, 0.8);
+    }
+    &.level-عاشر {
+      background: linear-gradient(90deg, rgba(#F5FFFA, 0.9), rgba(#F5FFFA, 0.7));
+      color: darken(#F5FFFA, 40%);
+      border: 1px solid rgba(#F5FFFA, 0.8);
+    }
+    &.level-أول-ثانوي {
+      background: linear-gradient(90deg, rgba(#FAFAD2, 0.9), rgba(#FAFAD2, 0.7));
+      color: darken(#FAFAD2, 40%);
+      border: 1px solid rgba(#FAFAD2, 0.8);
+    }
+    &.level-ثانوي-توجيهي {
+      background: linear-gradient(90deg, rgba(#EEDD82, 0.9), rgba(#EEDD82, 0.7));
+      color: darken(#EEDD82, 40%);
+      border: 1px solid rgba(#EEDD82, 0.8);
     }
   }
 }
@@ -479,132 +673,5 @@ h2 {
   .actions {
     flex-direction: column;
     gap: $spacing-unit;
-  }
-}
-.special-tags {
-  display: flex;
-  gap: $spacing-unit * 0.8;
-  margin-bottom: $spacing-unit;
-  flex-wrap: wrap;
-
-  .subject-tag, .creator-tag, .academicLevel-tag {
-    display: flex;
-    align-items: center;
-    gap: $spacing-unit * 0.5;
-    padding: $spacing-unit * 0.4 $spacing-unit * 1.2;
-    border-radius: 16px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    font-family: $font-family;
-    transition: all 0.2s ease;
-  }
-
-  .subject-tag {
-    background: linear-gradient(90deg, rgba($primary-color, 0.25), rgba($primary-color, 0.15));
-    color: darken($primary-color, 10%);
-    border: 1px solid rgba($primary-color, 0.35);
-
-    i {
-      font-size: 0.75rem;
-    }
-
-    &:hover {
-      background: linear-gradient(90deg, rgba($primary-color, 0.35), rgba($primary-color, 0.25));
-      transform: translateY(-1px);
-    }
-  }
-
-  .creator-tag {
-    background: linear-gradient(90deg, rgba($secondary-color, 0.25), rgba($secondary-color, 0.15));
-    color: darken($secondary-color, 10%);
-    border: 1px solid rgba($secondary-color, 0.35);
-
-    i {
-      font-size: 0.75rem;
-    }
-
-    &:hover {
-      background: linear-gradient(90deg, rgba($secondary-color, 0.35), rgba($secondary-color, 0.25));
-      transform: translateY(-1px);
-    }
-  }
-
-  // Academic level-specific tag styles
-  .academicLevel-tag {
-    // Default styling
-    background: linear-gradient(90deg, rgba($secondary-color, 0.25), rgba($secondary-color, 0.15));
-    color: darken($secondary-color, 10%);
-    border: 1px solid rgba($secondary-color, 0.35);
-
-    i {
-      font-size: 0.75rem;
-    }
-
-    &:hover {
-      background: linear-gradient(90deg, rgba($secondary-color, 0.35), rgba($secondary-color, 0.25));
-      transform: translateY(-1px);
-    }
-
-    // Specific academic level styles
-    &.level-أول {
-      background: linear-gradient(90deg, rgba(#FFE4E1, 0.9), rgba(#FFE4E1, 0.7));
-      color: darken(#FFE4E1, 40%);
-      border: 1px solid rgba(#FFE4E1, 0.8);
-    }
-    &.level-ثاني {
-      background: linear-gradient(90deg, rgba(#E6E6FA, 0.9), rgba(#E6E6FA, 0.7));
-      color: darken(#E6E6FA, 40%);
-      border: 1px solid rgba(#E6E6FA, 0.8);
-    }
-    &.level-ثالث {
-      background: linear-gradient(90deg, rgba(#F0FFF0, 0.9), rgba(#F0FFF0, 0.7));
-      color: darken(#F0FFF0, 40%);
-      border: 1px solid rgba(#F0FFF0, 0.8);
-    }
-    &.level-رابع {
-      background: linear-gradient(90deg, rgba(#FFFACD, 0.9), rgba(#FFFACD, 0.7));
-      color: darken(#FFFACD, 40%);
-      border: 1px solid rgba(#FFFACD, 0.8);
-    }
-    &.level-خامس {
-      background: linear-gradient(90deg, rgba(#E0FFFF, 0.9), rgba(#E0FFFF, 0.7));
-      color: darken(#E0FFFF, 40%);
-      border: 1px solid rgba(#E0FFFF, 0.8);
-    }
-    &.level-سادس {
-      background: linear-gradient(90deg, rgba(#F5F5DC, 0.9), rgba(#F5F5DC, 0.7));
-      color: darken(#F5F5DC, 40%);
-      border: 1px solid rgba(#F5F5DC, 0.8);
-    }
-    &.level-سابع {
-      background: linear-gradient(90deg, rgba(#D3D3D3, 0.9), rgba(#D3D3D3, 0.7));
-      color: darken(#D3D3D3, 40%);
-      border: 1px solid rgba(#D3D3D3, 0.8);
-    }
-    &.level-ثامن {
-      background: linear-gradient(90deg, rgba(#F0F8FF, 0.9), rgba(#F0F8FF, 0.7));
-      color: darken(#F0F8FF, 40%);
-      border: 1px solid rgba(#F0F8FF, 0.8);
-    }
-    &.level-تاسع {
-      background: linear-gradient(90deg, rgba(#FFF5EE, 0.9), rgba(#FFF5EE, 0.7));
-      color: darken(#FFF5EE, 40%);
-      border: 1px solid rgba(#FFF5EE, 0.8);
-    }
-    &.level-عاشر {
-      background: linear-gradient(90deg, rgba(#F5FFFA, 0.9), rgba(#F5FFFA, 0.7));
-      color: darken(#F5FFFA, 40%);
-      border: 1px solid rgba(#F5FFFA, 0.8);
-    }
-    &.level-أول-ثانوي {
-      background: linear-gradient(90deg, rgba(#FAFAD2, 0.9), rgba(#FAFAD2, 0.7));
-      color: darken(#FAFAD2, 40%);
-      border: 1px solid rgba(#FAFAD2, 0.8);
-    }
-    &.level-ثانوي-توجيهي {
-      background: linear-gradient(90deg, rgba(#EEDD82, 0.9), rgba(#EEDD82, 0.7));
-      color: darken(#EEDD82, 40%);
-      border: 1px solid rgba(#EEDD82, 0.8);
-    }
   }
 }

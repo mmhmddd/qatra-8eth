@@ -1,3 +1,8 @@
+<div  style="margin-top: 110px;">
+<app-new-section></app-new-section>
+
+</div>
+
 <div class="gallery-container" dir="rtl">
   <header class="gallery-header">
     <h1 class="gallery-title">معرض الصور</h1>
@@ -8,13 +13,13 @@
   <section class="hero-section">
     <h2 class="section-title">أنشطة مميزة</h2>
     <swiper-container class="hero-swiper"
-                     [attr.slides-per-view]="5"
-                     [attr.space-between]="10"
-                     [attr.loop]="true"
-                     [attr.autoplay]="{ delay: 2000, disableOnInteraction: false }"
-                     [attr.speed]="600"
+                     slides-per-view="3"
+                     space-between="20"
+                     loop="true"
+                     autoplay='{"delay": 2500, "disableOnInteraction": false}'
+                     speed="800"
                      navigation="true"
-                     pagination="true">
+                     pagination='{"clickable": true}'>
       <swiper-slide *ngFor="let image of featuredImages">
         <div class="hero-slide">
           <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="hero-image">
@@ -51,9 +56,9 @@
     <div class="row">
       <div class="col-md-6">
         <swiper-container class="vertical-swiper"
-                         [attr.slides-per-view]="1"
-                         [attr.loop]="true"
-                         [attr.autoplay]="{ delay: 4000 }"
+                         slides-per-view="1"
+                         loop="true"
+                         autoplay='{"delay": 4000}'
                          direction="vertical"
                          navigation="true">
           <swiper-slide *ngFor="let image of popularImages">

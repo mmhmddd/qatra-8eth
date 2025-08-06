@@ -27,7 +27,7 @@
               (change)="onFileSelected($event)"
               required
             />
-            <span class="error-text" *ngIf="!selectedFile">
+            <span class="error-text" *ngIf="!selectedFile && uploadForm.submitted">
               يرجى اختيار ملف PDF
             </span>
           </div>
@@ -121,6 +121,24 @@
           </div>
 
           <div class="form-group">
+            <label for="country">الدولة:</label>
+            <select
+              id="country"
+              [(ngModel)]="country"
+              name="country"
+              required
+              #countryInput="ngModel"
+            >
+              <option value="" disabled selected>اختر الدولة</option>
+              <option value="الأردن">الأردن</option>
+              <option value="مصر">فلسطين</option>
+            </select>
+            <span class="error-text" *ngIf="countryInput.touched && countryInput.invalid">
+              الدولة مطلوبة
+            </span>
+          </div>
+
+          <div class="form-group">
             <label for="semester">الفصل الدراسي:</label>
             <select
               id="semester"
@@ -149,18 +167,9 @@
             #academicLevelInput="ngModel"
           >
             <option value="" disabled selected>اختر المرحلة الدراسية</option>
-            <option value="أول">أول</option>
-            <option value="ثاني">ثاني</option>
-            <option value="ثالث">ثالث</option>
-            <option value="رابع">رابع</option>
-            <option value="خامس">خامس</option>
-            <option value="سادس">سادس</option>
-            <option value="سابع">سابع</option>
-            <option value="ثامن">ثامن</option>
-            <option value="تاسع">تاسع</option>
-            <option value="عاشر">عاشر</option>
-            <option value="أول ثانوي">أول ثانوي</option>
-            <option value="ثانوي (توجيهي)">ثانوي (توجيهي)</option>
+            <option *ngFor="let level of academicLevels" [value]="level.value" [style.background]="level.color">
+              {{ level.value }}
+            </option>
           </select>
           <span class="error-text" *ngIf="academicLevelInput.touched && academicLevelInput.invalid">
             المرحلة الدراسية مطلوبة
@@ -188,6 +197,7 @@
               <th>الوصف</th>
               <th>المنشئ</th>
               <th>المادة</th>
+              <th>الدولة</th>
               <th>الفصل الدراسي</th>
               <th>المرحلة الدراسية</th>
               <th>اسم الملف</th>
@@ -201,6 +211,7 @@
               <td>{{ pdf.description }}</td>
               <td>{{ pdf.creatorName }}</td>
               <td>{{ pdf.subject }}</td>
+              <td>{{ pdf.country }}</td>
               <td>{{ pdf.semester }}</td>
               <td>{{ pdf.academicLevel }}</td>
               <td>{{ pdf.fileName }}</td>

@@ -121,8 +121,9 @@
                     class="btn btn-outline-secondary password-toggle"
                     (click)="togglePasswordVisibility()"
                     [disabled]="isLoading"
+                    style="margin-top: 10px; border-radius: 50%;"
                   >
-                    <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                    <i id="showPassword" [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                   </button>
                 </div>
                 <div *ngIf="isFieldInvalid('password')" class="invalid-feedback">

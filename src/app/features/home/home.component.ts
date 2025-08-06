@@ -39,7 +39,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   achievements: Achievement[] = [
     {
-      value: 11,
+      value: 5,
       label: 'سنة خبرة',
       count: 0,
       animationDuration: 2000,
@@ -54,7 +54,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       ringOffset: this.ringDasharray
     },
     {
-      value: 12000,
+      value: 900,
       label: 'متطوع',
       count: 0,
       prefix: '+',
@@ -62,7 +62,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       ringOffset: this.ringDasharray
     },
     {
-      value: 90,
+      value: 5,
       label: 'شريك وداعم',
       count: 0,
       prefix: '+',
@@ -70,7 +70,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       ringOffset: this.ringDasharray
     },
     {
-      value: 70000,
+      value: 700,
       label: 'مستفيد',
       count: 0,
       prefix: '+',
@@ -293,7 +293,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   navigateToDonate(event: Event): void {
     event.preventDefault();
-    this.router.navigate(['/donate']);
+    this.router.navigate(['/contact']);
   }
 
   submitContactForm(form: NgForm): void {

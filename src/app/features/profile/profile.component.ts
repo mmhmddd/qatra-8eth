@@ -100,7 +100,6 @@ export class ProfileComponent implements OnInit {
   uploadProfileImage(): void {
     if (!this.selectedFile) {
       this.error = 'يرجى اختيار صورة أولاً';
-      alert(this.error);
       return;
     }
     this.isUploading = true;
@@ -112,7 +111,7 @@ export class ProfileComponent implements OnInit {
           this.showUploadField = false;
           this.selectedFile = null;
           this.error = null;
-          alert(response.message);
+          this.successMessage = response.message || 'تم رفع الصورة بنجاح';
           const fileInput = document.getElementById('profileImageInput') as HTMLInputElement;
           if (fileInput) fileInput.value = '';
         }
@@ -120,7 +119,6 @@ export class ProfileComponent implements OnInit {
       error: (err) => {
         this.isUploading = false;
         this.error = err.message || 'فشل في رفع الصورة';
-        alert(this.error);
         console.error('Upload image error:', err);
       },
       complete: () => {
@@ -147,16 +145,15 @@ export class ProfileComponent implements OnInit {
     if (this.currentPassword && this.newPassword) {
       this.profileService.updatePassword(this.currentPassword, this.newPassword).subscribe({
         next: (response) => {
-          alert(response.message);
+          this.successMessage = response.message || 'تم تغيير كلمة المرور بنجاح';
           this.closePasswordModal();
         },
         error: (err) => {
           this.error = err.message || 'فشل في تغيير كلمة المرور';
-          alert(this.error);
         }
       });
     } else {
-      alert('يرجى إدخال كلمة المرور الحالية والجديدة');
+      this.error = 'يرجى إدخال كلمة المرور الحالية والجديدة';
     }
   }
 
@@ -180,17 +177,16 @@ export class ProfileComponent implements OnInit {
         next: (response) => {
           if (response.success && response.data && this.profile) {
             this.profile.meetings = response.data.meetings;
-            alert(response.message || 'تم إضافة الموعد بنجاح');
+            this.successMessage = response.message || 'تم إضافة الموعد بنجاح';
             this.closeMeetingModal();
           }
         },
         error: (err) => {
           this.error = err.message || 'فشل في إضافة الموعد';
-          alert(this.error);
         }
       });
     } else {
-      alert('يرجى إدخال جميع تفاصيل الموعد');
+      this.error = 'يرجى إدخال جميع تفاصيل الموعد';
     }
   }
 
@@ -200,12 +196,11 @@ export class ProfileComponent implements OnInit {
         next: (response) => {
           if (response.success && response.data && this.profile) {
             this.profile.meetings = response.data.meetings;
-            alert(response.message || 'تم حذف الموعد بنجاح');
+            this.successMessage = response.message || 'تم حذف الموعد بنجاح';
           }
         },
         error: (err) => {
           this.error = err.message || 'فشل في حذف الموعد';
-          alert(this.error);
         }
       });
     }
@@ -254,14 +249,18 @@ export class ProfileComponent implements OnInit {
           this.lectureForm.reset();
           this.checkLectureCount();
           this.notificationService.getNotifications().subscribe({
-            next: () => alert('تم إرسال إشعار إلى الإدارة'),
-            error: (err) => console.error('Notification error:', err)
+            next: () => {
+              this.successMessage = 'تم رفع المحاضرة وإرسال إشعار إلى الإدارة';
+            },
+            error: (err) => {
+              this.error = 'تم رفع المحاضرة، لكن فشل إرسال الإشعار';
+              console.error('Notification error:', err);
+            }
           });
         }
       },
       error: (err) => {
         this.error = err.message || 'فشل في رفع المحاضرة';
-        alert(this.error);
         console.error('Upload lecture error:', err);
       },
       complete: () => {

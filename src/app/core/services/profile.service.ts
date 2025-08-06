@@ -67,7 +67,6 @@ export class ProfileService {
     }
     return new HttpHeaders({
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
     });
   }
 
@@ -119,7 +118,7 @@ export class ProfileService {
 
   uploadProfileImage(file: File): Observable<UploadImageResponse> {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('profileImage', file); // Match backend field name
     return this.http.post<UploadImageResponse>(ApiEndpoints.profile.uploadImage, formData, { headers: this.getHeaders() }).pipe(
       catchError(error => {
         console.error('Error uploading profile image:', error);
