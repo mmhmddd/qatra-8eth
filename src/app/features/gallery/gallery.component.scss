@@ -96,6 +96,9 @@ $black: #000000;
   --swiper-navigation-size: 30px;
   --swiper-pagination-color: $primary-color;
   --swiper-pagination-bullet-size: 10px;
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .hero-slide {
@@ -103,13 +106,17 @@ $black: #000000;
   aspect-ratio: 16/9;
   overflow: hidden;
   background: $dark-color;
+  width: 100%;
+  height: 100%;
 }
 
 .hero-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   transition: transform 0.5s ease;
+  display: block;
 }
 
 .hero-slide:hover .hero-image {
@@ -123,7 +130,7 @@ $black: #000000;
   right: 0;
   background: linear-gradient(to top, rgba($black, 0.85), transparent);
   color: $white;
-  padding: 1.5rem;
+  padding: 1rem;
   text-align: center;
   opacity: 0.9;
   transition: opacity 0.3s ease;
@@ -177,7 +184,9 @@ $black: #000000;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   transition: transform 0.4s ease;
+  display: block;
 }
 
 .gallery-card:hover .gallery-image {
@@ -231,13 +240,18 @@ $black: #000000;
   box-shadow: 0 6px 20px rgba($black, 0.08);
   --swiper-navigation-color: $white;
   --swiper-navigation-size: 28px;
+  touch-action: pan-x;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .popular-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   transition: transform 0.5s ease;
+  display: block;
 }
 
 .popular-caption {
@@ -247,7 +261,7 @@ $black: #000000;
   right: 0;
   background: linear-gradient(to top, rgba($black, 0.85), transparent);
   color: $white;
-  padding: 1.5rem;
+  padding: 1rem;
   text-align: center;
 }
 
@@ -319,6 +333,10 @@ $black: #000000;
   .vertical-swiper {
     height: 400px;
   }
+
+  .hero-swiper {
+    --swiper-slides-per-view: 2;
+  }
 }
 
 @media (max-width: 768px) {
@@ -338,9 +356,15 @@ $black: #000000;
     font-size: 1.6rem;
   }
 
+  .hero-slide {
+    aspect-ratio: 4/3;
+    height: 300px;
+  }
+
   .hero-image,
   .popular-image {
-    height: 220px;
+    height: 100%;
+    min-height: 300px;
   }
 
   .hero-caption h3,
@@ -387,9 +411,15 @@ $black: #000000;
     font-size: 0.95rem;
   }
 
+  .hero-slide {
+    aspect-ratio: 3/2;
+    height: 250px;
+  }
+
   .hero-image,
   .popular-image {
-    height: 180px;
+    height: 100%;
+    min-height: 250px;
   }
 
   .hero-caption h3,
@@ -412,5 +442,15 @@ $black: #000000;
 
   .vertical-swiper {
     height: 300px;
+  }
+
+  .hero-swiper {
+    --swiper-slides-per-view: 1;
+    --swiper-space-between: 10px;
+  }
+
+  .swiper-container {
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
   }
 }

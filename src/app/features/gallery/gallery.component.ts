@@ -12,7 +12,7 @@ import { NewSectionComponent } from "../../shared/new-section/new-section.compon
   imports: [CommonModule, NewSectionComponent],
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.scss'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA] // Add this to suppress Web Component errors
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GalleryComponent implements OnInit {
   images$: Observable<GalleryResponse> | undefined;
@@ -36,13 +36,13 @@ export class GalleryComponent implements OnInit {
           this.latestImages = images
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
             .slice(0, 8);
-          // Simulate popular images based on views or likes (mocked for simplicity)
+          // Simulate popular images based on views or likes
           this.popularImages = images
             .sort((a, b) => (b.views || 0) - (a.views || 0))
             .slice(0, 6);
           // All images
           this.allImages = images;
-          // Featured images for hero slider (ensure at least 5 images)
+          // Featured images for hero slider
           this.featuredImages = images.slice(0, Math.max(5, images.length));
         }
       },

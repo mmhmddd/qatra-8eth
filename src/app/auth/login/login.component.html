@@ -100,41 +100,40 @@
                 </div>
               </div>
 
-              <!-- Password Field -->
-              <div class="form-group mb-3">
-                <label for="password" class="form-label">
-                  <i class="fas fa-lock me-2"></i>
-                  كلمة المرور
-                </label>
-                <div class="input-group">
-                  <input
-                    [type]="showPassword ? 'text' : 'password'"
-                    [class]="getFieldClasses('password')"
-                    id="password"
-                    formControlName="password"
-                    placeholder="أدخل كلمة المرور"
-                    (focus)="onFieldFocus('password')"
-                    autocomplete="current-password"
-                  >
-                  <button
-                    type="button"
-                    class="btn btn-outline-secondary password-toggle"
-                    (click)="togglePasswordVisibility()"
-                    [disabled]="isLoading"
-                    style="margin-top: 10px; border-radius: 50%;"
-                  >
-                    <i id="showPassword" [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-                  </button>
-                </div>
-                <div *ngIf="isFieldInvalid('password')" class="invalid-feedback">
-                  <i class="fas fa-exclamation-circle me-1"></i>
-                  {{ getFieldErrorMessage('password') }}
-                </div>
-                <div *ngIf="isFieldValid('password')" class="valid-feedback">
-                  <i class="fas fa-check-circle me-1"></i>
-                  كلمة المرور قوية
-                </div>
-              </div>
+<!-- Password Field -->
+<div class="form-group mb-3">
+  <label for="password" class="form-label">
+    <i class="fas fa-lock me-2"></i>
+    كلمة المرور
+  </label>
+  <div class="input-group">
+    <input
+      [type]="showPassword ? 'text' : 'password'"
+      [class]="getFieldClasses('password')"
+      id="password"
+      formControlName="password"
+      placeholder="أدخل كلمة المرور"
+      (focus)="onFieldFocus('password')"
+      autocomplete="current-password"
+    >
+    <button
+      type="button"
+      class="password-toggle"
+      (click)="togglePasswordVisibility()"
+      [disabled]="isLoading"
+    >
+      <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+    </button>
+  </div>
+  <div *ngIf="isFieldInvalid('password')" class="invalid-feedback">
+    <i class="fas fa-exclamation-circle me-1"></i>
+    {{ getFieldErrorMessage('password') }}
+  </div>
+  <div *ngIf="isFieldValid('password')" class="valid-feedback">
+    <i class="fas fa-check-circle me-1"></i>
+    كلمة المرور قوية
+  </div>
+</div>
 
               <!-- Remember Me & Forgot Password -->
               <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem;">

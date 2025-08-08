@@ -42,6 +42,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       value: 5,
       label: 'سنة خبرة',
       count: 0,
+      prefix: '+',
       animationDuration: 2000,
       ringOffset: this.ringDasharray
     },
@@ -62,8 +63,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       ringOffset: this.ringDasharray
     },
     {
-      value: 5,
-      label: 'شريك وداعم',
+      value: 20000,
+      label: 'ساعات تطوع',
       count: 0,
       prefix: '+',
       animationDuration: 2200,

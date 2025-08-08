@@ -1,6 +1,5 @@
-<div  style="margin-top: 110px;">
-<app-new-section></app-new-section>
-
+<div style="margin-top: 110px;">
+  <app-new-section></app-new-section>
 </div>
 
 <div class="gallery-container" dir="rtl">
@@ -19,10 +18,29 @@
                      autoplay='{"delay": 2500, "disableOnInteraction": false}'
                      speed="800"
                      navigation="true"
-                     pagination='{"clickable": true}'>
+                     pagination='{"clickable": true}'
+                     touch-events-target="container"
+                     touch-ratio="1"
+                     touch-angle="45"
+                     simulate-touch="true"
+                     grab-cursor="true"
+                     breakpoints='{
+                       "320": {
+                         "slidesPerView": 1,
+                         "spaceBetween": 10
+                       },
+                       "768": {
+                         "slidesPerView": 2,
+                         "spaceBetween": 15
+                       },
+                       "992": {
+                         "slidesPerView": 3,
+                         "spaceBetween": 20
+                       }
+                     }'>
       <swiper-slide *ngFor="let image of featuredImages">
         <div class="hero-slide">
-          <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="hero-image">
+          <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="hero-image" loading="lazy">
           <div class="hero-caption">
             <h3>{{ image.title }}</h3>
             <p>{{ image.description || 'لا يوجد وصف' }}</p>
@@ -39,7 +57,7 @@
     <div class="gallery-grid">
       <div *ngFor="let image of latestImages" class="gallery-card">
         <div class="image-wrapper">
-          <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="gallery-image">
+          <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="gallery-image" loading="lazy">
           <div class="image-overlay">
             <h3 class="image-title">{{ image.title }}</h3>
             <p class="image-description">{{ image.description || 'لا يوجد وصف' }}</p>
@@ -58,11 +76,16 @@
         <swiper-container class="vertical-swiper"
                          slides-per-view="1"
                          loop="true"
-                         autoplay='{"delay": 4000}'
+                         autoplay='{"delay": 4000, "disableOnInteraction": false}'
                          direction="vertical"
-                         navigation="true">
+                         navigation="true"
+                         touch-events-target="container"
+                         touch-ratio="1"
+                         touch-angle="45"
+                         simulate-touch="true"
+                         grab-cursor="true">
           <swiper-slide *ngFor="let image of popularImages">
-            <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="popular-image">
+            <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="popular-image" loading="lazy">
             <div class="popular-caption">
               <h3>{{ image.title }}</h3>
               <p>{{ image.description || 'لا يوجد وصف' }}</p>
@@ -87,7 +110,7 @@
     <div class="gallery-grid">
       <div *ngFor="let image of allImages" class="gallery-card">
         <div class="image-wrapper">
-          <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="gallery-image">
+          <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="gallery-image" loading="lazy">
           <div class="image-overlay">
             <h3 class="image-title">{{ image.title }}</h3>
             <p class="image-description">{{ image.description || 'لا يوجد وصف' }}</p>
