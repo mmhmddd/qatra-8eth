@@ -25,8 +25,8 @@ $black: #000000;
 
     .navbar-brand {
       img {
-        height: 80px;
-        width: 180px;
+        height: 60px;
+        width: 140px;
       }
     }
 
@@ -343,8 +343,402 @@ $black: #000000;
 body {
   margin-top: 70px;
   transition: margin-top 0.3s ease;
+$primary-color: #00adb5;
+$secondary-color: #0097b2;
+$accent-color: #ff914d;
+$neutral-color: #545454;
+$black: #000000;
+
+.navbar {
+  background-color: $primary-color;
+  min-height: 70px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  direction: rtl;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: background-color 0.3s ease, min-height 0.3s ease;
+
+  &.scrolled {
+    background-color: rgba($primary-color, 0.9);
+    min-height: 50px;
+    padding: 0.3rem 1rem;
+
+    .navbar-brand {
+      img {
+        height: 80px;
+        width: 180px;
+      }
+    }
+
+    .navbar-nav {
+      gap: 1.2rem;
+    }
+
+    .btn {
+      padding: 0.3rem 0.8rem;
+      font-size: 0.85rem;
+    }
+  }
+
+  .container-fluid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .navbar-brand {
+    display: flex !important;
+    align-items: center;
+
+    img {
+      height: 90px;
+      width: 250px;
+      object-fit: cover;
+      transition: transform 0.3s ease, height 0.3s ease, width 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  .navbar-toggler {
+    border: none;
+    background-color: transparent;
+    padding: 0.5rem;
+
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.9)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .navbar-collapse {
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .navbar-nav {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 0;
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-link {
+      color: white;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 8px 14px;
+      border-radius: 8px;
+      background-color: transparent;
+      position: relative;
+      transition: all 0.3s ease;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        right: 0;
+        width: 0;
+        height: 2px;
+        background-color: $accent-color;
+        transition: width 0.3s ease;
+      }
+
+      &:hover {
+        color: $accent-color;
+        padding: 8px 16px;
+        border-radius: 10px;
+        text-decoration: none;
+
+        &::after {
+          width: 100%;
+        }
+      }
+
+      &.active {
+        color: $accent-color;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 8px 16px;
+        border-radius: 10px;
+
+        &::after {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .buttons-container {
+    min-width: 120px;
+    gap: 0.5rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .btn {
+    font-weight: 600;
+    padding: 0.35rem 0.9rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-align: center;
+
+    &.btn-primary {
+      background-color: $accent-color;
+      color: white;
+
+      &:hover {
+        background-color: darken($accent-color, 10%);
+      }
+    }
+
+    &.btn-danger {
+      background-color: #dc3545;
+      color: white;
+
+      &:hover {
+        background-color: darken(#dc3545, 10%);
+      }
+    }
+
+    &.btn-profile,
+    &.btn-dashboard {
+      background-color: transparent;
+      color: $black;
+      padding: 0.35rem 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+
+      svg {
+        transition: color 0.3s ease;
+        margin-left: 0.5rem;
+        width: 20px;
+        height: 20px;
+      }
+
+      span {
+        transition: color 0.3s ease;
+      }
+
+      &:hover {
+        svg,
+        span {
+          color: $accent-color;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 991.98px) {
+  .navbar {
+    // Better mobile layout with proper RTL positioning
+    .container-fluid {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar-brand {
+      display: flex !important;
+      align-items: center;
+      order: 2; // Move logo to the right in RTL layout
+      margin-right: 0;
+      margin-left: auto;
+
+      img {
+        height: 60px;
+        width: 150px !important;
+        object-fit: cover;
+      }
+    }
+
+    .navbar-toggler {
+      order: 1; // Move toggle button to the left in RTL layout
+      margin-left: 0;
+      margin-right: auto;
+    }
+
+    &.scrolled {
+      .navbar-brand {
+        img {
+          height: 50px;
+          width: 120px;
+        }
+      }
+    }
+
+    .navbar-collapse {
+      order: 3; // Collapse content comes last
+      width: 100%;
+
+      &.show {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 1.5rem;
+        background-color: $primary-color;
+        margin-top: 1rem;
+      }
+
+      .navbar-nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        width: 100%;
+        margin-bottom: 1.5rem;
+
+        .nav-link {
+          text-align: center;
+          width: 100%;
+          max-width: 300px;
+          padding: 10px 0;
+          font-size: 0.9rem;
+
+          &.active::after {
+            width: 100%;
+            right: 0;
+          }
+        }
+      }
+
+      .buttons-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+
+        .btn {
+          width: 100%;
+          max-width: 250px;
+          padding: 0.5rem 1rem;
+          font-size: 0.9rem;
+          text-align: center;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          &.btn-profile,
+          &.btn-dashboard {
+            justify-content: center;
+            svg {
+              margin-left: 0.5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar {
+    padding: 0.75rem;
+
+    .container-fluid {
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar-brand {
+      order: 2;
+      margin-left: 0.5rem;
+          margin-right: -50px;
+
+
+      img {
+        height: 50px;
+        width: 120px;
+         margin-right: -50px;
+
+      }
+    }
+
+    .navbar-toggler {
+      order: 1;
+      margin-right: 0.5rem; // Add small margin for better spacing
+    }
+
+    &.scrolled {
+      .navbar-brand {
+        img {
+          height: 40px;
+          width: 100px;
+        }
+      }
+    }
+
+    .navbar-collapse {
+      .navbar-nav {
+        gap: 0.5rem;
+
+        .nav-link {
+          font-size: 0.85rem;
+          padding: 8px 0;
+          max-width: 260px;
+          text-align: center;
+        }
+      }
+
+      .buttons-container {
+        gap: 0.5rem;
+        max-width: 260px;
+        margin: 0 auto;
+
+        .btn {
+          max-width: 220px;
+          padding: 0.4rem 0.8rem;
+          font-size: 0.85rem;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+body {
+  margin-top: 70px;
+  transition: margin-top 0.3s ease;
 
   .navbar.scrolled + & {
     margin-top: 50px;
   }
+}
+  .navbar.scrolled + & {
+    margin-top: 50px;
+  }
+}
+
+@media (max-width: 576px) {
+    .navbar[_ngcontent-ng-c412818520] .navbar-brand[_ngcontent-ng-c412818520] img[_ngcontent-ng-c412818520] {
+        height: 50px;
+        width: 120px;
+        margin-right: -50px;
+    }
 }

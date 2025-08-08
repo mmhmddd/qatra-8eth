@@ -1,19 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { GalleryService, GalleryImage } from '../../core/services/gallery.service';
-import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { CommonModule, ViewportScroller } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-image-section',
   standalone: true,
-  imports: [RouterModule,CommonModule],
+  imports: [RouterModule, CommonModule],
   templateUrl: './image-section.component.html',
-  styleUrl: './image-section.component.scss'
+  styleUrls: ['./image-section.component.scss'] // Fix: Use styleUrls (plural) since styleUrl is deprecated
 })
 export class ImageSectionComponent implements OnInit {
   displayedImages: GalleryImage[] = [];
 
-  constructor(private galleryService: GalleryService, private router: Router) {}
+  constructor(
+    private galleryService: GalleryService,
+    private router: Router,
+    private viewportScroller: ViewportScroller
+  ) {}
 
   ngOnInit() {
     this.galleryService.getAllImages().subscribe({
@@ -30,5 +35,16 @@ export class ImageSectionComponent implements OnInit {
 
   getImageUrl(imagePath: string): string {
     return this.galleryService.getImageUrl(imagePath);
+  }
+
+  goToGallery() {
+    const currentUrl = this.router.url.split('#')[0];
+
+    if (currentUrl === '/gallery') {
+      this.viewportScroller.scrollToAnchor('gallery');
+    } else {
+      // Navigate to gallery page with fragment
+      this.router.navigate(['/gallery'], { fragment: 'gallerysection' });
+    }
   }
 }
