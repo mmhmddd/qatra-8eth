@@ -22,7 +22,9 @@ export class SidebarComponent {
     { label: 'إضافة كتاب', icon: 'fas fa-plus', link: '/upload-pdf' },
     { label: 'إضافة رأي', icon: 'fas fa-plus', link: '/add-testimonials' },
     { label: 'إضافة متصدر', icon: 'fas fa-plus', link: '/add-leaderboards' },
-    { label: 'إضافة صوره الي المعرض ', icon: 'fas fa-plus', link: '/add-gallery' }
+    { label: 'إضافة صوره الي المعرض ', icon: 'fas fa-plus', link: '/add-gallery' },
+    { label: 'العضاء المقصرون', icon: 'fas fa-user-times', link: '/low-lecture-members', class: 'low-lecture-members' }
+
   ];
 
   constructor(private router: Router, private authService: AuthService) {

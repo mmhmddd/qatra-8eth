@@ -6,6 +6,7 @@ $dark-color: #1a1a1a;
 $light-gray: #f8f9fa;
 $white: #ffffff;
 $black: #000;
+$red-color: #D32F2F;
 
 .sidebar {
   width: 220px;
@@ -110,6 +111,10 @@ $black: #000;
           &.active,
           &:hover {
             background: $primary-color;
+
+            &.low-lecture-members {
+              background: $red-color;
+            }
           }
         }
       }
