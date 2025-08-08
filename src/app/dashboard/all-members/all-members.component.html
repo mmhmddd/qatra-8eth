@@ -86,7 +86,6 @@
                 <th>التخصص الجامعي</th>
                 <th>ساعات التطوع</th>
                 <th>عدد المحاضرات</th>
-                <th>تاريخ الإنشاء</th>
                 <th>الإجراءات</th>
               </tr>
             </thead>
@@ -108,7 +107,6 @@
                   <span class="hours-badge">{{ member.volunteerHours || 0 }} ساعة</span>
                 </td>
                 <td class="member-lectures">{{ member.lectureCount || 0 }}</td>
-                <td class="member-date">{{ member.createdAt ? (member.createdAt | date:'dd/MM/yyyy') : 'غير محدد' }}</td>
                 <td class="member-actions">
                   <button
                     class="delete-btn"

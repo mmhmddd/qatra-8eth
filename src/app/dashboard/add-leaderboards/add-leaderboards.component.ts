@@ -29,8 +29,8 @@ export class AddLeaderboardsComponent implements OnInit {
   editSubjects: string = '';
   editImage: File | null = null;
   editImagePreview: string | null = null;
-  error: string = '';
-  success: string = '';
+  toastMessage: { message: string; type: 'success' | 'error' } | null = null;
+  isLoading: boolean = false;
   environment = environment;
 
   constructor(private leaderboardService: LeaderboardService) {}
@@ -40,14 +40,16 @@ export class AddLeaderboardsComponent implements OnInit {
   }
 
   loadLeaderboard(): void {
+    this.isLoading = true;
     this.leaderboardService.getLeaderboard().subscribe({
       next: (users) => {
         this.leaderboard = users;
-        this.error = '';
+        this.isLoading = false;
       },
       error: (err) => {
-        this.error = err.message;
+        this.showToast(err.message || 'فشل في جلب بيانات لوحة الصدارة', 'error');
         this.leaderboard = [];
+        this.isLoading = false;
       },
     });
   }
@@ -74,14 +76,15 @@ export class AddLeaderboardsComponent implements OnInit {
 
   addUser(): void {
     if (!this.newUser.email.trim() || !this.newUser.type) {
-      this.error = 'البريد الإلكتروني والدور مطلوبان';
+      this.showToast('البريد الإلكتروني والدور مطلوبان', 'error');
       return;
     }
     if (this.newUser.type === 'قاده' && (!this.newUser.name.trim() || !this.newUser.rank || !this.newUser.image)) {
-      this.error = 'الاسم، الرتبة، والصورة مطلوبة للقادة';
+      this.showToast('الاسم، الرتبة، والصورة مطلوبة للقادة', 'error');
       return;
     }
 
+    this.isLoading = true;
     this.leaderboardService
       .addUserToLeaderboard(
         this.newUser.email,
@@ -92,14 +95,13 @@ export class AddLeaderboardsComponent implements OnInit {
       )
       .subscribe({
         next: (user) => {
-          this.success = `تم إضافة ${user.name} بنجاح`;
-          this.error = '';
+          this.showToast(`تم إضافة ${user.name || user.email} بنجاح`, 'success');
           this.newUser = { email: '', type: '', name: '', rank: '', image: null };
           this.loadLeaderboard();
         },
         error: (err) => {
-          this.error = err.message;
-          this.success = '';
+          this.showToast(err.message || 'فشل في إضافة المستخدم', 'error');
+          this.isLoading = false;
         },
       });
   }
@@ -113,8 +115,6 @@ export class AddLeaderboardsComponent implements OnInit {
     this.editSubjects = user.subjects.join(', ');
     this.editImage = null;
     this.editImagePreview = null;
-    this.error = '';
-    this.success = '';
   }
 
   cancelEdit(): void {
@@ -133,18 +133,19 @@ export class AddLeaderboardsComponent implements OnInit {
 
     const subjects = this.editSubjects.split(',').map(s => s.trim()).filter(s => s);
     if (this.editVolunteerHours < 0 || this.editNumberOfStudents < 0) {
-      this.error = 'ساعات التطوع وعدد الطلاب يجب أن يكونا صفر أو أكثر';
+      this.showToast('ساعات التطوع وعدد الطلاب يجب أن يكونا صفر أو أكثر', 'error');
       return;
     }
     if (subjects.some(s => !s)) {
-      this.error = 'المواد يجب أن تكون نصوصًا غير فارغة';
+      this.showToast('المواد يجب أن تكون نصوصًا غير فارغة', 'error');
       return;
     }
     if (this.editingUser.type === 'قاده' && !this.editRank) {
-      this.error = 'الرتبة مطلوبة للقادة';
+      this.showToast('الرتبة مطلوبة للقادة', 'error');
       return;
     }
 
+    this.isLoading = true;
     this.leaderboardService
       .editUserInLeaderboard(
         this.editingUser.email,
@@ -157,31 +158,44 @@ export class AddLeaderboardsComponent implements OnInit {
       )
       .subscribe({
         next: (user) => {
-          this.success = `تم تحديث ${user.name} بنجاح`;
-          this.error = '';
+          this.showToast(`تم تحديث ${user.name || user.email} بنجاح`, 'success');
           this.cancelEdit();
           this.loadLeaderboard();
         },
         error: (err) => {
-          this.error = err.message;
-          this.success = '';
+          this.showToast(err.message || 'فشل في تحديث المستخدم', 'error');
+          this.isLoading = false;
         },
       });
   }
 
   deleteUser(email: string): void {
     if (confirm('هل أنت متأكد من حذف هذا المستخدم من لوحة الصدارة؟')) {
+      this.isLoading = true;
+      // Optimistically update the UI by removing the user
+      const deletedUser = this.leaderboard.find(user => user.email === email);
+      this.leaderboard = this.leaderboard.filter(user => user.email !== email);
       this.leaderboardService.removeUserFromLeaderboard(email).subscribe({
         next: (response) => {
-          this.success = response.message;
-          this.error = '';
+          this.showToast(response.message || `تم حذف ${deletedUser?.name || email} بنجاح`, 'success');
+          this.isLoading = false;
+          // Reload to ensure data consistency
           this.loadLeaderboard();
         },
         error: (err) => {
-          this.error = err.message;
-          this.success = '';
+          this.showToast(err.message || 'فشل في حذف المستخدم', 'error');
+          this.isLoading = false;
+          // Revert optimistic update on error
+          this.loadLeaderboard();
         },
       });
     }
+  }
+
+  showToast(message: string, type: 'success' | 'error'): void {
+    this.toastMessage = { message, type };
+    setTimeout(() => {
+      this.toastMessage = null;
+    }, 3000); // Hide toast after 3 seconds
   }
 }

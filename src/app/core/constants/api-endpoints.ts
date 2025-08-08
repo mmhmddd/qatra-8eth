@@ -22,7 +22,7 @@ export const ApiEndpoints = {
   },
   profile: {
     get: `${base}/profile`,
-    getByEmail: '/api/profile/email',
+    getByEmail: `${base}/profile/email`,
     updatePassword: `${base}/profile/password`,
     uploadImage: `${base}/profile/image`,
     addMeeting: `${base}/profile/meetings`,
@@ -32,7 +32,10 @@ export const ApiEndpoints = {
   lectures: {
     upload: `${base}/lectures`,
     delete: (lectureId: string) => `${base}/lectures/${lectureId}`,
-    list: `${base}/lectures/list`,
+    list: `${base}/lectures`,
+    notifications: `${base}/lectures/notifications`,
+    markNotificationsRead: `${base}/lectures/notifications/mark-read`,
+    deleteNotification: (notificationId: string) => `${base}/lectures/notifications/${notificationId}`
   },
   notifications: {
     get: `${base}/lectures/notifications`,

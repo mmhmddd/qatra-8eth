@@ -13,7 +13,7 @@ export interface UserProfile {
   profileImage: string | null;
   numberOfStudents: number;
   subjects: string[];
-  students: { name: string; email: string; phone: string }[];
+  students: { name: string; email: string; phone: string; grade?: string; subject?: string }[];
   meetings: { _id?: string; id?: string; title: string; date: string | Date; startTime: string; endTime: string }[];
   lectures: { _id: string; link: string; createdAt: string }[];
   lectureCount: number;
@@ -118,7 +118,7 @@ export class ProfileService {
 
   uploadProfileImage(file: File): Observable<UploadImageResponse> {
     const formData = new FormData();
-    formData.append('profileImage', file); // Match backend field name
+    formData.append('profileImage', file);
     return this.http.post<UploadImageResponse>(ApiEndpoints.profile.uploadImage, formData, { headers: this.getHeaders() }).pipe(
       catchError(error => {
         console.error('Error uploading profile image:', error);

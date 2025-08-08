@@ -65,7 +65,11 @@ export class AllJoinRequestComponent implements OnInit {
         this.joinRequests = requests.map(request => ({
           ...request,
           id: request._id || request.id, // Map _id to id for backend compatibility
-          createdAt: new Date(request.createdAt).toLocaleDateString('ar-SA') // Format date
+          createdAt: new Date(request.createdAt).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          }) // Format date as Gregorian (Miladi) in MM/DD/YYYY
         }));
         this.isLoading = false;
         console.log('Fetched join requests:', this.joinRequests);

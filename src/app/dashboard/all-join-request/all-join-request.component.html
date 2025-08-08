@@ -16,7 +16,12 @@
               <span *ngIf="header.key === 'status'" [ngClass]="getStatusClass(request.status)">
                 {{ request.status | statusTranslate }}
               </span>
-              <span *ngIf="header.key !== 'status'">
+              <span *ngIf="header.key === 'email'" style="text-decoration: none">
+                <a [href]="'mailto:' + request.email" class="text-primary" target="_blank" style="text-decoration: none">
+                  {{ request.email || 'غير متوفر' }}
+                </a>
+              </span>
+              <span *ngIf="header.key !== 'status' && header.key !== 'email'">
                 {{ request[header.key] || 'غير متوفر' }}
               </span>
             </td>

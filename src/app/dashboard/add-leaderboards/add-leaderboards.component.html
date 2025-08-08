@@ -7,9 +7,18 @@
     <div class="leaderboard-section">
       <h2>لوحة الصدارة</h2>
 
-      <!-- Success and Error Messages -->
-      <div *ngIf="success" class="success-message">{{ success }}</div>
-      <div *ngIf="error" class="error-message">{{ error }}</div>
+      <!-- Toast Notification -->
+      <div *ngIf="toastMessage" class="toast" [ngClass]="{'toast-success': toastMessage.type === 'success', 'toast-error': toastMessage.type === 'error'}">
+        {{ toastMessage.message }}
+      </div>
+
+      <!-- Loading Overlay -->
+      <div class="loading-overlay" *ngIf="isLoading">
+        <div class="loading-content">
+          <div class="loading-spinner"></div>
+          <p>جاري التحميل...</p>
+        </div>
+      </div>
 
       <!-- Add User Form -->
       <div class="add-user-form">
@@ -102,7 +111,7 @@
               الصورة مطلوبة للقادة
             </div>
           </div>
-          <button type="submit" class="btn primary" [disabled]="addUserForm.invalid">إضافة إلى لوحة الصدارة</button>
+          <button type="submit" class="btn primary" [disabled]="addUserForm.invalid || isLoading">إضافة إلى لوحة الصدارة</button>
         </form>
       </div>
 
@@ -194,7 +203,7 @@
                     name="editImage"
                     accept="image/jpeg,image/jpg,image/png"
                   />
-                  <button class="btn success" (click)="saveEdit()">حفظ</button>
+                  <button class="btn success" (click)="saveEdit()" [disabled]="isLoading">حفظ</button>
                   <button class="btn danger" (click)="cancelEdit()">إلغاء</button>
                 </td>
               </ng-container>
@@ -213,8 +222,8 @@
                 <td>{{ user.subjects.join(', ') || 'لا توجد مواد' }}</td>
                 <td>{{ user.score }}</td>
                 <td>
-                  <button class="view-btn" (click)="startEdit(user)">تعديل</button>
-                  <button class="delete-btn" (click)="deleteUser(user.email)">حذف</button>
+                  <button class="view-btn" (click)="startEdit(user)" [disabled]="isLoading">تعديل</button>
+                  <button class="delete-btn" (click)="deleteUser(user.email)" [disabled]="isLoading">حذف</button>
                 </td>
               </ng-template>
             </tr>

@@ -8,7 +8,7 @@
       </div>
 
       <div *ngIf="member" class="card shadow-sm">
-        <div class="card-header  text-white">
+        <div class="card-header text-white">
           <h3 class="mb-0">تفاصيل العضو: {{ member.name }}</h3>
         </div>
         <div class="card-body">
@@ -71,6 +71,8 @@
                       <th>الاسم</th>
                       <th>البريد الإلكتروني</th>
                       <th>الهاتف</th>
+                      <th>الصف</th>
+                      <th>المادة</th>
                       <th>الإجراءات</th>
                     </tr>
                   </thead>
@@ -79,6 +81,8 @@
                       <td><input type="text" class="form-control" [(ngModel)]="student.name"></td>
                       <td><input type="email" class="form-control" [(ngModel)]="student.email"></td>
                       <td><input type="text" class="form-control" [(ngModel)]="student.phone"></td>
+                      <td><input type="text" class="form-control" [(ngModel)]="student.grade" placeholder="الصف (اختياري)"></td>
+                      <td><input type="text" class="form-control" [(ngModel)]="student.subject" placeholder="المادة (اختياري)"></td>
                       <td><button class="btn btn-danger btn-sm" (click)="deleteStudent(i)">حذف</button></td>
                     </tr>
                   </tbody>
@@ -103,22 +107,34 @@
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label for="studentName" class="form-label">الاسم</label>
                 <input type="text" class="form-control" id="studentName" [(ngModel)]="newStudent.name">
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label for="studentEmail" class="form-label">البريد الإلكتروني</label>
                 <input type="email" class="form-control" id="studentEmail" [(ngModel)]="newStudent.email">
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="mb-3">
                 <label for="studentPhone" class="form-label">الهاتف</label>
                 <input type="text" class="form-control" id="studentPhone" [(ngModel)]="newStudent.phone">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label for="studentGrade" class="form-label">الصف (اختياري)</label>
+                <input type="text" class="form-control" id="studentGrade" [(ngModel)]="newStudent.grade">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3">
+                <label for="studentSubject" class="form-label">المادة (اختياري)</label>
+                <input type="text" class="form-control" id="studentSubject" [(ngModel)]="newStudent.subject">
               </div>
             </div>
           </div>
@@ -141,6 +157,8 @@
                   <th>الاسم</th>
                   <th>البريد الإلكتروني</th>
                   <th>الهاتف</th>
+                  <th>الصف</th>
+                  <th>المادة</th>
                 </tr>
               </thead>
               <tbody>
@@ -148,6 +166,8 @@
                   <td>{{ student.name }}</td>
                   <td>{{ student.email }}</td>
                   <td>{{ student.phone }}</td>
+                  <td>{{ student.grade || 'غير محدد' }}</td>
+                  <td>{{ student.subject || 'غير محدد' }}</td>
                 </tr>
               </tbody>
             </table>
@@ -180,7 +200,7 @@
                   <td>{{ lecture.name }}</td>
                   <td>{{ lecture.subject }}</td>
                   <td><a [href]="lecture.link" target="_blank" class="text-primary">{{ lecture.link }}</a></td>
-                  <td>{{ lecture.createdAt | date:'yyyy-MM-dd' }}</td>
+                  <td>{{ lecture.createdAt }}</td>
                   <td><button class="btn btn-danger btn-sm" (click)="deleteLecture(i)">حذف</button></td>
                 </tr>
               </tbody>

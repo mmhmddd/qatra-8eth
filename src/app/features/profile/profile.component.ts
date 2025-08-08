@@ -4,8 +4,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { ProfileService } from '../../core/services/profile.service';
 import { Router } from '@angular/router';
 import { JoinRequestService, JoinRequestResponse } from '../../core/services/join-request.service';
-import { LectureService, LectureResponse } from '../../core/services/lecture.service';
-import { NotificationService, NotificationResponse } from '../../core/services/Notification.service'
+import { LectureService, LectureResponse, NotificationResponse } from '../../core/services/lecture.service';
 
 @Component({
   selector: 'app-profile',
@@ -20,7 +19,7 @@ export class ProfileComponent implements OnInit {
   successMessage: string | null = null;
   lectureForm: FormGroup;
   isUploadingLecture: boolean = false;
-  showLectureWarning: boolean = false;
+  notifications: NotificationResponse['notifications'] = [];
   currentPassword: string = '';
   newPassword: string = '';
   showPasswordModal: boolean = false;
@@ -46,7 +45,6 @@ export class ProfileComponent implements OnInit {
     private profileService: ProfileService,
     private joinRequestService: JoinRequestService,
     private lectureService: LectureService,
-    private notificationService: NotificationService,
     private router: Router,
     private fb: FormBuilder
   ) {
@@ -59,6 +57,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProfile();
+    this.fetchNotifications();
   }
 
   loadProfile(): void {
@@ -66,7 +65,14 @@ export class ProfileComponent implements OnInit {
       next: (response) => {
         console.log('Profile response:', response);
         if (response.success && response.data) {
-          this.profile = response.data;
+          this.profile = {
+            ...response.data,
+            students: response.data.students.map((student: { grade: any; subject: any; }) => ({
+              ...student,
+              grade: student.grade || '',
+              subject: student.subject || ''
+            }))
+          };
           if (this.profile.profileImage) {
             this.profile.profileImage = `${this.backendUrl}${this.profile.profileImage}`;
           }
@@ -77,7 +83,6 @@ export class ProfileComponent implements OnInit {
             this.error = 'يوجد تناقض في بيانات الطلاب. يرجى التواصل مع الإدارة.';
             console.warn(this.error);
           }
-          this.checkLectureCount();
         } else {
           this.error = response.message || 'فشل في جلب بيانات الملف الشخصي';
         }
@@ -85,6 +90,50 @@ export class ProfileComponent implements OnInit {
       error: (err) => {
         this.error = err.message || 'حدث خطأ أثناء جلب بيانات الملف الشخصي';
         console.error('Profile loading error:', err);
+      }
+    });
+  }
+
+  fetchNotifications(): void {
+    this.lectureService.getNotifications().subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.notifications = response.notifications.filter(n => !n.read); // Show only unread notifications
+        }
+      },
+      error: (err) => {
+        this.error = err.message || 'فشل في جلب الإشعارات';
+        console.error('Notification fetch error:', err);
+      }
+    });
+  }
+
+  markNotificationsRead(): void {
+    this.lectureService.markNotificationsRead().subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.notifications = response.notifications.filter(n => !n.read); // Update to show only unread
+          this.successMessage = 'تم تحديد الإشعارات كمقروءة';
+        }
+      },
+      error: (err) => {
+        this.error = err.message || 'فشل في تحديد الإشعارات كمقروءة';
+        console.error('Mark notifications read error:', err);
+      }
+    });
+  }
+
+  deleteNotification(notificationId: string): void {
+    this.lectureService.deleteNotification(notificationId).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.notifications = this.notifications.filter(n => n._id !== notificationId);
+          this.successMessage = 'تم حذف الإشعار بنجاح';
+        }
+      },
+      error: (err) => {
+        this.error = err.message || 'فشل في حذف الإشعار';
+        console.error('Delete notification error:', err);
       }
     });
   }
@@ -210,19 +259,6 @@ export class ProfileComponent implements OnInit {
     this.activeSection = section;
   }
 
-  isValidLink(): boolean {
-    const urlPattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/;
-    return urlPattern.test(this.lectureForm.get('link')?.value || '');
-  }
-
-  checkLectureCount(): void {
-    if (this.profile && this.profile.lectures) {
-      const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-      const monthlyLectures = this.profile.lectures.filter((lecture: { createdAt: string | number | Date }) => new Date(lecture.createdAt) >= startOfMonth).length;
-      this.showLectureWarning = monthlyLectures < 2;
-    }
-  }
-
   uploadLecture(): void {
     if (this.lectureForm.invalid) {
       this.error = 'يرجى ملء جميع الحقول بشكل صحيح';
@@ -243,20 +279,12 @@ export class ProfileComponent implements OnInit {
             subject: response.lecture?.subject || '',
             createdAt: response.lecture?.createdAt || new Date().toISOString()
           });
-          this.profile.lectureCount = (this.profile.lectureCount || 0) + 1;
+          this.profile.lectureCount = response.lectureCount || (this.profile.lectureCount || 0) + 1;
+          this.profile.volunteerHours = response.volunteerHours || this.profile.volunteerHours;
           this.successMessage = response.message || 'تم رفع المحاضرة بنجاح';
           this.error = null;
           this.lectureForm.reset();
-          this.checkLectureCount();
-          this.notificationService.getNotifications().subscribe({
-            next: () => {
-              this.successMessage = 'تم رفع المحاضرة وإرسال إشعار إلى الإدارة';
-            },
-            error: (err) => {
-              this.error = 'تم رفع المحاضرة، لكن فشل إرسال الإشعار';
-              console.error('Notification error:', err);
-            }
-          });
+          this.fetchNotifications(); // Refresh notifications to check for warnings
         }
       },
       error: (err) => {

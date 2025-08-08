@@ -24,12 +24,12 @@ export interface JoinRequest {
   volunteerHours: number;
   numberOfStudents: number;
   subjects: string[];
-  students: { name: string; email: string; phone: string }[];
+  students: { name: string; email: string; phone: string; grade?: string; subject?: string }[];
   lectures: { _id: string; link: string; name: string; subject: string; createdAt: string; hasNewLecture: boolean }[];
   lectureCount: number;
   createdAt: string;
   showLectureWarning?: boolean;
-  hasNewLecture: boolean; // Changed from optional to required with default false
+  hasNewLecture: boolean;
 }
 
 interface CreateJoinRequestResponse {
@@ -46,7 +46,7 @@ interface UpdateMemberDetailsResponse {
   message: string;
   volunteerHours: number;
   numberOfStudents: number;
-  students: { name: string; email: string; phone: string }[];
+  students: { name: string; email: string; phone: string; grade?: string; subject?: string }[];
   subjects: string[];
   lectures?: { _id: string; link: string; name: string; subject: string; createdAt: string; hasNewLecture: boolean }[];
   lectureCount?: number;
@@ -54,9 +54,9 @@ interface UpdateMemberDetailsResponse {
 
 interface AddStudentResponse {
   message: string;
-  student: { name: string; email: string; phone: string };
+  student: { name: string; email: string; phone: string; grade?: string; subject?: string };
   numberOfStudents: number;
-  students: { name: string; email: string; phone: string }[];
+  students: { name: string; email: string; phone: string; grade?: string; subject?: string }[];
 }
 
 interface RejectJoinRequestResponse {
@@ -175,11 +175,11 @@ export class JoinRequestService {
           students: response.students || [],
           lectures: (response.lectures || []).map(lecture => ({
             ...lecture,
-            hasNewLecture: lecture.hasNewLecture ?? false // Ensure hasNewLecture is set
+            hasNewLecture: lecture.hasNewLecture ?? false
           })),
           lectureCount: response.lectureCount || 0,
           createdAt: response.createdAt,
-          hasNewLecture: response.hasNewLecture ?? false // Ensure hasNewLecture is set
+          hasNewLecture: response.hasNewLecture ?? false
         }
       })),
       catchError(error => {
@@ -193,7 +193,7 @@ export class JoinRequestService {
     );
   }
 
-  updateMemberDetails(id: string, volunteerHours: number, numberOfStudents: number, students: { name: string; email: string; phone: string }[], subjects: string[]): Observable<JoinRequestResponse> {
+  updateMemberDetails(id: string, volunteerHours: number, numberOfStudents: number, students: { name: string; email: string; phone: string; grade?: string; subject?: string }[], subjects: string[]): Observable<JoinRequestResponse> {
     if (!id) {
       return throwError(() => ({
         success: false,
@@ -212,6 +212,18 @@ export class JoinRequestService {
         message: 'بيانات الطلاب يجب أن تحتوي على الاسم، البريد الإلكتروني الصحيح، والهاتف'
       }));
     }
+    if (students.some(student => student.grade && (student.grade.length < 1 || student.grade.length > 50))) {
+      return throwError(() => ({
+        success: false,
+        message: 'الصف يجب أن يكون بين 1 و50 حرفًا إذا تم توفيره'
+      }));
+    }
+    if (students.some(student => student.subject && (student.subject.length < 1 || student.subject.length > 100))) {
+      return throwError(() => ({
+        success: false,
+        message: 'المادة يجب أن تكون بين 1 و100 حرف إذا تم توفيرها'
+      }));
+    }
     return this.http.put<UpdateMemberDetailsResponse>(ApiEndpoints.joinRequests.updateMemberDetails(id), { volunteerHours, numberOfStudents, students, subjects }, { headers: this.getAuthHeaders() }).pipe(
       map(response => ({
         success: true,
@@ -223,7 +235,7 @@ export class JoinRequestService {
           subjects: response.subjects,
           lectures: (response.lectures || []).map(lecture => ({
             ...lecture,
-            hasNewLecture: lecture.hasNewLecture ?? false // Ensure hasNewLecture is set
+            hasNewLecture: lecture.hasNewLecture ?? false
           })),
           lectureCount: response.lectureCount || 0
         }
@@ -239,7 +251,7 @@ export class JoinRequestService {
     );
   }
 
-  addStudent(id: string, name: string, email: string, phone: string): Observable<JoinRequestResponse> {
+  addStudent(id: string, name: string, email: string, phone: string, grade?: string, subject?: string): Observable<JoinRequestResponse> {
     if (!id) {
       return throwError(() => ({
         success: false,
@@ -258,7 +270,19 @@ export class JoinRequestService {
         message: 'البريد الإلكتروني للطالب غير صالح'
       }));
     }
-    return this.http.post<AddStudentResponse>(ApiEndpoints.joinRequests.addStudent(id), { name, email, phone }, { headers: this.getAuthHeaders() }).pipe(
+    if (grade && (grade.length < 1 || grade.length > 50)) {
+      return throwError(() => ({
+        success: false,
+        message: 'الصف يجب أن يكون بين 1 و50 حرفًا إذا تم توفيره'
+      }));
+    }
+    if (subject && (subject.length < 1 || subject.length > 100)) {
+      return throwError(() => ({
+        success: false,
+        message: 'المادة يجب أن تكون بين 1 و100 حرف إذا تم توفيرها'
+      }));
+    }
+    return this.http.post<AddStudentResponse>(ApiEndpoints.joinRequests.addStudent(id), { name, email, phone, grade, subject }, { headers: this.getAuthHeaders() }).pipe(
       map(response => ({
         success: true,
         message: response.message || 'تم إضافة الطالب بنجاح',

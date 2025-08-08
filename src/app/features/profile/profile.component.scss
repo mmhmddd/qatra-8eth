@@ -201,7 +201,6 @@ body {
   }
 }
 
-
 // Alerts
 .alert {
   border-radius: 8px;
@@ -372,6 +371,25 @@ body {
 
   .form-group {
     margin-bottom: 1.25rem;
+  }
+}
+
+// Notifications section
+.notifications-section {
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+
+  h4 {
+    font-weight: 700;
+    color: $neutral-color;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+  }
+
+  .notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
   }
 }
 
@@ -552,6 +570,7 @@ dl.row {
     }
   }
 }
+
 // Add animation to alerts
 .alert {
   animation: fadeIn 0.5s ease-in-out;

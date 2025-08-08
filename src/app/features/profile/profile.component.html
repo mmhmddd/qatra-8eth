@@ -66,8 +66,28 @@
             </dl>
           </div>
         </div>
+        <!-- Notifications Section -->
+        <div class="notifications-section mt-4">
+          <h4>الإشعارات</h4>
+          <div *ngIf="notifications.length === 0" class="alert alert-info">
+            لا توجد إشعارات جديدة.
+          </div>
+          <div *ngIf="notifications.length > 0" class="notification-list">
+            <div *ngFor="let notification of notifications" class="alert alert-warning alert-dismissible fade show d-flex align-items-center justify-content-between">
+              <div>
+                {{ notification.message }}
+                <small>({{ notification.createdAt | date:'short' }})</small>
+              </div>
+              <div>
+                <button class="btn btn-danger btn-sm me-2" (click)="deleteNotification(notification._id)">حذف</button>
+              </div>
+            </div>
+            <button class="btn btn-success mt-2" (click)="markNotificationsRead()">تحديد الكل كمقروء</button>
+          </div>
+        </div>
         <!-- Add Lecture Section -->
         <div class="upload-section mt-4">
+          <h4>إضافة محاضرة</h4>
           <form [formGroup]="lectureForm" (ngSubmit)="uploadLecture()">
             <div class="form-group">
               <label for="lectureLink" class="form-label">رابط المحاضرة</label>
@@ -102,18 +122,17 @@
             </div>
             <div class="form-group">
               <label for="lectureSubject" class="form-label">المادة</label>
-              <input
+              <select
                 id="lectureSubject"
                 formControlName="subject"
-                type="text"
                 class="form-control mb-2"
-                placeholder="أدخل اسم المادة"
                 [class.is-invalid]="lectureForm.get('subject')?.invalid && lectureForm.get('subject')?.touched"
-              />
+              >
+                <option value="" disabled selected>اختر المادة</option>
+                <option *ngFor="let subject of profile?.subjects" [value]="subject">{{ subject }}</option>
+              </select>
               <div *ngIf="lectureForm.get('subject')?.invalid && lectureForm.get('subject')?.touched" class="invalid-feedback">
                 <span *ngIf="lectureForm.get('subject')?.errors?.['required']">اسم المادة مطلوب</span>
-                <span *ngIf="lectureForm.get('subject')?.errors?.['minlength']">اسم المادة قصير جدًا</span>
-                <span *ngIf="lectureForm.get('subject')?.errors?.['maxlength']">اسم المادة طويل جدًا (الحد الأقصى 100 حرف)</span>
               </div>
             </div>
             <button
@@ -124,9 +143,6 @@
               {{ isUploadingLecture ? 'جاري الرفع...' : 'رفع المحاضرة' }}
             </button>
           </form>
-          <div *ngIf="showLectureWarning" class="alert alert-warning mt-2">
-            تحذير: لقد قمت برفع أقل من 2 محاضرة هذا الشهر. يرجى زيادة المحاضرات!
-          </div>
         </div>
       </div>
     </div>
@@ -150,6 +166,8 @@
                 <th>الاسم</th>
                 <th>البريد الإلكتروني</th>
                 <th>الهاتف</th>
+                <th>الصف</th>
+                <th>المادة</th>
               </tr>
             </thead>
             <tbody>
@@ -157,6 +175,8 @@
                 <td>{{ student.name || 'غير متوفر' }}</td>
                 <td>{{ student.email || 'غير متوفر' }}</td>
                 <td>{{ student.phone || 'غير متوفر' }}</td>
+                <td>{{ student.grade || 'غير محدد' }}</td>
+                <td>{{ student.subject || 'غير محدد' }}</td>
               </tr>
             </tbody>
           </table>
