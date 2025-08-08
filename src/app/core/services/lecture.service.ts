@@ -33,6 +33,17 @@ export interface NotificationResponse {
   }[];
 }
 
+export interface LowLectureMembersResponse {
+  success: boolean;
+  message: string;
+  members: {
+    _id: string;
+    name: string;
+    email: string;
+    underTargetSubjects: string[];
+  }[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -43,7 +54,11 @@ export class LectureService {
 
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
-    return token ? this.headers.set('Authorization', `Bearer ${token}`) : this.headers;
+    if (!token) {
+      console.error('No token found in localStorage');
+      throw new Error('No authentication token found');
+    }
+    return this.headers.set('Authorization', `Bearer ${token}`);
   }
 
   uploadLecture(link: string, name: string, subject: string): Observable<LectureResponse> {
@@ -168,7 +183,7 @@ export class LectureService {
     );
   }
 
-  deleteNotification = (notificationId: string): Observable<{ success: boolean; message?: string }> => {
+  deleteNotification(notificationId: string): Observable<{ success: boolean; message?: string }> {
     if (!notificationId) {
       return throwError(() => ({
         success: false,
@@ -188,6 +203,42 @@ export class LectureService {
         return throwError(() => ({
           success: false,
           message: error.error?.message || 'خطأ في حذف الإشعار',
+          error: error.message,
+        }));
+      })
+    );
+  }
+
+  getLowLectureMembers(): Observable<LowLectureMembersResponse> {
+    return this.http.get<LowLectureMembersResponse>(
+      ApiEndpoints.lectures.lowLectureMembers,
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      map(response => {
+        console.log('Raw API response:', response); // Debug log
+        return {
+          success: response.success,
+          message: response.members && response.members.length > 0
+            ? 'تم جلب الأعضاء الذين لديهم أقل من محاضرتين بنجاح'
+            : 'لا يوجد أعضاء لديهم أقل من محاضرتين حاليًا',
+          members: response.members || []
+        };
+      }),
+      catchError(error => {
+        console.error('Error fetching low lecture members:', error);
+        let errorMessage = 'خطأ في جلب الأعضاء الذين لديهم أقل من محاضرتين';
+        if (error.status === 401) {
+          errorMessage = 'غير مسموح بالوصول. يرجى تسجيل الدخول مرة أخرى';
+        } else if (error.status === 403) {
+          errorMessage = 'يجب أن تكون أدمن لعرض هذه المعلومات';
+        } else if (error.status === 0) {
+          errorMessage = 'خطأ في الاتصال بالخادم. تحقق من اتصالك بالإنترنت';
+        } else if (error.error && error.error.message) {
+          errorMessage = error.error.message;
+        }
+        return throwError(() => ({
+          success: false,
+          message: errorMessage,
           error: error.message,
         }));
       })

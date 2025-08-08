@@ -71,6 +71,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard, AdminGuard]
   },
   {
+    path: 'low-lecture-members',
+    loadComponent: () => import('./dashboard/low-lecture-members/low-lecture-members.component').then(m => m.LowLectureMembersComponent),
+
+  },
+  {
     path: 'member/:id',
     loadComponent: () => import('./dashboard/show-member/show-member.component').then(m => m.ShowMemberComponent),
     canActivate: [AuthGuard, AdminGuard]

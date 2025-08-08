@@ -35,7 +35,9 @@ export const ApiEndpoints = {
     list: `${base}/lectures`,
     notifications: `${base}/lectures/notifications`,
     markNotificationsRead: `${base}/lectures/notifications/mark-read`,
-    deleteNotification: (notificationId: string) => `${base}/lectures/notifications/${notificationId}`
+    deleteNotification: (notificationId: string) => `${base}/lectures/notifications/${notificationId}`,
+    lowLectureMembers: `${base}/lectures/low-lecture-members`, 
+    user: (userId: string) => `${base}/lectures/user/${userId}`,
   },
   notifications: {
     get: `${base}/lectures/notifications`,
@@ -65,5 +67,5 @@ export const ApiEndpoints = {
     add: `${base}/gallery/images`,
     edit: (id: string) => `${base}/gallery/images/${id}`,
     delete: (id: string) => `${base}/gallery/images/${id}`,
-  }
+  },
 };
