@@ -136,25 +136,33 @@
 </div>
 
               <!-- Remember Me & Forgot Password -->
-              <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem;">
-                <a
-                  href="#"
-                  style="text-decoration: none; color: #007bff; font-weight: bold;"
-                  (click)="goToForgotojoinus(); $event.preventDefault()"
-                >
-                  لست عضو ؟ انضم الينا الان
-                </a>
+<!-- Remember Me & Forgot Password -->
+<div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem;">
+  <a
+    href="#"
+    style="text-decoration: none; color: #007bff; font-weight: bold;"
+    (click)="goToForgotojoinus(); $event.preventDefault()"
+  >
+    لست عضو ؟ انضم الينا الان
+  </a>
 
-                <a
-                  href="#"
-                  style="text-decoration: none; color: #dc3545; font-weight: bold;"
-                  (click)="goToForgotPassword(); $event.preventDefault()"
-                >
-                  نسيت كلمة المرور؟
-                </a>
-              </div>
+  <a
+    href="#"
+    style="text-decoration: none; color: #dc3545; font-weight: bold;"
+    (click)="goToForgotPassword(); $event.preventDefault()"
+  >
+    نسيت كلمة المرور؟
+  </a>
 
-
+  <!-- Home Button -->
+  <a
+    href="#"
+    style="text-decoration: none; color: #28a745; font-weight: bold;"
+    (click)="goToHome(); $event.preventDefault()"
+  >
+    العودة إلى الصفحة الرئيسية
+  </a>
+</div>
               <!-- Submit Button -->
               <button
                 type="submit"

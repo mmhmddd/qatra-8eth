@@ -297,7 +297,7 @@ $danger-color: #dc3545;
 
 .form-group {
   position: relative;
-  margin-bottom: 1.2rem; 
+  margin-bottom: 1.2rem;
 }
 
 .form-label {
@@ -572,5 +572,27 @@ $danger-color: #dc3545;
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+.btn-success {
+  background: $success-color;
+  color: $white;
+  font-family: 'Amiri', serif;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.9rem 1.5rem;
+  border-radius: 12px;
+  border: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: darken($success-color, 10%);
+    transform: translateY(-2px);
+  }
+
+  &:disabled {
+    background: $neutral-color;
+    cursor: not-allowed;
+    opacity: 0.6;
   }
 }

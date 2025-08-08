@@ -180,9 +180,9 @@
           <h4 class="mb-0">المحاضرات</h4>
         </div>
         <div class="card-body">
-          <div *ngIf="member.showLectureWarning" class="alert alert-warning">
+          <!-- <div *ngIf="member.showLectureWarning" class="alert alert-warning">
             تحذير: لقد قمت برفع أقل من 2 محاضرة هذا الشهر. يرجى زيادة المحاضرات!
-          </div>
+          </div> -->
           <div *ngIf="member.lectures.length === 0" class="alert alert-info">لا توجد محاضرات مسجلة.</div>
           <div class="table-responsive" *ngIf="member.lectures.length > 0">
             <table class="table table-hover">

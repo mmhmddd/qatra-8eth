@@ -27,7 +27,7 @@ $black: #000000;
   position: relative;
   overflow: hidden;
   margin-top: 50px;
-  height: 80vh; // Height unchanged
+  height: 90vh;
 
   #hero_section & .carousel {
     position: relative;
@@ -72,7 +72,7 @@ $black: #000000;
   }
 
   .carousel-img {
-    object-fit: cover;
+    object-fit: contain;
     height: 100%;
     width: 100%;
     transition: transform 0.8s ease-in-out;
@@ -1080,7 +1080,8 @@ $black: #000000;
 }
 
 @media (max-width: 768px) {
-  .hero-wrapper {
-    height: auto;
-  }
+    .hero-wrapper[_ngcontent-ng-c1138095498] {
+        margin-top: 84px;
+        height: auto;
+    }
 }
