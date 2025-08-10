@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { TestimonialsService, Testimonial } from '../../core/services/testimonials.service';
-import { environment } from '../../../environments/environment';
 import { SidebarComponent } from "../../shared/sidebar/sidebar.component";
 
 @Component({
@@ -13,13 +12,16 @@ import { SidebarComponent } from "../../shared/sidebar/sidebar.component";
   styleUrls: ['./add-testimonials.component.scss']
 })
 export class AddTestimonialsComponent implements OnInit {
+  @ViewChild('addTestimonialForm') addTestimonialForm!: NgForm;
+
   testimonials: Testimonial[] = [];
-  newTestimonial: { name: string; major: string; rating: number; reviewText: string; image: File | null } = {
+  newTestimonial: { name: string; major: string; rating: number; reviewText: string; image: File | null; imagePreview: string | null } = {
     name: '',
     major: '',
     rating: 1,
     reviewText: '',
-    image: null
+    image: null,
+    imagePreview: null
   };
   editingTestimonial: Testimonial | null = null;
   editName: string = '';
@@ -30,7 +32,6 @@ export class AddTestimonialsComponent implements OnInit {
   editImagePreview: string | null = null;
   error: string = '';
   success: string = '';
-  environment = environment;
 
   constructor(private testimonialsService: TestimonialsService) {}
 
@@ -55,6 +56,11 @@ export class AddTestimonialsComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       this.newTestimonial.image = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.newTestimonial.imagePreview = reader.result as string;
+      };
+      reader.readAsDataURL(this.newTestimonial.image);
     }
   }
 
@@ -90,7 +96,7 @@ export class AddTestimonialsComponent implements OnInit {
       next: (testimonial) => {
         this.success = `تم إضافة ${testimonial.name} بنجاح`;
         this.error = '';
-        this.newTestimonial = { name: '', major: '', rating: 1, reviewText: '', image: null };
+        this.resetForm();
         this.loadTestimonials();
       },
       error: (err) => {
@@ -107,7 +113,7 @@ export class AddTestimonialsComponent implements OnInit {
     this.editRating = testimonial.rating;
     this.editReviewText = testimonial.reviewText;
     this.editImage = null;
-    this.editImagePreview = null;
+    this.editImagePreview = this.getImageUrl(testimonial.image);
     this.error = '';
     this.success = '';
   }
@@ -167,6 +173,17 @@ export class AddTestimonialsComponent implements OnInit {
           this.success = '';
         }
       });
+    }
+  }
+
+  getImageUrl(imagePath: string): string {
+    return this.testimonialsService.getImageUrl(imagePath);
+  }
+
+  private resetForm(): void {
+    this.newTestimonial = { name: '', major: '', rating: 1, reviewText: '', image: null, imagePreview: null };
+    if (this.addTestimonialForm) {
+      this.addTestimonialForm.resetForm();
     }
   }
 }
