@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { LeaderboardService, LeaderboardUser } from '../../core/services/leaderboard.service';
-import { environment } from '../../../environments/environment';
 import { SidebarComponent } from "../../shared/sidebar/sidebar.component";
 
 @Component({
@@ -13,13 +12,16 @@ import { SidebarComponent } from "../../shared/sidebar/sidebar.component";
   styleUrls: ['./add-leaderboards.component.scss'],
 })
 export class AddLeaderboardsComponent implements OnInit {
+  @ViewChild('addUserForm') addUserForm!: NgForm;
+
   leaderboard: LeaderboardUser[] = [];
-  newUser: { email: string; type: 'متطوع' | 'قاده' | ''; name: string; rank: string; image: File | null } = {
+  newUser: { email: string; type: 'متطوع' | 'قاده' | ''; name: string; rank: string; image: File | null; imagePreview: string | null } = {
     email: '',
     type: '',
     name: '',
     rank: '',
     image: null,
+    imagePreview: null
   };
   editingUser: LeaderboardUser | null = null;
   editName: string = '';
@@ -31,7 +33,6 @@ export class AddLeaderboardsComponent implements OnInit {
   editImagePreview: string | null = null;
   toastMessage: { message: string; type: 'success' | 'error' } | null = null;
   isLoading: boolean = false;
-  environment = environment;
 
   constructor(private leaderboardService: LeaderboardService) {}
 
@@ -58,6 +59,11 @@ export class AddLeaderboardsComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       this.newUser.image = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.newUser.imagePreview = reader.result as string;
+      };
+      reader.readAsDataURL(this.newUser.image);
     }
   }
 
@@ -65,7 +71,6 @@ export class AddLeaderboardsComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       this.editImage = input.files[0];
-      // Generate preview
       const reader = new FileReader();
       reader.onload = () => {
         this.editImagePreview = reader.result as string;
@@ -96,7 +101,7 @@ export class AddLeaderboardsComponent implements OnInit {
       .subscribe({
         next: (user) => {
           this.showToast(`تم إضافة ${user.name || user.email} بنجاح`, 'success');
-          this.newUser = { email: '', type: '', name: '', rank: '', image: null };
+          this.resetForm();
           this.loadLeaderboard();
         },
         error: (err) => {
@@ -114,7 +119,7 @@ export class AddLeaderboardsComponent implements OnInit {
     this.editNumberOfStudents = user.numberOfStudents;
     this.editSubjects = user.subjects.join(', ');
     this.editImage = null;
-    this.editImagePreview = null;
+    this.editImagePreview = this.getImageUrl(user.image);
   }
 
   cancelEdit(): void {
@@ -172,20 +177,17 @@ export class AddLeaderboardsComponent implements OnInit {
   deleteUser(email: string): void {
     if (confirm('هل أنت متأكد من حذف هذا المستخدم من لوحة الصدارة؟')) {
       this.isLoading = true;
-      // Optimistically update the UI by removing the user
       const deletedUser = this.leaderboard.find(user => user.email === email);
       this.leaderboard = this.leaderboard.filter(user => user.email !== email);
       this.leaderboardService.removeUserFromLeaderboard(email).subscribe({
         next: (response) => {
           this.showToast(response.message || `تم حذف ${deletedUser?.name || email} بنجاح`, 'success');
           this.isLoading = false;
-          // Reload to ensure data consistency
           this.loadLeaderboard();
         },
         error: (err) => {
           this.showToast(err.message || 'فشل في حذف المستخدم', 'error');
           this.isLoading = false;
-          // Revert optimistic update on error
           this.loadLeaderboard();
         },
       });
@@ -196,6 +198,17 @@ export class AddLeaderboardsComponent implements OnInit {
     this.toastMessage = { message, type };
     setTimeout(() => {
       this.toastMessage = null;
-    }, 3000); // Hide toast after 3 seconds
+    }, 3000);
+  }
+
+  getImageUrl(imagePath: string | null): string {
+    return this.leaderboardService.getImageUrl(imagePath);
+  }
+
+  private resetForm(): void {
+    this.newUser = { email: '', type: '', name: '', rank: '', image: null, imagePreview: null };
+    if (this.addUserForm) {
+      this.addUserForm.resetForm();
+    }
   }
 }

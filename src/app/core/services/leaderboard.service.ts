@@ -10,7 +10,7 @@ export interface LeaderboardUser {
   name: string;
   email: string;
   type: 'متطوع' | 'قاده';
-  rank: string | null; // or number, depending on your backend
+  rank: string | null;
   image: string | null;
   volunteerHours: number;
   numberOfStudents: number;
@@ -32,7 +32,10 @@ export class LeaderboardService {
 
   // Helper to get auth headers
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token'); // Adjust based on how you store the JWT token
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('لم يتم العثور على توكن. يرجى تسجيل الدخول.');
+    }
     return new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
@@ -46,6 +49,13 @@ export class LeaderboardService {
     rank?: string,
     image?: File
   ): Observable<LeaderboardUser> {
+    if (!email.trim() || !type) {
+      return throwError(() => new Error('البريد الإلكتروني والدور مطلوبان'));
+    }
+    if (type === 'قاده' && (!name?.trim() || !rank || !image)) {
+      return throwError(() => new Error('الاسم، الرتبة، والصورة مطلوبة للقادة'));
+    }
+
     const formData = new FormData();
     formData.append('email', email);
     formData.append('type', type);
@@ -57,12 +67,12 @@ export class LeaderboardService {
       .post<ApiResponse<LeaderboardUser>>(
         ApiEndpoints.leaderboard.add,
         formData,
-        { headers: this.getAuthHeaders() } // No Content-Type for FormData
+        { headers: this.getAuthHeaders() }
       )
       .pipe(
         map(response => response.data),
         catchError(error => {
-          const errorMsg = error.error?.message || 'خطأ في الخادم';
+          const errorMsg = error.error?.message || 'خطأ في إضافة المستخدم إلى لوحة الصدارة';
           return throwError(() => new Error(errorMsg));
         })
       );
@@ -75,7 +85,7 @@ export class LeaderboardService {
       .pipe(
         map(response => response.data),
         catchError(error => {
-          const errorMsg = error.error?.message || 'خطأ في الخادم';
+          const errorMsg = error.error?.message || 'خطأ في جلب لوحة الصدارة';
           return throwError(() => new Error(errorMsg));
         })
       );
@@ -91,6 +101,16 @@ export class LeaderboardService {
     subjects?: string[],
     image?: File
   ): Observable<LeaderboardUser> {
+    if (!email.trim()) {
+      return throwError(() => new Error('البريد الإلكتروني مطلوب'));
+    }
+    if (volunteerHours !== undefined && volunteerHours < 0) {
+      return throwError(() => new Error('ساعات التطوع يجب أن تكون صفر أو أكثر'));
+    }
+    if (numberOfStudents !== undefined && numberOfStudents < 0) {
+      return throwError(() => new Error('عدد الطلاب يجب أن يكون صفر أو أكثر'));
+    }
+
     const formData = new FormData();
     formData.append('email', email);
     if (name) formData.append('name', name);
@@ -109,7 +129,7 @@ export class LeaderboardService {
       .pipe(
         map(response => response.data),
         catchError(error => {
-          const errorMsg = error.error?.message || 'خطأ في الخادم';
+          const errorMsg = error.error?.message || 'خطأ في تحديث المستخدم';
           return throwError(() => new Error(errorMsg));
         })
       );
@@ -117,6 +137,9 @@ export class LeaderboardService {
 
   // Remove a user from the leaderboard
   removeUserFromLeaderboard(email: string): Observable<{ message: string; email: string }> {
+    if (!email.trim()) {
+      return throwError(() => new Error('البريد الإلكتروني مطلوب'));
+    }
     const body = { email };
     return this.http
       .delete<ApiResponse<{ email: string }>>(
@@ -126,9 +149,13 @@ export class LeaderboardService {
       .pipe(
         map(response => ({ message: response.message, email: response.data.email })),
         catchError(error => {
-          const errorMsg = error.error?.message || 'خطأ في الخادم';
+          const errorMsg = error.error?.message || 'خطأ في حذف المستخدم';
           return throwError(() => new Error(errorMsg));
         })
       );
+  }
+
+  getImageUrl(imagePath: string | null): string {
+    return imagePath || '/assets/images/leaderboard/placeholder.jpg';
   }
 }

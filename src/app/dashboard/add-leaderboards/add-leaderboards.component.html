@@ -23,6 +23,11 @@
       <!-- Add User Form -->
       <div class="add-user-form">
         <h3>إضافة متصدر</h3>
+        <!-- Image Preview -->
+        <div class="form-group" *ngIf="newUser.imagePreview">
+          <label>معاينة الصورة</label>
+          <img [src]="newUser.imagePreview" alt="معاينة الصورة" class="user-image" />
+        </div>
         <form (ngSubmit)="addUser()" #addUserForm="ngForm">
           <div class="form-row">
             <div class="form-group">
@@ -140,7 +145,8 @@
                 <!-- Edit Form -->
                 <td>{{ user.rank }}</td>
                 <td>
-                  <img *ngIf="editImagePreview || user.image" [src]="editImagePreview || (environment.apiBaseUrl + user.image)" alt="صورة المستخدم" class="user-image" />
+                  <img *ngIf="editImagePreview" [src]="editImagePreview" alt="صورة المستخدم" class="user-image" />
+                  <img *ngIf="!editImagePreview && user.image" [src]="getImageUrl(user.image)" alt="صورة المستخدم" class="user-image" />
                 </td>
                 <td>
                   <input
@@ -210,7 +216,7 @@
               <ng-template #showUser>
                 <td>{{ user.rank }}</td>
                 <td>
-                  <img *ngIf="user.image" [src]="environment.apiBaseUrl + user.image" alt="صورة المستخدم" class="user-image" />
+                  <img *ngIf="user.image" [src]="getImageUrl(user.image)" alt="صورة المستخدم" class="user-image" />
                   <span *ngIf="!user.image">لا توجد صورة</span>
                 </td>
                 <td>{{ user.name || 'غير محدد' }}</td>
