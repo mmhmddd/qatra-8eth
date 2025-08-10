@@ -97,6 +97,10 @@ export const routes: Routes = [
     path: 'reset-password/:token',
     loadComponent: () => import('./shared/reset-password-component/reset-password-component.component').then(m => m.ResetPasswordComponent)
   },
+{
+  path: 'tree',
+  loadComponent: () => import('./features/tree/tree.component').then(m => m.TreeComponent)
+},
   {
     path: '',
     redirectTo: '/home',
