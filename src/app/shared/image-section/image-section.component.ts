@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GalleryService, GalleryImage } from '../../core/services/gallery.service';
+import { GalleryService, GalleryImage, GalleryResponse } from '../../core/services/gallery.service';
 import { Router } from '@angular/router';
 import { CommonModule, ViewportScroller } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [RouterModule, CommonModule],
   templateUrl: './image-section.component.html',
-  styleUrls: ['./image-section.component.scss'] // Fix: Use styleUrls (plural) since styleUrl is deprecated
+  styleUrls: ['./image-section.component.scss']
 })
 export class ImageSectionComponent implements OnInit {
   displayedImages: GalleryImage[] = [];
@@ -22,12 +22,12 @@ export class ImageSectionComponent implements OnInit {
 
   ngOnInit() {
     this.galleryService.getAllImages().subscribe({
-      next: (response) => {
+      next: (response: GalleryResponse) => {
         if (response.success && Array.isArray(response.data)) {
           this.displayedImages = response.data.slice(0, 4);
         }
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Failed to load images:', error);
       }
     });

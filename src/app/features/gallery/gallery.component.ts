@@ -20,6 +20,7 @@ export class GalleryComponent implements OnInit {
   popularImages: GalleryImage[] = [];
   allImages: GalleryImage[] = [];
   featuredImages: GalleryImage[] = [];
+  errorMessage: string | null = null;
 
   constructor(private galleryService: GalleryService) {}
 
@@ -36,7 +37,7 @@ export class GalleryComponent implements OnInit {
           this.latestImages = images
             .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
             .slice(0, 8);
-          // Simulate popular images based on views or likes
+          // Sort by views for popular images
           this.popularImages = images
             .sort((a, b) => (b.views || 0) - (a.views || 0))
             .slice(0, 6);
@@ -44,10 +45,14 @@ export class GalleryComponent implements OnInit {
           this.allImages = images;
           // Featured images for hero slider
           this.featuredImages = images.slice(0, Math.max(5, images.length));
+          this.errorMessage = null;
+        } else {
+          this.errorMessage = response.message;
         }
       },
       error: (error) => {
-        console.error('فشل في تحميل صور المعرض:', error);
+        this.errorMessage = error.message || 'فشل في تحميل صور المعرض';
+        console.error('Error loading gallery images:', error);
       }
     });
   }

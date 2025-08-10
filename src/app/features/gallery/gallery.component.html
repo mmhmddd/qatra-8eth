@@ -8,6 +8,9 @@
     <p class="gallery-subtitle">صور ملهمة من مبادراتنا التعليمية والإنسانية لمساعدة أطفال غزة ومرضى السرطان، بمشاركة متطوعين ملتزمين بالتعليم والدعم النفسي.</p>
   </header>
 
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
   <!-- Hero Slider Section -->
   <section class="hero-section">
     <h2 class="section-title">أنشطة مميزة</h2>

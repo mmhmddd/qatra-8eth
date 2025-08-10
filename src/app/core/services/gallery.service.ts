@@ -5,18 +5,15 @@ import { catchError, map } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
 import { ApiEndpoints } from '../constants/api-endpoints';
 import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
 
 export interface GalleryImage {
-  views: number;
-path: string;
-alt: any;
   id: string;
   title: string;
   description: string | null;
   imagePath: string;
   uploadedBy: string;
   createdAt: string;
+  views: number;
 }
 
 export interface GalleryResponse {
@@ -184,6 +181,6 @@ export class GalleryService {
   }
 
   getImageUrl(imagePath: string): string {
-    return `${environment.apiBaseUrl}${imagePath}`;
+    return imagePath; // إرجاع imagePath مباشرة لأنه يحتوي على رابط Cloudinary الكامل
   }
 }

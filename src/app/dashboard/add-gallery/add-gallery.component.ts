@@ -1,8 +1,8 @@
-import { Component, inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { GalleryService, GalleryImage } from '../../core/services/gallery.service';
+import { GalleryService, GalleryImage, GalleryResponse, AddEditImageResponse, DeleteImageResponse } from '../../core/services/gallery.service';
 import { Router } from '@angular/router';
 import { SidebarComponent } from "../../shared/sidebar/sidebar.component";
 
@@ -14,27 +14,15 @@ import { SidebarComponent } from "../../shared/sidebar/sidebar.component";
   styleUrls: ['./add-gallery.component.scss']
 })
 export class AddGalleryComponent {
-visible() {
-throw new Error('Method not implemented.');
-}
-percentage() {
-throw new Error('Method not implemented.');
-}
-toggleToast() {
-throw new Error('Method not implemented.');
-}
-  private galleryService = inject(GalleryService);
-  private router = inject(Router);
-
   @ViewChild('addForm') addForm!: ElementRef;
 
   images: GalleryImage[] = [];
   isLoggedIn = false;
   newImage: { title: string; description: string | null; file: File | null; previewUrl: string | null; id?: string } = { title: '', description: '', file: null, previewUrl: null };
-  message = '';
+  message: string | null = null;
   isSuccess = true;
-  isEditing = false; // Removed, no longer needed
-position: any;
+
+  constructor(private galleryService: GalleryService, private router: Router) {}
 
   ngOnInit() {
     this.checkLoginStatus();
@@ -49,16 +37,17 @@ position: any;
 
   loadImages() {
     this.galleryService.getAllImages().subscribe({
-      next: response => {
+      next: (response: GalleryResponse) => {
         if (response.success) {
           this.images = response.data as GalleryImage[];
+          this.message = null;
         } else {
           this.message = response.message;
           this.isSuccess = false;
         }
       },
-      error: error => {
-        this.message = error.message;
+      error: (error: any) => {
+        this.message = error.message || 'فشل في تحميل الصور';
         this.isSuccess = false;
         if (error.message.includes('Redirecting to login')) {
           this.router.navigate(['/login']);
@@ -74,7 +63,7 @@ position: any;
       return;
     }
     this.galleryService.addImage(this.newImage.title, this.newImage.description, this.newImage.file).subscribe({
-      next: response => {
+      next: (response: AddEditImageResponse) => {
         if (response.success) {
           this.images.push(response.data);
           this.resetForm();
@@ -85,8 +74,8 @@ position: any;
           this.isSuccess = false;
         }
       },
-      error: error => {
-        this.message = error.message;
+      error: (error: any) => {
+        this.message = error.message || 'فشل في إضافة الصورة';
         this.isSuccess = false;
         if (error.message.includes('Redirecting to login')) {
           this.router.navigate(['/login']);
@@ -96,7 +85,6 @@ position: any;
   }
 
   openEditForm(image: GalleryImage) {
-    console.log('Opening edit form for image:', image);
     this.newImage = {
       id: image.id,
       title: image.title,
@@ -104,6 +92,8 @@ position: any;
       file: null,
       previewUrl: this.galleryService.getImageUrl(image.imagePath)
     };
+    this.message = null;
+    this.isSuccess = true;
     this.scrollToForm();
   }
 
@@ -114,7 +104,7 @@ position: any;
       return;
     }
     this.galleryService.editImage(this.newImage.id, this.newImage.title, this.newImage.description, this.newImage.file).subscribe({
-      next: response => {
+      next: (response: AddEditImageResponse) => {
         if (response.success) {
           const index = this.images.findIndex(img => img.id === response.data.id);
           if (index !== -1) {
@@ -128,8 +118,8 @@ position: any;
           this.isSuccess = false;
         }
       },
-      error: error => {
-        this.message = error.message;
+      error: (error: any) => {
+        this.message = error.message || 'فشل في تحديث الصورة';
         this.isSuccess = false;
         if (error.message.includes('Redirecting to login')) {
           this.router.navigate(['/login']);
@@ -140,13 +130,14 @@ position: any;
 
   cancelEdit() {
     this.resetForm();
-    this.message = '';
+    this.message = null;
+    this.isSuccess = true;
   }
 
   deleteImage(id: string) {
     if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
       this.galleryService.deleteImage(id).subscribe({
-        next: response => {
+        next: (response: DeleteImageResponse) => {
           if (response.success) {
             this.images = this.images.filter(img => img.id !== id);
             this.message = response.message;
@@ -156,8 +147,8 @@ position: any;
             this.isSuccess = false;
           }
         },
-        error: error => {
-          this.message = error.message;
+        error: (error: any) => {
+          this.message = error.message || 'فشل في حذف الصورة';
           this.isSuccess = false;
           if (error.message.includes('Redirecting to login')) {
             this.router.navigate(['/login']);

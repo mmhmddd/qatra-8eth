@@ -6,7 +6,7 @@
   </div>
   <div class="image-grid">
     <div class="image-card" *ngFor="let image of displayedImages; let i = index" [ngClass]="{'active': i < 4}">
-      <img [src]="getImageUrl(image.imagePath)" [alt]="image.alt || image.title" class="image-card-img">
+      <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="image-card-img">
       <div class="image-card-content">
         <h3 class="image-title">{{ image.title }}</h3>
         <p class="image-description">{{ image.description || 'لا يوجد وصف' }}</p>
