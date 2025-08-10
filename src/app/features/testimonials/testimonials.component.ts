@@ -4,7 +4,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { TestimonialsService, Testimonial } from '../../core/services/testimonials.service';
 import Swiper from 'swiper';
 import { Autoplay, Pagination } from 'swiper/modules';
-import { environment } from '../../../environments/environment';
 
 Swiper.use([Autoplay, Pagination]);
 
@@ -56,7 +55,7 @@ export class TestimonialsComponent implements AfterViewInit {
   initializeSwiper(): void {
     if (isPlatformBrowser(this.platformId)) {
       new Swiper('.swiper-container', {
-        slidesPerView: 1, // One slide at a time, each containing two cards
+        slidesPerView: 1,
         spaceBetween: 0,
         loop: this.testimonialChunks.length > 1,
         autoplay: {
@@ -118,10 +117,12 @@ export class TestimonialsComponent implements AfterViewInit {
     return rating >= star ? 'star filled' : 'star';
   }
 
+  getImageUrl(imagePath: string): string {
+    return this.testimonialsService.getImageUrl(imagePath);
+  }
+
   handleImageError(event: Event): void {
     const img = event.target as HTMLImageElement;
     img.src = '/assets/images/testimonials/placeholder.jpg';
   }
-
-  environment = environment;
 }
