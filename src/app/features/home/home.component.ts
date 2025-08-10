@@ -96,15 +96,21 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     private router: Router
   ) {}
 
-  async ngAfterViewInit() {
+  ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
       console.log('Running in browser, initializing AOS and carousel');
       AOS.init({
         duration: 800,
         easing: 'ease-in-out',
-        once: true
+        once: true,
+        mirror: false,
+        anchorPlacement: 'top-bottom'
       });
-      await this.initializeBrowserFeatures();
+      this.initializeBrowserFeatures();
+      // إعادة تحميل AOS عند تغيير حجم النافذة
+      window.addEventListener('resize', () => {
+        AOS.refresh();
+      });
     } else {
       console.log('Running in SSR, skipping browser-specific initialization');
     }
@@ -122,6 +128,12 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     if (this.carousel && this.carouselElement?.nativeElement) {
       this.carousel.dispose();
+    }
+
+    if (isPlatformBrowser(this.platformId)) {
+      window.removeEventListener('resize', () => {
+        AOS.refresh();
+      });
     }
   }
 
@@ -280,7 +292,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   formatNumber(num: number): string {
-    return num.toLocaleString('en-US', { useGrouping: true });
+    return num.toLocaleString('ar-EG', { useGrouping: true }); // تغيير إلى تنسيق الأرقام بالعربية
   }
 
   formatPhoneNumber(phone: string): string {
@@ -299,7 +311,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   submitContactForm(form: NgForm): void {
     if (isPlatformBrowser(this.platformId) && form.valid) {
-      const message = `Name: ${this.contactData.name}\nEmail: ${this.contactData.email}\nMessage: ${this.contactData.message}`;
+      const message = `الاسم: ${this.contactData.name}\nالبريد الإلكتروني: ${this.contactData.email}\nالرسالة: ${this.contactData.message}`;
       const whatsappUrl = `https://wa.me/+962795686452?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, '_blank');
       this.contactData = { name: '', email: '', message: '' };

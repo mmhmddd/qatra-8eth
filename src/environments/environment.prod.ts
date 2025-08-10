@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://production-domain.com/api'
+  apiBaseUrl: 'https://qatra-8eth-server.onrender.com/api'
 };
