@@ -30,7 +30,6 @@ interface ApiResponse<T> {
 export class LeaderboardService {
   constructor(private http: HttpClient) {}
 
-  // Helper to get auth headers
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -41,32 +40,25 @@ export class LeaderboardService {
     });
   }
 
-  // Add a user to the leaderboard (volunteer or leader)
   addUserToLeaderboard(
     email: string,
     type: 'متطوع' | 'قاده',
     name?: string,
-    rank?: string,
-    image?: File
+    rank?: string
   ): Observable<LeaderboardUser> {
     if (!email.trim() || !type) {
       return throwError(() => new Error('البريد الإلكتروني والدور مطلوبان'));
     }
-    if (type === 'قاده' && (!name?.trim() || !rank || !image)) {
-      return throwError(() => new Error('الاسم، الرتبة، والصورة مطلوبة للقادة'));
+    if (type === 'قاده' && (!name?.trim() || !rank)) {
+      return throwError(() => new Error('الاسم والرتبة مطلوبة للقادة'));
     }
 
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('type', type);
-    if (name) formData.append('name', name);
-    if (rank) formData.append('rank', rank);
-    if (image) formData.append('image', image);
+    const body = { email, type, name, rank };
 
     return this.http
       .post<ApiResponse<LeaderboardUser>>(
         ApiEndpoints.leaderboard.add,
-        formData,
+        body,
         { headers: this.getAuthHeaders() }
       )
       .pipe(
@@ -78,7 +70,6 @@ export class LeaderboardService {
       );
   }
 
-  // Get the leaderboard
   getLeaderboard(): Observable<LeaderboardUser[]> {
     return this.http
       .get<ApiResponse<LeaderboardUser[]>>(ApiEndpoints.leaderboard.get)
@@ -91,15 +82,13 @@ export class LeaderboardService {
       );
   }
 
-  // Edit a user in the leaderboard
   editUserInLeaderboard(
     email: string,
     name?: string,
     rank?: string,
     volunteerHours?: number,
     numberOfStudents?: number,
-    subjects?: string[],
-    image?: File
+    subjects?: string[]
   ): Observable<LeaderboardUser> {
     if (!email.trim()) {
       return throwError(() => new Error('البريد الإلكتروني مطلوب'));
@@ -111,19 +100,12 @@ export class LeaderboardService {
       return throwError(() => new Error('عدد الطلاب يجب أن يكون صفر أو أكثر'));
     }
 
-    const formData = new FormData();
-    formData.append('email', email);
-    if (name) formData.append('name', name);
-    if (rank) formData.append('rank', rank);
-    if (volunteerHours !== undefined) formData.append('volunteerHours', volunteerHours.toString());
-    if (numberOfStudents !== undefined) formData.append('numberOfStudents', numberOfStudents.toString());
-    if (subjects) formData.append('subjects', JSON.stringify(subjects));
-    if (image) formData.append('image', image);
+    const body = { email, name, rank, volunteerHours, numberOfStudents, subjects };
 
     return this.http
       .put<ApiResponse<LeaderboardUser>>(
         ApiEndpoints.leaderboard.edit,
-        formData,
+        body,
         { headers: this.getAuthHeaders() }
       )
       .pipe(
@@ -135,7 +117,6 @@ export class LeaderboardService {
       );
   }
 
-  // Remove a user from the leaderboard
   removeUserFromLeaderboard(email: string): Observable<{ message: string; email: string }> {
     if (!email.trim()) {
       return throwError(() => new Error('البريد الإلكتروني مطلوب'));

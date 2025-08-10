@@ -15,13 +15,11 @@ export class AddLeaderboardsComponent implements OnInit {
   @ViewChild('addUserForm') addUserForm!: NgForm;
 
   leaderboard: LeaderboardUser[] = [];
-  newUser: { email: string; type: 'متطوع' | 'قاده' | ''; name: string; rank: string; image: File | null; imagePreview: string | null } = {
+  newUser: { email: string; type: 'متطوع' | 'قاده' | ''; name: string; rank: string } = {
     email: '',
     type: '',
     name: '',
-    rank: '',
-    image: null,
-    imagePreview: null
+    rank: ''
   };
   editingUser: LeaderboardUser | null = null;
   editName: string = '';
@@ -29,8 +27,6 @@ export class AddLeaderboardsComponent implements OnInit {
   editVolunteerHours: number = 0;
   editNumberOfStudents: number = 0;
   editSubjects: string = '';
-  editImage: File | null = null;
-  editImagePreview: string | null = null;
   toastMessage: { message: string; type: 'success' | 'error' } | null = null;
   isLoading: boolean = false;
 
@@ -55,37 +51,13 @@ export class AddLeaderboardsComponent implements OnInit {
     });
   }
 
-  onImageSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.newUser.image = input.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.newUser.imagePreview = reader.result as string;
-      };
-      reader.readAsDataURL(this.newUser.image);
-    }
-  }
-
-  onEditImageSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.editImage = input.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.editImagePreview = reader.result as string;
-      };
-      reader.readAsDataURL(this.editImage);
-    }
-  }
-
   addUser(): void {
     if (!this.newUser.email.trim() || !this.newUser.type) {
       this.showToast('البريد الإلكتروني والدور مطلوبان', 'error');
       return;
     }
-    if (this.newUser.type === 'قاده' && (!this.newUser.name.trim() || !this.newUser.rank || !this.newUser.image)) {
-      this.showToast('الاسم، الرتبة، والصورة مطلوبة للقادة', 'error');
+    if (this.newUser.type === 'قاده' && (!this.newUser.name.trim() || !this.newUser.rank)) {
+      this.showToast('الاسم والرتبة مطلوبة للقادة', 'error');
       return;
     }
 
@@ -95,8 +67,7 @@ export class AddLeaderboardsComponent implements OnInit {
         this.newUser.email,
         this.newUser.type,
         this.newUser.name,
-        this.newUser.rank,
-        this.newUser.image ?? undefined
+        this.newUser.rank
       )
       .subscribe({
         next: (user) => {
@@ -118,8 +89,6 @@ export class AddLeaderboardsComponent implements OnInit {
     this.editVolunteerHours = user.volunteerHours;
     this.editNumberOfStudents = user.numberOfStudents;
     this.editSubjects = user.subjects.join(', ');
-    this.editImage = null;
-    this.editImagePreview = this.getImageUrl(user.image);
   }
 
   cancelEdit(): void {
@@ -129,8 +98,6 @@ export class AddLeaderboardsComponent implements OnInit {
     this.editVolunteerHours = 0;
     this.editNumberOfStudents = 0;
     this.editSubjects = '';
-    this.editImage = null;
-    this.editImagePreview = null;
   }
 
   saveEdit(): void {
@@ -158,8 +125,7 @@ export class AddLeaderboardsComponent implements OnInit {
         this.editingUser.type === 'قاده' ? this.editRank : undefined,
         this.editVolunteerHours,
         this.editNumberOfStudents,
-        subjects,
-        this.editImage ?? undefined
+        subjects
       )
       .subscribe({
         next: (user) => {
@@ -206,7 +172,7 @@ export class AddLeaderboardsComponent implements OnInit {
   }
 
   private resetForm(): void {
-    this.newUser = { email: '', type: '', name: '', rank: '', image: null, imagePreview: null };
+    this.newUser = { email: '', type: '', name: '', rank: '' };
     if (this.addUserForm) {
       this.addUserForm.resetForm();
     }
