@@ -28,7 +28,7 @@ export const routes: Routes = [
     loadComponent: () => import('./features/testimonials/testimonials.component').then(m => m.TestimonialsComponent)
   },
   {
-    path: 'gallery',
+    path: 'last-news',
     loadComponent: () => import('./features/gallery/gallery.component').then(m => m.GalleryComponent)
   },
   {
