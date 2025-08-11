@@ -50,8 +50,8 @@ export class LeaderboardService {
     if (!email.trim() || !type) {
       return throwError(() => new Error('البريد الإلكتروني والدور مطلوبان'));
     }
-    if (type === 'قاده' && (!name?.trim() || !rank)) {
-      return throwError(() => new Error('الاسم والرتبة مطلوبة للقادة'));
+    if (type === 'قاده' && (!name?.trim() || !rank || !image)) {
+      return throwError(() => new Error('الاسم والرتبة والصورة مطلوبة للقادة'));
     }
 
     const formData = new FormData();
@@ -148,5 +148,9 @@ export class LeaderboardService {
           return throwError(() => new Error(errorMsg));
         })
       );
+  }
+
+  getImageUrl(imagePath: string | null): string {
+    return imagePath ? imagePath : '/assets/images/leaderboard/placeholder.jpg';
   }
 }

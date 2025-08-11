@@ -49,12 +49,12 @@ export const ApiEndpoints = {
     delete: (id: string) => `${base}/pdf/${id}`,
     view: (id: string) => `${base}/pdf/view/${id}`,
   },
-  leaderboard: {
-    add: `${base}/leaderboard/add`,
-    get: `${base}/leaderboard`,
-    edit: `${base}/leaderboard/edit`,
-    remove: `${base}/leaderboard/remove`,
-  },
+leaderboard: {
+  add: `${base}/leaderboard/add`,
+  get: `${base}/leaderboard`,
+  edit: `${base}/leaderboard/edit`,
+  remove: `${base}/leaderboard/remove`,
+},
   testimonials: {
     create: `${base}/testimonials/create`,
     list: `${base}/testimonials/list`,
