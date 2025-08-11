@@ -20,6 +20,7 @@ export class ProfileComponent implements OnInit {
   lectureForm: FormGroup;
   isUploadingLecture: boolean = false;
   notifications: NotificationResponse['notifications'] = [];
+  unreadNotificationsCount: number = 0;
   currentPassword: string = '';
   newPassword: string = '';
   showPasswordModal: boolean = false;
@@ -72,7 +73,6 @@ export class ProfileComponent implements OnInit {
               subject: student.subject || ''
             }))
           };
-          // Cloudinary URLs are absolute, no need to prepend backend URL
           this.showUploadField = !this.profile.profileImage;
           console.log('Students:', this.profile.students);
           console.log('Number of Students:', this.profile.numberOfStudents);
@@ -95,7 +95,8 @@ export class ProfileComponent implements OnInit {
     this.lectureService.getNotifications().subscribe({
       next: (response) => {
         if (response.success) {
-          this.notifications = response.notifications.filter(n => !n.read); // Show only unread notifications
+          this.notifications = response.notifications.filter(n => !n.read);
+          this.unreadNotificationsCount = this.notifications.length;
         }
       },
       error: (err) => {
@@ -109,7 +110,8 @@ export class ProfileComponent implements OnInit {
     this.lectureService.markNotificationsRead().subscribe({
       next: (response) => {
         if (response.success) {
-          this.notifications = response.notifications.filter(n => !n.read); // Update to show only unread
+          this.notifications = response.notifications.filter(n => !n.read);
+          this.unreadNotificationsCount = this.notifications.length;
           this.successMessage = 'تم تحديد الإشعارات كمقروءة';
         }
       },
@@ -125,6 +127,7 @@ export class ProfileComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           this.notifications = this.notifications.filter(n => n._id !== notificationId);
+          this.unreadNotificationsCount = this.notifications.length;
           this.successMessage = 'تم حذف الإشعار بنجاح';
         }
       },
@@ -139,7 +142,6 @@ export class ProfileComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
-      // Optionally validate file size client-side (10MB limit)
       if (this.selectedFile.size > 10 * 1024 * 1024) {
         this.error = 'حجم الملف كبير جدًا. الحد الأقصى 10 ميغابايت';
         this.selectedFile = null;
@@ -159,7 +161,6 @@ export class ProfileComponent implements OnInit {
       next: (response) => {
         console.log('Upload image response:', response);
         if (response.success && response.data && this.profile) {
-          // Use Cloudinary URL directly
           this.profile.profileImage = response.data.profileImage;
           this.showUploadField = false;
           this.selectedFile = null;
@@ -288,7 +289,7 @@ export class ProfileComponent implements OnInit {
           this.successMessage = response.message || 'تم رفع المحاضرة بنجاح';
           this.error = null;
           this.lectureForm.reset();
-          this.fetchNotifications(); // Refresh notifications to check for warnings
+          this.fetchNotifications();
         }
       },
       error: (err) => {

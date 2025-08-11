@@ -19,6 +19,10 @@
       <button class="nav-tab" [ngClass]="{'active': activeSection === 'profile'}" (click)="setActiveSection('profile')">الملف الشخصي</button>
       <button class="nav-tab" [ngClass]="{'active': activeSection === 'students'}" (click)="setActiveSection('students')">الطلاب</button>
       <button class="nav-tab" [ngClass]="{'active': activeSection === 'meetings'}" (click)="setActiveSection('meetings')">المواعيد</button>
+      <button class="nav-tab" [ngClass]="{'active': activeSection === 'notifications'}" (click)="setActiveSection('notifications')">
+        الإشعارات
+        <span *ngIf="unreadNotificationsCount > 0" class="badge">{{ unreadNotificationsCount }}</span>
+      </button>
       <button class="nav-tab" (click)="openPasswordModal()">تغيير كلمة المرور</button>
     </div>
 
@@ -64,25 +68,6 @@
               <dt class="col-sm-4">عدد المحاضرات:</dt>
               <dd class="col-sm-8">{{ profile.lectureCount }}</dd>
             </dl>
-          </div>
-        </div>
-        <!-- Notifications Section -->
-        <div class="notifications-section mt-4">
-          <h4>الإشعارات</h4>
-          <div *ngIf="notifications.length === 0" class="alert alert-info">
-            لا توجد إشعارات جديدة.
-          </div>
-          <div *ngIf="notifications.length > 0" class="notification-list">
-            <div *ngFor="let notification of notifications" class="alert alert-warning alert-dismissible fade show d-flex align-items-center justify-content-between">
-              <div>
-                {{ notification.message }}
-                <small>({{ notification.createdAt | date:'short' }})</small>
-              </div>
-              <div>
-                <button class="btn btn-danger btn-sm me-2" (click)="deleteNotification(notification._id)">حذف</button>
-              </div>
-            </div>
-            <button class="btn btn-success mt-2" (click)="markNotificationsRead()">تحديد الكل كمقروء</button>
           </div>
         </div>
         <!-- Add Lecture Section -->
@@ -143,6 +128,30 @@
               {{ isUploadingLecture ? 'جاري الرفع...' : 'رفع المحاضرة' }}
             </button>
           </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications Section -->
+    <div id="notifications" *ngIf="activeSection === 'notifications'" class="card shadow-sm mt-4">
+      <div class="card-header">
+        <h3 class="mb-0">الإشعارات</h3>
+      </div>
+      <div class="card-body">
+        <div *ngIf="notifications.length === 0" class="alert alert-info">
+          لا توجد إشعارات جديدة.
+        </div>
+        <div *ngIf="notifications.length > 0" class="notification-list">
+          <div *ngFor="let notification of notifications" class="alert alert-warning alert-dismissible fade show d-flex align-items-center justify-content-between">
+            <div>
+              {{ notification.message }}
+              <small>({{ notification.createdAt | date:'short' }})</small>
+            </div>
+            <div>
+              <button class="btn btn-danger btn-sm me-2" (click)="deleteNotification(notification._id)">حذف</button>
+            </div>
+          </div>
+          <button class="btn btn-success mt-2" (click)="markNotificationsRead()">تحديد الكل كمقروء</button>
         </div>
       </div>
     </div>

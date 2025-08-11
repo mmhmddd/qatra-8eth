@@ -131,6 +131,7 @@ body {
   margin-bottom: 2rem;
   flex-wrap: wrap;
   padding: 0 1rem;
+  position: relative;
 
   .nav-tab {
     background: $white;
@@ -145,6 +146,7 @@ body {
     flex: 1;
     min-width: 100px;
     text-align: center;
+    position: relative;
 
     @media (min-width: 768px) {
       font-size: 1rem;
@@ -163,6 +165,19 @@ body {
       background: rgba($primary-color, 0.1);
       border-color: $primary-color;
       transform: translateY(-2px);
+    }
+
+    .badge {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background-color: $danger-color;
+      color: $white;
+      border-radius: 50%;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      line-height: 1;
     }
   }
 }
@@ -524,6 +539,11 @@ dl.row {
       padding: 0.5rem 1rem;
       font-size: 0.85rem;
       min-width: 80px;
+
+      .badge {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.5rem;
+      }
     }
   }
 
