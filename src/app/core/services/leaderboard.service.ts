@@ -44,7 +44,8 @@ export class LeaderboardService {
     email: string,
     type: 'متطوع' | 'قاده',
     name?: string,
-    rank?: string
+    rank?: string,
+    image?: File | null
   ): Observable<LeaderboardUser> {
     if (!email.trim() || !type) {
       return throwError(() => new Error('البريد الإلكتروني والدور مطلوبان'));
@@ -53,12 +54,17 @@ export class LeaderboardService {
       return throwError(() => new Error('الاسم والرتبة مطلوبة للقادة'));
     }
 
-    const body = { email, type, name, rank };
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('type', type);
+    if (name) formData.append('name', name);
+    if (rank) formData.append('rank', rank);
+    if (image) formData.append('image', image);
 
     return this.http
       .post<ApiResponse<LeaderboardUser>>(
         ApiEndpoints.leaderboard.add,
-        body,
+        formData,
         { headers: this.getAuthHeaders() }
       )
       .pipe(
@@ -88,7 +94,8 @@ export class LeaderboardService {
     rank?: string,
     volunteerHours?: number,
     numberOfStudents?: number,
-    subjects?: string[]
+    subjects?: string[],
+    image?: File | null
   ): Observable<LeaderboardUser> {
     if (!email.trim()) {
       return throwError(() => new Error('البريد الإلكتروني مطلوب'));
@@ -100,12 +107,19 @@ export class LeaderboardService {
       return throwError(() => new Error('عدد الطلاب يجب أن يكون صفر أو أكثر'));
     }
 
-    const body = { email, name, rank, volunteerHours, numberOfStudents, subjects };
+    const formData = new FormData();
+    formData.append('email', email);
+    if (name) formData.append('name', name);
+    if (rank) formData.append('rank', rank);
+    if (volunteerHours !== undefined) formData.append('volunteerHours', volunteerHours.toString());
+    if (numberOfStudents !== undefined) formData.append('numberOfStudents', numberOfStudents.toString());
+    if (subjects) formData.append('subjects', JSON.stringify(subjects));
+    if (image) formData.append('image', image);
 
     return this.http
       .put<ApiResponse<LeaderboardUser>>(
         ApiEndpoints.leaderboard.edit,
-        body,
+        formData,
         { headers: this.getAuthHeaders() }
       )
       .pipe(
@@ -134,9 +148,5 @@ export class LeaderboardService {
           return throwError(() => new Error(errorMsg));
         })
       );
-  }
-
-  getImageUrl(imagePath: string | null): string {
-    return imagePath || '/assets/images/leaderboard/placeholder.jpg';
   }
 }

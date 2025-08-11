@@ -15,11 +15,12 @@ export class AddLeaderboardsComponent implements OnInit {
   @ViewChild('addUserForm') addUserForm!: NgForm;
 
   leaderboard: LeaderboardUser[] = [];
-  newUser: { email: string; type: 'متطوع' | 'قاده' | ''; name: string; rank: string } = {
+  newUser: { email: string; type: 'متطوع' | 'قاده' | ''; name: string; rank: string; image?: File | null } = {
     email: '',
     type: '',
     name: '',
-    rank: ''
+    rank: '',
+    image: null
   };
   editingUser: LeaderboardUser | null = null;
   editName: string = '';
@@ -27,8 +28,11 @@ export class AddLeaderboardsComponent implements OnInit {
   editVolunteerHours: number = 0;
   editNumberOfStudents: number = 0;
   editSubjects: string = '';
+  editImage: File | null = null;
   toastMessage: { message: string; type: 'success' | 'error' } | null = null;
   isLoading: boolean = false;
+  isUploading: boolean = false;
+  imageError: string | null = null;
 
   constructor(private leaderboardService: LeaderboardService) {}
 
@@ -51,6 +55,34 @@ export class AddLeaderboardsComponent implements OnInit {
     });
   }
 
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      if (file.size > 10 * 1024 * 1024) {
+        this.imageError = 'حجم الصورة كبير جدًا. الحد الأقصى 10 ميغابايت';
+        this.newUser.image = null;
+        return;
+      }
+      this.newUser.image = file;
+      this.imageError = null;
+    }
+  }
+
+  onEditFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      if (file.size > 10 * 1024 * 1024) {
+        this.imageError = 'حجم الصورة كبير جدًا. الحد الأقصى 10 ميغابايت';
+        this.editImage = null;
+        return;
+      }
+      this.editImage = file;
+      this.imageError = null;
+    }
+  }
+
   addUser(): void {
     if (!this.newUser.email.trim() || !this.newUser.type) {
       this.showToast('البريد الإلكتروني والدور مطلوبان', 'error');
@@ -62,12 +94,14 @@ export class AddLeaderboardsComponent implements OnInit {
     }
 
     this.isLoading = true;
+    this.isUploading = true;
     this.leaderboardService
       .addUserToLeaderboard(
         this.newUser.email,
         this.newUser.type,
         this.newUser.name,
-        this.newUser.rank
+        this.newUser.rank,
+        this.newUser.image
       )
       .subscribe({
         next: (user) => {
@@ -78,6 +112,7 @@ export class AddLeaderboardsComponent implements OnInit {
         error: (err) => {
           this.showToast(err.message || 'فشل في إضافة المستخدم', 'error');
           this.isLoading = false;
+          this.isUploading = false;
         },
       });
   }
@@ -89,6 +124,8 @@ export class AddLeaderboardsComponent implements OnInit {
     this.editVolunteerHours = user.volunteerHours;
     this.editNumberOfStudents = user.numberOfStudents;
     this.editSubjects = user.subjects.join(', ');
+    this.editImage = null;
+    this.imageError = null;
   }
 
   cancelEdit(): void {
@@ -98,6 +135,8 @@ export class AddLeaderboardsComponent implements OnInit {
     this.editVolunteerHours = 0;
     this.editNumberOfStudents = 0;
     this.editSubjects = '';
+    this.editImage = null;
+    this.imageError = null;
   }
 
   saveEdit(): void {
@@ -118,6 +157,7 @@ export class AddLeaderboardsComponent implements OnInit {
     }
 
     this.isLoading = true;
+    this.isUploading = !!this.editImage;
     this.leaderboardService
       .editUserInLeaderboard(
         this.editingUser.email,
@@ -125,7 +165,8 @@ export class AddLeaderboardsComponent implements OnInit {
         this.editingUser.type === 'قاده' ? this.editRank : undefined,
         this.editVolunteerHours,
         this.editNumberOfStudents,
-        subjects
+        subjects,
+        this.editImage
       )
       .subscribe({
         next: (user) => {
@@ -136,6 +177,7 @@ export class AddLeaderboardsComponent implements OnInit {
         error: (err) => {
           this.showToast(err.message || 'فشل في تحديث المستخدم', 'error');
           this.isLoading = false;
+          this.isUploading = false;
         },
       });
   }
@@ -167,14 +209,13 @@ export class AddLeaderboardsComponent implements OnInit {
     }, 3000);
   }
 
-  getImageUrl(imagePath: string | null): string {
-    return this.leaderboardService.getImageUrl(imagePath);
-  }
-
   private resetForm(): void {
-    this.newUser = { email: '', type: '', name: '', rank: '' };
+    this.newUser = { email: '', type: '', name: '', rank: '', image: null };
+    this.imageError = null;
     if (this.addUserForm) {
       this.addUserForm.resetForm();
     }
+    const fileInput = document.getElementById('image') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
   }
 }

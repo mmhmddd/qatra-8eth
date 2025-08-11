@@ -96,8 +96,23 @@
                 الرتبة مطلوبة
               </div>
             </div>
+            <div class="form-group">
+              <label for="image">صورة المستخدم</label>
+              <input
+                id="image"
+                type="file"
+                name="image"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                (change)="onFileSelected($event)"
+                #imageInput
+                [ngClass]="{'invalid': imageError}"
+              />
+              <div *ngIf="imageError" class="error-text">
+                {{ imageError }}
+              </div>
+            </div>
           </div>
-          <button type="submit" class="btn primary" [disabled]="addUserForm.invalid || isLoading">إضافة إلى لوحة الصدارة</button>
+          <button type="submit" class="btn primary" [disabled]="addUserForm.invalid || isLoading || isUploading">إضافة إلى لوحة الصدارة</button>
         </form>
       </div>
 
@@ -126,8 +141,17 @@
                 <!-- Edit Form -->
                 <td>{{ user.rank }}</td>
                 <td>
-                  <img *ngIf="user.image" [src]="getImageUrl(user.image)" alt="صورة المستخدم" class="user-image" />
+                  <img *ngIf="user.image" [src]="user.image" alt="صورة المستخدم" class="user-image" />
                   <span *ngIf="!user.image">لا توجد صورة</span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/gif,image/webp"
+                    (change)="onEditFileSelected($event)"
+                    [ngClass]="{'invalid': imageError}"
+                  />
+                  <div *ngIf="imageError" class="error-text">
+                    {{ imageError }}
+                  </div>
                 </td>
                 <td>
                   <input
@@ -184,14 +208,14 @@
                 </td>
                 <td>{{ user.score }}</td>
                 <td>
-                  <button class="btn success" (click)="saveEdit()" [disabled]="isLoading">حفظ</button>
+                  <button class="btn success" (click)="saveEdit()" [disabled]="isLoading || isUploading">حفظ</button>
                   <button class="btn danger" (click)="cancelEdit()">إلغاء</button>
                 </td>
               </ng-container>
               <ng-template #showUser>
                 <td>{{ user.rank }}</td>
                 <td>
-                  <img *ngIf="user.image" [src]="getImageUrl(user.image)" alt="صورة المستخدم" class="user-image" />
+                  <img *ngIf="user.image" [src]="user.image" alt="صورة المستخدم" class="user-image" />
                   <span *ngIf="!user.image">لا توجد صورة</span>
                 </td>
                 <td>{{ user.name || 'غير محدد' }}</td>
