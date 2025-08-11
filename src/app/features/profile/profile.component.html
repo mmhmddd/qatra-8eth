@@ -7,7 +7,7 @@
       <h2 class="profile-name">{{ profile?.name || 'اسم المستخدم' }}</h2>
       <button class="btn btn-outline-primary change-image-btn" (click)="changeImage()">تغيير الصورة</button>
       <div *ngIf="showUploadField" class="upload-section mt-3">
-        <input type="file" id="profileImageInput" class="form-control mb-2" accept="image/jpeg,image/png" (change)="onFileSelected($event)">
+        <input type="file" id="profileImageInput" class="form-control mb-2" accept="image/jpeg,image/png,image/gif,image/webp" (change)="onFileSelected($event)">
         <button [disabled]="isUploading" class="btn btn-primary" (click)="uploadProfileImage()">
           {{ isUploading ? 'جاري الرفع...' : 'رفع الصورة' }}
         </button>

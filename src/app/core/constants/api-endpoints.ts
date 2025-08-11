@@ -36,7 +36,7 @@ export const ApiEndpoints = {
     notifications: `${base}/lectures/notifications`,
     markNotificationsRead: `${base}/lectures/notifications/mark-read`,
     deleteNotification: (notificationId: string) => `${base}/lectures/notifications/${notificationId}`,
-    lowLectureMembers: `${base}/lectures/low-lecture-members`, 
+    lowLectureMembers: `${base}/lectures/low-lecture-members`,
     user: (userId: string) => `${base}/lectures/user/${userId}`,
   },
   notifications: {

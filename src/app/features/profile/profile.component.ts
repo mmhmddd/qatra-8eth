@@ -38,7 +38,6 @@ export class ProfileComponent implements OnInit {
   selectedFile: File | null = null;
   isUploading: boolean = false;
   showUploadField: boolean = true;
-  backendUrl: string = 'http://localhost:5000';
   activeSection: string = 'profile';
 
   constructor(
@@ -73,9 +72,7 @@ export class ProfileComponent implements OnInit {
               subject: student.subject || ''
             }))
           };
-          if (this.profile.profileImage) {
-            this.profile.profileImage = `${this.backendUrl}${this.profile.profileImage}`;
-          }
+          // Cloudinary URLs are absolute, no need to prepend backend URL
           this.showUploadField = !this.profile.profileImage;
           console.log('Students:', this.profile.students);
           console.log('Number of Students:', this.profile.numberOfStudents);
@@ -142,6 +139,12 @@ export class ProfileComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
+      // Optionally validate file size client-side (10MB limit)
+      if (this.selectedFile.size > 10 * 1024 * 1024) {
+        this.error = 'حجم الملف كبير جدًا. الحد الأقصى 10 ميغابايت';
+        this.selectedFile = null;
+        return;
+      }
       this.uploadProfileImage();
     }
   }
@@ -156,7 +159,8 @@ export class ProfileComponent implements OnInit {
       next: (response) => {
         console.log('Upload image response:', response);
         if (response.success && response.data && this.profile) {
-          this.profile.profileImage = `${this.backendUrl}${response.data.profileImage}`;
+          // Use Cloudinary URL directly
+          this.profile.profileImage = response.data.profileImage;
           this.showUploadField = false;
           this.selectedFile = null;
           this.error = null;
