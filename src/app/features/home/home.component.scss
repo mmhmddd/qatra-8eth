@@ -1016,6 +1016,9 @@ $black: #000000;
     .section-title {
       font-size: 2rem;
     }
+    .col-md-6{
+      margin-top: 12px;
+    }
 
     .section-description {
       font-size: 1rem;
@@ -1080,8 +1083,8 @@ $black: #000000;
 }
 
 @media (max-width: 768px) {
-    .hero-wrapper[_ngcontent-ng-c1138095498] {
-        margin-top: 84px;
-        height: auto;
+    .hero-wrapper{
+      margin-top: 2rem;
+        height: auto !important;
     }
 }

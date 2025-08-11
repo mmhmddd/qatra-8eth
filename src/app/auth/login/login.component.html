@@ -1,4 +1,3 @@
-<!-- Login Section -->
 <section class="login-section" dir="rtl">
   <div class="container-fluid h-100">
     <div class="row h-100 g-0">
@@ -100,69 +99,59 @@
                 </div>
               </div>
 
-<!-- Password Field -->
-<div class="form-group mb-3">
-  <label for="password" class="form-label">
-    <i class="fas fa-lock me-2"></i>
-    كلمة المرور
-  </label>
-  <div class="input-group">
-    <input
-      [type]="showPassword ? 'text' : 'password'"
-      [class]="getFieldClasses('password')"
-      id="password"
-      formControlName="password"
-      placeholder="أدخل كلمة المرور"
-      (focus)="onFieldFocus('password')"
-      autocomplete="current-password"
-    >
-    <button
-      type="button"
-      class="password-toggle"
-      (click)="togglePasswordVisibility()"
-      [disabled]="isLoading"
-    >
-      <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-    </button>
-  </div>
-  <div *ngIf="isFieldInvalid('password')" class="invalid-feedback">
-    <i class="fas fa-exclamation-circle me-1"></i>
-    {{ getFieldErrorMessage('password') }}
-  </div>
-  <div *ngIf="isFieldValid('password')" class="valid-feedback">
-    <i class="fas fa-check-circle me-1"></i>
-    كلمة المرور قوية
-  </div>
-</div>
+              <!-- Password Field -->
+              <div class="form-group mb-3">
+                <label for="password" class="form-label">
+                  <i class="fas fa-lock me-2"></i>
+                  كلمة المرور
+                </label>
+                <div class="input-group">
+                  <input
+                    [type]="showPassword ? 'text' : 'password'"
+                    [class]="getFieldClasses('password')"
+                    id="password"
+                    formControlName="password"
+                    placeholder="أدخل كلمة المرور"
+                    (focus)="onFieldFocus('password')"
+                    autocomplete="current-password"
+                  >
+                  <button
+                    type="button"
+                    class="password-toggle"
+                    (click)="togglePasswordVisibility()"
+                    [disabled]="isLoading"
+                  >
+                    <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                  </button>
+                </div>
+                <div *ngIf="isFieldInvalid('password')" class="invalid-feedback">
+                  <i class="fas fa-exclamation-circle me-1"></i>
+                  {{ getFieldErrorMessage('password') }}
+                </div>
+                <div *ngIf="isFieldValid('password')" class="valid-feedback">
+                  <i class="fas fa-check-circle me-1"></i>
+                  كلمة المرور قوية
+                </div>
+              </div>
 
-              <!-- Remember Me & Forgot Password -->
-<!-- Remember Me & Forgot Password -->
-<div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem;">
-  <a
-    href="#"
-    style="text-decoration: none; color: #007bff; font-weight: bold;"
-    (click)="goToForgotojoinus(); $event.preventDefault()"
-  >
-    لست عضو ؟ انضم الينا الان
-  </a>
+              <!-- Links Container -->
+              <div class="links-container mb-4">
+                <a
+                  href="#"
+                  class="auth-link join-link"
+                  (click)="goToForgotojoinus(); $event.preventDefault()"
+                >
+                  لست عضو؟ انضم إلينا الآن
+                </a>
+                <a
+                  href="#"
+                  class="auth-link forgot-link"
+                  (click)="goToForgotPassword(); $event.preventDefault()"
+                >
+                  نسيت كلمة المرور؟
+                </a>
+              </div>
 
-  <a
-    href="#"
-    style="text-decoration: none; color: #dc3545; font-weight: bold;"
-    (click)="goToForgotPassword(); $event.preventDefault()"
-  >
-    نسيت كلمة المرور؟
-  </a>
-
-  <!-- Home Button -->
-  <a
-    href="#"
-    style="text-decoration: none; color: #28a745; font-weight: bold;"
-    (click)="goToHome(); $event.preventDefault()"
-  >
-    العودة إلى الصفحة الرئيسية
-  </a>
-</div>
               <!-- Submit Button -->
               <button
                 type="submit"
@@ -199,6 +188,16 @@
               </div>
 
             </form>
+
+            <!-- Home Button -->
+            <a
+              href="#"
+              class="btn btn-success home-btn w-100 mt-3"
+              (click)="goToHome(); $event.preventDefault()"
+            >
+              <i class="fas fa-home me-2"></i>
+              العودة إلى الصفحة الرئيسية
+            </a>
           </div>
         </div>
       </div>
