@@ -46,7 +46,7 @@
           <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="hero-image" loading="lazy">
           <div class="hero-caption">
             <h3>{{ image.title }}</h3>
-            <p>{{ image.description || 'لا يوجد وصف' }}</p>
+            <p>{{ image.description }}</p>
           </div>
         </div>
       </swiper-slide>
@@ -63,7 +63,7 @@
           <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="gallery-image" loading="lazy">
           <div class="image-overlay">
             <h3 class="image-title">{{ image.title }}</h3>
-            <p class="image-description">{{ image.description || 'لا يوجد وصف' }}</p>
+            <p class="image-description">{{ image.description }}</p>
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@
             <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="popular-image" loading="lazy">
             <div class="popular-caption">
               <h3>{{ image.title }}</h3>
-              <p>{{ image.description || 'لا يوجد وصف' }}</p>
+              <p>{{ image.description }}</p>
             </div>
           </swiper-slide>
         </swiper-container>

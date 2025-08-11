@@ -21,6 +21,8 @@ export class AddGalleryComponent {
   newImage: { title: string; description: string | null; file: File | null; previewUrl: string | null; id?: string } = { title: '', description: '', file: null, previewUrl: null };
   message: string | null = null;
   isSuccess = true;
+  isLoading = false;
+  private maxFileSize = 5 * 1024 * 1024; // 5MB
 
   constructor(private galleryService: GalleryService, private router: Router) {}
 
@@ -56,14 +58,38 @@ export class AddGalleryComponent {
     });
   }
 
+  onFileChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      if (file.size > this.maxFileSize) {
+        this.message = 'حجم الصورة أكبر من الحد الأقصى المسموح به (5MB)';
+        this.isSuccess = false;
+        this.newImage.file = null;
+        this.newImage.previewUrl = null;
+        input.value = '';
+        return;
+      }
+      this.newImage.file = file;
+      const reader = new FileReader();
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        this.newImage.previewUrl = e.target?.result as string || null;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
   addImage() {
     if (!this.newImage.title || !this.newImage.file) {
       this.message = 'العنوان والصورة مطلوبان';
       this.isSuccess = false;
       return;
     }
+    this.isLoading = true;
+    this.message = null;
     this.galleryService.addImage(this.newImage.title, this.newImage.description, this.newImage.file).subscribe({
       next: (response: AddEditImageResponse) => {
+        this.isLoading = false;
         if (response.success) {
           this.images.push(response.data);
           this.resetForm();
@@ -75,6 +101,7 @@ export class AddGalleryComponent {
         }
       },
       error: (error: any) => {
+        this.isLoading = false;
         this.message = error.message || 'فشل في إضافة الصورة';
         this.isSuccess = false;
         if (error.message.includes('Redirecting to login')) {
@@ -103,8 +130,16 @@ export class AddGalleryComponent {
       this.isSuccess = false;
       return;
     }
+    if (this.newImage.file && this.newImage.file.size > this.maxFileSize) {
+      this.message = 'حجم الصورة أكبر من الحد الأقصى المسموح به (5MB)';
+      this.isSuccess = false;
+      return;
+    }
+    this.isLoading = true;
+    this.message = null;
     this.galleryService.editImage(this.newImage.id, this.newImage.title, this.newImage.description, this.newImage.file).subscribe({
       next: (response: AddEditImageResponse) => {
+        this.isLoading = false;
         if (response.success) {
           const index = this.images.findIndex(img => img.id === response.data.id);
           if (index !== -1) {
@@ -119,6 +154,7 @@ export class AddGalleryComponent {
         }
       },
       error: (error: any) => {
+        this.isLoading = false;
         this.message = error.message || 'فشل في تحديث الصورة';
         this.isSuccess = false;
         if (error.message.includes('Redirecting to login')) {
@@ -136,8 +172,11 @@ export class AddGalleryComponent {
 
   deleteImage(id: string) {
     if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
+      this.isLoading = true;
+      this.message = null;
       this.galleryService.deleteImage(id).subscribe({
         next: (response: DeleteImageResponse) => {
+          this.isLoading = false;
           if (response.success) {
             this.images = this.images.filter(img => img.id !== id);
             this.message = response.message;
@@ -148,6 +187,7 @@ export class AddGalleryComponent {
           }
         },
         error: (error: any) => {
+          this.isLoading = false;
           this.message = error.message || 'فشل في حذف الصورة';
           this.isSuccess = false;
           if (error.message.includes('Redirecting to login')) {
@@ -155,19 +195,6 @@ export class AddGalleryComponent {
           }
         }
       });
-    }
-  }
-
-  onFileChange(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.newImage.file = file;
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        this.newImage.previewUrl = e.target?.result as string || null;
-      };
-      reader.readAsDataURL(file);
     }
   }
 

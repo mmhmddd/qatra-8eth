@@ -11,8 +11,14 @@
       <div *ngIf="message && isSuccess" class="success-message">{{ message }}</div>
       <div *ngIf="message && !isSuccess" class="error-message">{{ message }}</div>
 
+      <!-- Loader -->
+      <div *ngIf="isLoading" class="loader">
+        <div class="spinner"></div>
+        <p>جاري رفع الصورة...</p>
+      </div>
+
       <!-- Add/Edit Image Form -->
-      <div *ngIf="isLoggedIn" class="add-form" #addForm>
+      <div *ngIf="isLoggedIn && !isLoading" class="add-form" #addForm>
         <h3>{{ newImage.id ? 'تعديل الصورة' : 'إضافة صورة جديدة' }}</h3>
         <form (ngSubmit)="newImage.id ? updateImage() : addImage()" class="form">
           <div class="form-row">
@@ -60,7 +66,7 @@
       </div>
 
       <!-- Image Grid -->
-      <div class="image-grid">
+      <div class="image-grid" *ngIf="!isLoading">
         <div *ngFor="let image of images" class="image-card">
           <img [src]="getImageUrl(image.imagePath)" [alt]="image.title" class="image" />
           <div class="image-details">

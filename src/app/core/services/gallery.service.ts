@@ -119,9 +119,15 @@ export class GalleryService {
       })),
       catchError(error => {
         console.error('Error adding image:', error);
+        let errorMessage = 'فشل في إضافة الصورة';
+        if (error.status === 413) {
+          errorMessage = 'حجم الصورة أكبر من الحد الأقصى المسموح به';
+        } else if (error.error && error.error.message) {
+          errorMessage = error.error.message;
+        }
         return throwError(() => ({
           success: false,
-          message: error.message || 'فشل في إضافة الصورة',
+          message: errorMessage,
           error: error.message,
         }));
       })
@@ -148,9 +154,15 @@ export class GalleryService {
       })),
       catchError(error => {
         console.error('Error editing image:', error);
+        let errorMessage = 'فشل في تحديث الصورة';
+        if (error.status === 413) {
+          errorMessage = 'حجم الصورة أكبر من الحد الأقصى المسموح به';
+        } else if (error.error && error.error.message) {
+          errorMessage = error.error.message;
+        }
         return throwError(() => ({
           success: false,
-          message: error.message || 'فشل في تحديث الصورة',
+          message: errorMessage,
           error: error.message,
         }));
       })
@@ -181,6 +193,6 @@ export class GalleryService {
   }
 
   getImageUrl(imagePath: string): string {
-    return imagePath; // إرجاع imagePath مباشرة لأنه يحتوي على رابط Cloudinary الكامل
+    return imagePath; 
   }
 }
