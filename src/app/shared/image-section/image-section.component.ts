@@ -40,11 +40,11 @@ export class ImageSectionComponent implements OnInit {
   goToGallery() {
     const currentUrl = this.router.url.split('#')[0];
 
-    if (currentUrl === '/last-news') {
+    if (currentUrl === '/gallery') {
       this.viewportScroller.scrollToAnchor('gallery');
     } else {
       // Navigate to gallery page with fragment
-      this.router.navigate(['/gallery'], { fragment: 'gallerysection' });
+      this.router.navigate(['/last-news'], { fragment: 'gallerysection' });
     }
   }
 }
