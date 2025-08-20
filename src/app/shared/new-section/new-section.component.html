@@ -1,0 +1,27 @@
+<div class="latest-news-container" id="last_news" [dir]="translationService.isRtl() ? 'rtl' : 'ltr'">
+  <div class="row">
+    <div class="col-12 col-md-6 left-section">
+      <div class="news-preview">
+        <h1 class="latest-news-title">{{ translationService.translate('news.latestNews') }} <span class="highlight">{{ translationService.translate('news.highlight') }}</span></h1>
+        <p class="news-description">{{ translationService.translate('news.description') }}</p>
+        <div class="additional-info">
+          <p>{{ translationService.translate('news.joinUs') }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 right-section">
+      <div class="row">
+        <div class="col-12" *ngFor="let news of newsItems">
+          <div class="news-card">
+            <span class="category">{{ translationService.translate('news.newCategory') }}</span>
+            <p class="card-text">{{ news.text | translate }}</p>
+            <a href="#" class="read-more">{{ translationService.translate('news.readMore') }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="section-actions">
+    <a class="hero-btn btn-primary" routerLink="/last-news">{{ translationService.translate('news.viewAllNews') }}</a>
+  </div>
+</div>

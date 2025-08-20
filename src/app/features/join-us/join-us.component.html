@@ -1,0 +1,198 @@
+<div class="join-container" style="margin-top: 90px;" [attr.dir]="translationService.isRtl() ? 'rtl' : 'ltr'">
+  <div class="container py-5">
+    <!-- Welcome Section -->
+    <section class="welcome-section text-center mb-5">
+      <h1 class="display-4 welcome-title">{{ 'joinUs.welcomeTitle' | translate }}</h1>
+      <p class="lead welcome-subtitle">{{ 'joinUs.welcomeSubtitle' | translate }}</p>
+    </section>
+
+    <!-- Join Form -->
+    <section class="form-section">
+      <div class="form-card">
+        <h2 class="form-title text-center mb-4">{{ 'joinUs.formTitle' | translate }}</h2>
+
+        <!-- Error Alert Container -->
+        <div id="error-container">
+          <!-- Email Exists Error -->
+          <div *ngIf="emailExistsError" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            {{ 'joinUs.emailExistsError' | translate }}
+            <button type="button" class="btn-close" (click)="dismissEmailError()" aria-label="Close"></button>
+          </div>
+
+          <!-- General Error Alert -->
+          <div *ngIf="generalError" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            {{ generalError }}
+            <button type="button" class="btn-close" (click)="dismissGeneralError()" aria-label="Close"></button>
+          </div>
+        </div>
+
+        <form [formGroup]="joinForm" (ngSubmit)="onSubmit()" novalidate>
+          <!-- Name and Email Row -->
+          <div class="form-row">
+            <!-- Name Field -->
+            <div class="form-group col-md-6">
+              <label for="name" class="form-label">
+                <i class="fas fa-user me-2"></i>{{ 'joinUs.nameLabel' | translate }}
+                <span class="required-asterisk">*</span>
+              </label>
+              <input
+                type="text"
+                id="name"
+                formControlName="name"
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('name')"
+                [class.is-valid]="isFieldValid('name')"
+                [placeholder]="'joinUs.namePlaceholder' | translate">
+              <div *ngIf="isFieldInvalid('name')" class="invalid-feedback">
+                <div *ngIf="joinForm.get('name')?.errors?.['required']">
+                  <i class="fas fa-times-circle me-1"></i>{{ 'joinUs.nameRequired' | translate }}
+                </div>
+                <div *ngIf="joinForm.get('name')?.errors?.['minlength']">
+                  <i class="fas fa-times-circle me-1"></i>{{ 'joinUs.nameMinLength' | translate }}
+                </div>
+                <div *ngIf="joinForm.get('name')?.errors?.['maxlength']">
+                  <i class="fas fa-times-circle me-1"></i>{{ 'joinUs.nameMaxLength' | translate }}
+                </div>
+                <div *ngIf="joinForm.get('name')?.errors?.['pattern'] || joinForm.get('name')?.errors?.['onlySpaces']">
+                  <i class="fas fa-times-circle me-1"></i>{{ 'joinUs.namePattern' | translate }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group col-md-6">
+              <label for="email" class="form-label">
+                <i class="fas fa-envelope me-2"></i>{{ 'joinUs.emailLabel' | translate }}
+                <span class="required-asterisk">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('email')"
+                [class.is-valid]="isFieldValid('email')"
+                [placeholder]="'joinUs.emailPlaceholder' | translate">
+              <div *ngIf="isFieldInvalid('email')" class="invalid-feedback">
+                <div *ngIf="joinForm.get('email')?.errors?.['required']">
+                  <i class="fas fa-times-circle me-1"></i>{{ 'joinUs.emailRequired' | translate }}
+                </div>
+                <div *ngIf="joinForm.get('email')?.errors?.['email']">
+                  <i class="fas fa-times-circle me-1"></i>{{ 'joinUs.emailInvalid' | translate }}
+                </div>
+                <div *ngIf="joinForm.get('email')?.errors?.['emailExists']">
+                  <i class="fas fa-times-circle me-1"></i>{{ 'joinUs.emailExistsError' | translate }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phone and Academic Specialization Row -->
+          <div class="form-row">
+            <!-- Phone Number Field -->
+            <div class="form-group col-md-6">
+              <label for="number" class="form-label">
+                <i class="fas fa-phone me-2"></i>{{ 'joinUs.phoneLabel' | translate }}
+                <span class="required-asterisk">*</span>
+              </label>
+              <input
+                type="tel"
+                id="number"
+                formControlName="number"
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('number')"
+                [class.is-valid]="isFieldValid('number')"
+                [placeholder]="'joinUs.phonePlaceholder' | translate">
+              <div *ngIf="isFieldInvalid('number')" class="invalid-feedback">
+                <div *ngIf="joinForm.get('number')?.errors?.['required']">
+                  <i class="fas fa-times-circle me-1"></i>{{ 'joinUs.phoneRequired' | translate }}
+                </div>
+                <div *ngIf="joinForm.get('number')?.errors?.['pattern']">
+                  <i class="fas fa-times-circle me-1"></i>{{ 'joinUs.phonePattern' | translate }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Academic Specialization Field -->
+            <div class="form-group col-md-6">
+              <label for="academicSpecialization" class="form-label">
+                <i class="fas fa-graduation-cap me-2"></i>{{ 'joinUs.academicSpecializationLabel' | translate }}
+                <span class="required-asterisk">*</span>
+              </label>
+              <input
+                type="text"
+                id="academicSpecialization"
+                formControlName="academicSpecialization"
+                class="form-control"
+                [class.is-invalid]="isFieldInvalid('academicSpecialization')"
+                [class.is-valid]="isFieldValid('academicSpecialization')"
+                [placeholder]="'joinUs.academicSpecializationPlaceholder' | translate">
+              <div *ngIf="isFieldInvalid('academicSpecialization')" class="invalid-feedback">
+                <div *ngIf="joinForm.get('academicSpecialization')?.errors?.['required']">
+                  <i class="fas fa-times-circle me-1"></i>{{ 'joinUs.academicSpecializationRequired' | translate }}
+                </div>
+                <div *ngIf="joinForm.get('academicSpecialization')?.errors?.['minlength']">
+                  <i class="fas fa-times-circle me-1"></i>{{ 'joinUs.academicSpecializationMinLength' | translate }}
+                </div>
+                <div *ngIf="joinForm.get('academicSpecialization')?.errors?.['maxlength']">
+                  <i class="fas fa-times-circle me-1"></i>{{ 'joinUs.academicSpecializationMaxLength' | translate }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Address Field -->
+          <div class="form-group mb-4">
+            <label for="address" class="form-label">
+              <i class="fas fa-map-marker-alt me-2"></i>{{ 'joinUs.addressLabel' | translate }}
+              <span class="required-asterisk">*</span>
+            </label>
+            <textarea
+              id="address"
+              formControlName="address"
+              class="form-control"
+              [class.is-invalid]="isFieldInvalid('address')"
+              [class.is-valid]="isFieldValid('address')"
+              rows="3"
+              [placeholder]="'joinUs.addressPlaceholder' | translate"></textarea>
+            <div *ngIf="isFieldInvalid('address')" class="invalid-feedback">
+              <div *ngIf="joinForm.get('address')?.errors?.['required']">
+                <i class="fas fa-times-circle me-1"></i>{{ 'joinUs.addressRequired' | translate }}
+              </div>
+              <div *ngIf="joinForm.get('address')?.errors?.['minlength']">
+                <i class="fas fa-times-circle me-1"></i>{{ 'joinUs.addressMinLength' | translate }}
+              </div>
+              <div *ngIf="joinForm.get('address')?.errors?.['maxlength']">
+                <i class="fas fa-times-circle me-1"></i>{{ 'joinUs.addressMaxLength' | translate }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="btn btn-primary btn-submit w-100 d-flex align-items-center justify-content-center"
+            [disabled]="joinForm.invalid || isSubmitting">
+            <span *ngIf="!isSubmitting" class="d-flex align-items-center">
+              <i class="fas fa-paper-plane me-2"></i>
+              {{ 'joinUs.submitButton' | translate }}
+            </span>
+            <span *ngIf="isSubmitting" class="d-flex align-items-center">
+              <div class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></div>
+              {{ 'joinUs.submitting' | translate }}
+            </span>
+          </button>
+        </form>
+
+        <!-- Success Messages -->
+        <div *ngIf="isPending" class="alert alert-info mt-4 text-center fade-in" role="alert">
+          <i class="fas fa-clock me-2"></i>
+          <strong>{{ 'joinUs.successMessage' | translate }}</strong><br>
+          {{ 'joinUs.pendingMessage' | translate }}
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
