@@ -413,15 +413,15 @@ $black: #000000;
         border-radius: 0 0 10px 10px;
         display: flex;
         flex-direction: column;
-        align-items: center; /* Center horizontally */
+        align-items: center;
       }
 
       .navbar-nav {
         gap: 0.5rem;
-        justify-content: center; /* Center nav items */
-        width: 100%; /* Ensure full width for centering */
-        flex-direction: column; /* Stack vertically */
-        align-items: center; /* Center horizontally */
+        justify-content: center;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
 
         .nav-link {
           font-size: 0.85rem;
@@ -499,3 +499,20 @@ body {
     }
   }
 }}
+@media (max-width: 996px) and (max-width: 400px) {
+    .navbar.scrolled[_ngcontent-ng-c4237714425] {
+        height: 60px;
+    }
+  }
+
+
+@media (max-width: 996px) {
+    .navbar[_ngcontent-ng-c4237714425] .navbar-collapse.show[_ngcontent-ng-c4237714425] .navbar-nav[_ngcontent-ng-c4237714425] {
+        gap: 0.6rem;
+        justify-content: center;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 21px;
+    }
+}

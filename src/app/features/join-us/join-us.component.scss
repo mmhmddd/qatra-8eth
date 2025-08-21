@@ -14,20 +14,20 @@ $border-color: #e9ecef;
 $white: #ffffff;
 $black: #000000;
 
-// Typography
 $font-family-arabic: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 $font-size-base: 16px;
 $font-size-lg: 18px;
 $font-size-sm: 14px;
 
-// Spacing
 $spacer: 1rem;
 $border-radius: 12px;
 $border-radius-sm: 8px;
 $box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 $box-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
+body{
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 
-// Animations
+}
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -63,22 +63,20 @@ $box-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
   }
 }
 
-// Main Container
 .join-container {
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   min-height: 100vh;
   font-family: $font-family-arabic;
   direction: rtl;
-  
+
   .container {
     max-width: 800px;
   }
 }
 
-// Welcome Section
 .welcome-section {
   margin-bottom: $spacer * 3;
-  
+
   .welcome-title {
     color: $primary-color;
     font-weight: 700;
@@ -86,7 +84,7 @@ $box-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
     margin-bottom: $spacer * 1.5;
     animation: fadeIn 1s ease-out;
   }
-  
+
   .welcome-subtitle {
     color: $neutral-color;
     font-size: $font-size-lg;
@@ -113,7 +111,7 @@ $box-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
   max-width: 600px;
   border: 1px solid rgba($primary-color, 0.1);
   transition: all 0.3s ease;
-  
+
   &:hover {
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
@@ -126,7 +124,7 @@ $box-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
   font-size: 1.75rem;
   margin-bottom: $spacer * 2;
   position: relative;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -165,12 +163,12 @@ $box-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;
   font-size: $font-size-base;
-  
+
   i {
     color: $primary-color;
     width: 20px;
   }
-  
+
   .required-asterisk {
     color: $danger-color;
     margin-right: 4px;
@@ -187,14 +185,14 @@ $box-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
   font-family: $font-family-arabic;
   transition: all 0.3s ease;
   background-color: $white;
-  
+
   &:focus {
     border-color: $primary-color;
     box-shadow: 0 0 0 0.2rem rgba($primary-color, 0.25);
     outline: none;
     background-color: rgba($primary-color, 0.02);
   }
-  
+
   &.is-valid {
     border-color: $success-color;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='m2.3 6.73.15-.15 2.35-2.35.94-.94.94.94L3.47 7.47z'/%3e%3c/svg%3e");
@@ -202,13 +200,13 @@ $box-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
     background-position: left calc(0.375em + 0.1875rem) center;
     background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
     padding-left: calc(1.5em + 0.75rem);
-    
+
     &:focus {
       border-color: $success-color;
       box-shadow: 0 0 0 0.2rem rgba($success-color, 0.25);
     }
   }
-  
+
   &.is-invalid {
     border-color: $danger-color;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 4.6 1.4 1.4m0-1.4-1.4 1.4'/%3e%3c/svg%3e");
@@ -218,7 +216,7 @@ $box-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
     padding-left: calc(1.5em + 0.75rem);
     animation: shake 0.5s ease-in-out;
   }
-  
+
   &::placeholder {
     color: lighten($neutral-color, 20%);
     font-style: italic;
@@ -241,12 +239,12 @@ textarea.form-control {
   padding: $spacer * 0.5;
   border-radius: $border-radius-sm;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  
+
   div {
     display: flex;
     align-items: center;
     margin-bottom: 2px;
-    
+
     i {
       margin-left: 4px;
       font-size: 12px;
@@ -262,20 +260,19 @@ textarea.form-control {
     border-radius: $border-radius-sm;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-    
+
     &.alert-danger {
       background: linear-gradient(135deg, lighten($danger-color, 10%) 0%, $danger-color 100%);
       color: $white;
       border: none;
     }
-    
+
     .btn-close {
       filter: brightness(0) invert(1);
     }
   }
 }
 
-// Submit Button
 .btn-submit {
   background: linear-gradient(135deg, $primary-color 0%, $primary-hover 100%);
   border: none;
@@ -287,7 +284,7 @@ textarea.form-control {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  
+
   &:before {
     content: '';
     position: absolute;
@@ -298,99 +295,99 @@ textarea.form-control {
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     transition: left 0.5s;
   }
-  
+
   &:hover:not(:disabled) {
     background: linear-gradient(135deg, $primary-hover 0%, darken($primary-hover, 10%) 100%);
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba($primary-color, 0.3);
-    
+
     &:before {
       left: 100%;
     }
   }
-  
+
   &:active:not(:disabled) {
     transform: translateY(0);
     box-shadow: 0 4px 15px rgba($primary-color, 0.3);
   }
-  
+
   &:disabled {
     background: lighten($neutral-color, 30%);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
   }
-  
+
   .spinner-border-sm {
     width: 1rem;
     height: 1rem;
   }
 }
 
-// Alert Styles
 .alert {
   border: none;
   border-radius: $border-radius-sm;
   font-family: $font-family-arabic;
   font-weight: 500;
   position: relative;
-  
+
   &.alert-success {
     background: linear-gradient(135deg, lighten($success-color, 45%) 0%, lighten($success-color, 35%) 100%);
     color: darken($success-color, 10%);
     border-right: 4px solid $success-color;
   }
-  
+
   &.alert-info {
     background: linear-gradient(135deg, lighten($info-color, 45%) 0%, lighten($info-color, 35%) 100%);
     color: darken($info-color, 15%);
     border-right: 4px solid $info-color;
   }
-  
+
   &.alert-warning {
     background: linear-gradient(135deg, lighten($warning-color, 35%) 0%, lighten($warning-color, 25%) 100%);
     color: darken($warning-color, 20%);
     border-right: 4px solid $warning-color;
   }
-  
+
   i {
     font-size: 1.1em;
   }
-  
+
   .btn-close {
     filter: none;
     opacity: 0.7;
-    
+
     &:hover {
       opacity: 1;
     }
   }
 }
 
-// Fade In Animation
 .fade-in {
   animation: fadeIn 0.5s ease-out;
 }
 
-// Responsive Design
 @media (max-width: 768px) {
+    .join-container {
+      margin-top:25px !important;
+  }
   .form-card {
     margin: 0 $spacer;
     padding: $spacer * 2;
   }
-  
+
   .welcome-title {
     font-size: 2rem;
   }
-  
+
   .welcome-subtitle {
     font-size: $font-size-base;
   }
-  
+
   .form-title {
     font-size: 1.5rem;
   }
-  
+
   .form-row {
     flex-direction: column;
   }
@@ -402,16 +399,16 @@ textarea.form-control {
       padding: $spacer;
     }
   }
-  
+
   .form-card {
     margin: 0;
     padding: $spacer * 1.5;
   }
-  
+
   .welcome-section {
     margin-bottom: $spacer * 2;
   }
-  
+
   .welcome-title {
     font-size: 1.75rem;
   }
