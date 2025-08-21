@@ -1,112 +1,128 @@
-<div class="dashboard-wrapper flex min-h-screen">
+
+<div class="dashboard-wrapper">
   <app-sidebar></app-sidebar>
 
   <!-- Main Content -->
-  <main class="main-content flex-1 p-6 md:p-8">
-    <header class="dashboard-header flex justify-center items-center relative mb-8">
-      <h1 class="text-2xl md:text-3xl font-bold text-gray-800">لوحة التحكم</h1>
-      <div class="notification-area absolute left-4 top-1/2 transform -translate-y-1/2">
-        <div class="notification-icon cursor-pointer text-primary hover:text-primary-dark transition-colors" (click)="toggleNotifications()">
-          <i class="fas fa-bell text-xl md:text-2xl"></i>
-          <span *ngIf="unreadNotificationsCount > 0" class="badge absolute -top-2 -right-2 bg-accent text-white text-xs font-semibold rounded-full px-2 py-1 shadow">{{ unreadNotificationsCount }}</span>
+  <main class="main-content">
+    <header class="dashboard-header">
+      <h1>لوحة التحكم</h1>
+      <div class="notification-area">
+        <div class="notification-icon" (click)="toggleNotifications()">
+          <i class="fas fa-bell"></i>
+          <span *ngIf="unreadNotificationsCount > 0" class="badge">{{ unreadNotificationsCount }}</span>
         </div>
-        <div *ngIf="showNotifications" class="notification-dropdown absolute top-full left-0 bg-white rounded-lg shadow-xl w-80 max-h-96 overflow-y-auto z-50 p-4 border border-gray-100">
-          <div class="notifications-header text-lg font-bold text-gray-800 border-b border-gray-200 pb-3 mb-3">الإشعارات</div>
-          <div *ngIf="!notifications?.length" class="no-notifications text-center text-gray-500 text-sm py-4">لا توجد إشعارات جديدة</div>
-          <div *ngFor="let notification of notifications" class="notification-item p-3 border-b border-gray-100 last:border-0 transition-colors" [ngClass]="{'bg-blue-50 border-l-4 border-primary': !notification.read}">
-            <p class="text-sm text-gray-800 mb-1">{{ notification.message }}</p>
-            <small class="text-xs text-gray-500">{{ notification.createdAt | date:'short' }}</small>
+        <div *ngIf="showNotifications" class="notifications-dropdown">
+          <div class="notifications-header">الإشعارات</div>
+          <div *ngIf="!notifications?.length" class="no-notifications">لا توجد إشعارات جديدة</div>
+          <div *ngFor="let notification of notifications" class="notification-item" [ngClass]="{'unread': !notification.read}">
+            <p>{{ notification.message }}</p>
+            <small>{{ notification.createdAt | date:'short' }}</small>
           </div>
         </div>
       </div>
     </header>
-
-    <div class="counters-container flex justify-center mb-8">
-      <div class="counters flex gap-6 bg-white p-4 md:p-6 rounded-xl shadow-md hover:shadow-lg transition-transform hover:-translate-y-1">
-        <span class="counter flex items-center text-sm md:text-base font-semibold text-gray-800">
-          <i class="fas fa-users text-primary text-lg md:text-xl mr-2"></i>
+    <div class="counters-container">
+      <div class="counters">
+        <span class="counter">
+          <i class="fas fa-users me-2"></i>
           عدد الأعضاء: {{ membersCount }}
         </span>
-        <span class="counter flex items-center text-sm md:text-base font-semibold text-gray-800">
-          <i class="fas fa-file-alt text-primary text-lg md:text-xl mr-2"></i>
+        <span class="counter">
+          <i class="fas fa-file-alt me-2"></i>
           عدد الطلبات: {{ joinRequestsCount }}
         </span>
       </div>
     </div>
-
     <section class="content-area">
       <!-- Error Message -->
-      <div *ngIf="error" class="alert alert-danger bg-red-100 text-red-700 border border-red-300 rounded-lg p-4 mb-6 flex justify-between items-center">
+      <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
         {{ error }}
-        <button type="button" class="text-red-700 hover:text-red-900" (click)="error = null">
-          <i class="fas fa-times"></i>
-        </button>
+        <button type="button" class="btn-close" (click)="error = null"></button>
       </div>
+
 
       <!-- Dashboard Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="dashboard-card card-members bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-md cursor-pointer" (click)="navigateTo('/all-members')">
-          <div class="card-body text-center p-6">
-            <i class="fas fa-users text-4xl text-blue-700 mb-4"></i>
-            <h5 class="card-title text-lg font-bold text-gray-800 mb-2">عرض جميع الأعضاء</h5>
-            <p class="card-text text-sm text-gray-600">عرض قائمة الأعضاء المعتمدين</p>
+      <div class="row g-4">
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card shadow-sm dashboard-card card-members" (click)="navigateTo('/all-members')">
+            <div class="card-body text-center">
+              <i class="fas fa-users fa-3x mb-3"></i>
+              <h5 class="card-title">عرض جميع الأعضاء</h5>
+              <p class="card-text">عرض قائمة الأعضاء المعتمدين</p>
+            </div>
           </div>
         </div>
-        <div class="dashboard-card card-requests bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-md cursor-pointer" (click)="navigateTo('/all-join-request')">
-          <div class="card-body text-center p-6">
-            <i class="fas fa-file-alt text-4xl text-blue-600 mb-4"></i>
-            <h5 class="card-title text-lg font-bold text-gray-800 mb-2">عرض جميع الطلبات</h5>
-            <p class="card-text text-sm text-gray-600">عرض طلبات الانضمام</p>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card shadow-sm dashboard-card card-requests" (click)="navigateTo('/all-join-request')">
+            <div class="card-body text-center">
+              <i class="fas fa-file-alt fa-3x mb-3"></i>
+              <h5 class="card-title">عرض جميع الطلبات</h5>
+              <p class="card-text">عرض طلبات الانضمام</p>
+            </div>
           </div>
         </div>
-        <div class="dashboard-card card-book bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-md cursor-pointer" (click)="navigateTo('/upload-pdf')">
-          <div class="card-body text-center p-6">
-            <i class="fas fa-book text-4xl text-green-600 mb-4"></i>
-            <h5 class="card-title text-lg font-bold text-gray-800 mb-2">إضافة كتاب</h5>
-            <p class="card-text text-sm text-gray-600">إضافة كتاب جديد إلى النظام</p>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card shadow-sm dashboard-card card-book" (click)="navigateTo('/upload-pdf')">
+            <div class="card-body text-center">
+              <i class="fas fa-book fa-3x mb-3"></i>
+              <h5 class="card-title">إضافة كتاب</h5>
+              <p class="card-text">إضافة كتاب جديد إلى النظام</p>
+            </div>
           </div>
         </div>
-        <div class="dashboard-card card-opinion bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-md cursor-pointer" (click)="navigateTo('/add-testimonials')">
-          <div class="card-body text-center p-6">
-            <i class="fas fa-comment-dots text-4xl text-purple-600 mb-4"></i>
-            <h5 class="card-title text-lg font-bold text-gray-800 mb-2">إضافة رأي</h5>
-            <p class="card-text text-sm text-gray-600">إضافة رأي عميل</p>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card shadow-sm dashboard-card card-opinion" (click)="navigateTo('/add-testimonials')">
+            <div class="card-body text-center">
+              <i class="fas fa-comment-dots fa-3x mb-3"></i>
+              <h5 class="card-title">إضافة رأي</h5>
+              <p class="card-text">إضافة رأي عميل</p>
+            </div>
           </div>
         </div>
-        <div class="dashboard-card card-leaderboard bg-gradient-to-br from-red-50 to-red-100 rounded-xl shadow-md cursor-pointer" (click)="navigateTo('/add-leaderboards')">
-          <div class="card-body text-center p-6">
-            <i class="fas fa-trophy text-4xl text-red-600 mb-4"></i>
-            <h5 class="card-title text-lg font-bold text-gray-800 mb-2">إضافة متصدر</h5>
-            <p class="card-text text-sm text-gray-600">إضافة متصدر جديد</p>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card shadow-sm dashboard-card card-leaderboard" (click)="navigateTo('/add-leaderboards')">
+            <div class="card-body text-center">
+              <i class="fas fa-trophy fa-3x mb-3"></i>
+              <h5 class="card-title">إضافة متصدر</h5>
+              <p class="card-text">إضافة متصدر جديد</p>
+            </div>
           </div>
         </div>
-        <div class="dashboard-card card-gallery bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl shadow-md cursor-pointer" (click)="navigateTo('/add-gallery')">
-          <div class="card-body text-center p-6">
-            <i class="fas fa-image text-4xl text-orange-600 mb-4"></i>
-            <h5 class="card-title text-lg font-bold text-gray-800 mb-2">إضافة صورة</h5>
-            <p class="card-text text-sm text-gray-600">إضافة صورة في معرض الصور</p>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card shadow-sm dashboard-card card-gallery" (click)="navigateTo('/add-gallery')">
+            <div class="card-body text-center">
+              <i class="fas fa-image fa-3x mb-3"></i>
+              <h5 class="card-title">إضافة صورة</h5>
+              <p class="card-text">إضافة صورة في معرض الصور</p>
+            </div>
           </div>
         </div>
-        <div class="dashboard-card card-low-lecture-members bg-gradient-to-br from-red-50 to-red-100 rounded-xl shadow-md cursor-pointer" (click)="navigateTo('/low-lecture-members')">
-          <div class="card-body text-center p-6">
-            <i class="fas fa-user-times text-4xl text-red-700 mb-4"></i>
-            <h5 class="card-title text-lg font-bold text-gray-800 mb-2">الأعضاء المقصرون</h5>
-            <p class="card-text text-sm text-gray-600">عرض قائمة الأعضاء المقصرين</p>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card shadow-sm dashboard-card card-low-lecture-members" (click)="navigateTo('/low-lecture-members')">
+            <div class="card-body text-center">
+              <i class="fas fa-user-times fa-3x mb-3"></i>
+              <h5 class="card-title">الأعضاء المقصرون</h5>
+              <p class="card-text">عرض قائمة الأعضاء المقصرين</p>
+            </div>
           </div>
         </div>
-        <div class="dashboard-card card-request-pdf bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-md cursor-pointer" (click)="navigateTo('/lectures-request')">
-          <div class="card-body text-center p-6">
-            <i class="fas fa-file-alt text-4xl text-blue-800 mb-4"></i>
-            <h5 class="card-title text-lg font-bold text-gray-800 mb-2">طلبات pdf المحاضرات</h5>
-            <p class="card-text text-sm text-gray-600">عرض قائمة طلبات رفع المحاضرات</p>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <div class="card shadow-sm dashboard-card card-request-pdf" (click)="navigateTo('/lectures-request')">
+            <div class="card-body text-center">
+              <i class="fas fa-file-alt fa-3x mb-3"></i>
+              <h5 class="card-title">طلبات pdf المحاضرات</h5>
+              <p class="card-text">عرض قائمة طلبات رفع المحاضرات</p>
+            </div>
           </div>
         </div>
       </div>
 
+
+
       <!-- Pie Chart Section -->
-      <section class="chart-section bg-white p-6 rounded-xl shadow-md mb-8 hover:shadow-lg">
-        <h2 class="text-xl md:text-2xl font-bold text-gray-800 text-center mb-6">إحصائيات الطلبات</h2>
-        <div class="pie-chart-container max-w-xs mx-auto p-4 bg-gray-50 rounded-lg">
+      <section class="chart-section" style="margin-top: 12px;">
+        <h2>إحصائيات الطلبات</h2>
+        <div class="pie-chart-container">
           <canvas baseChart
             [data]="pieChartData"
             [options]="pieChartOptions"
@@ -116,10 +132,10 @@
         </div>
       </section>
 
-      <!-- Bar Chart Section -->
-      <section class="chart-section bg-white p-6 rounded-xl shadow-md hover:shadow-lg">
-        <h2 class="text-xl md:text-2xl font-bold text-gray-800 text-center mb-6">أعلى 5 متطوعين بساعات التطوع</h2>
-        <div class="chart-container max-w-2xl mx-auto p-4 bg-gray-50 rounded-lg">
+      <!-- Bar Chart Section: Top 5 Volunteers -->
+      <section class="chart-section">
+        <h2>أعلى 5 متطوعين بساعات التطوع</h2>
+        <div class="chart-container">
           <canvas baseChart
             [data]="barChartData"
             [options]="barChartOptions"
