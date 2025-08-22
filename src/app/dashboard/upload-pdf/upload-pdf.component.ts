@@ -12,7 +12,6 @@ import { SidebarComponent } from '../../shared/sidebar/sidebar.component';
   styleUrls: ['./upload-pdf.component.scss']
 })
 export class UploadPdfComponent {
-  // Form fields
   title = '';
   description = '';
   creatorName = '';
@@ -24,10 +23,8 @@ export class UploadPdfComponent {
   errorMessage: string | null = null;
   successMessage: string | null = null;
 
-  // PDF list
   pdfs: Pdf[] = [];
 
-  // Subjects list for dropdown
   subjects = [
     'اللغة العربية',
     'اللغة الإنجليزية',
@@ -88,7 +85,6 @@ export class UploadPdfComponent {
     'العقيدة الإسلامية'
   ];
 
-  // Academic levels with colors
   academicLevels = [
     { value: 'أول', color: '#FFE4E1' },
     { value: 'ثاني', color: '#E6E6FA' },

@@ -123,8 +123,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
   semesters = ['الفصل الأول', 'الفصل الثاني'];
   countries = ['الأردن', 'فلسطين'];
   academicLevels = [
-    'الثانوية العامة', 'البكالوريوس', 'الماجستير', 'الدكتوراه',
-    'الدبلوم', 'الدراسات العليا'
+    'أول',
+    'ثاني',
+    'ثالث',
+    'رابع',
+    'خامس',
+    'سادس',
+    'سابع',
+    'ثامن',
+    'تاسع',
+    'عاشر',
+    'أول ثانوي',
+    'ثانوي (توجيهي)'
   ];
 
   constructor(
@@ -360,6 +370,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
         console.log('ProfileComponent: Profile load response:', JSON.stringify(response, null, 2));
         if (response.success && response.data) {
           this.profile = this.processProfileData(response.data);
+          this.pdfRequestForm.patchValue({
+            creatorName: this.profile.name || (this.translationService.translate('profile.notSpecified') || 'غير محدد')
+          });
           this.setActiveMessage();
           this.showUploadField = !this.profile.profileImage;
           if (this.profile.students.length) {
