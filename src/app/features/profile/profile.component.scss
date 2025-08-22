@@ -1,27 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
 
 // Color variables
-$primary-color: #3b82f6; // Vibrant blue
-$secondary-color: #6b7280; // Neutral gray
-$success-color: #10b981; // Emerald green
-$danger-color: #ef4444; // Red
-$neutral-color: #1f2937; // Dark gray
-$data-color: #4b5563; // Medium gray
-$background-color: #f9fafb; // Light gray background
+$primary-color: #007bff;
+$secondary-color: #6c757d;
+$success-color: #28a745;
+$danger-color: #dc3545;
+$neutral-color: #495057;
+$data-color: #6c757d;
+$background-color: #f8f9fa;
 $white: #ffffff;
-$border-color: #e5e7eb; // Light border
-$accent-color: #8b5cf6; // Purple accent
+$border-color: #dee2e6;
 
 // Global styles
 body {
   background-color: $background-color;
   margin: 0;
   font-family: 'Cairo', sans-serif;
-  direction: ltr;
+  direction: ltr; // Default to LTR, overridden by [dir] in HTML
   overflow-x: hidden;
 }
 
-// Container styles
+// Ensure no horizontal scroll on the container
 .container-fluid {
   overflow-x: hidden;
   width: 100%;
@@ -30,120 +29,38 @@ body {
 
 // Main content
 .main-content {
-  padding: 2rem 1rem;
+  padding: 1.5rem 0.5rem;
   margin: 0 auto;
   min-height: calc(100vh - 80px);
-  max-width: 1280px;
+  max-width: 100%;
   box-sizing: border-box;
 
   @media (min-width: 768px) {
-    padding: 2.5rem 1.5rem;
+    padding: 2rem 1rem;
   }
 
   @media (min-width: 1200px) {
-    padding: 3rem 2rem;
-  }
-}
-
-// Profile info section
-.profile-info-section {
-  padding: 2rem;
-  background: $white;
-  border-radius: 16px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
-  max-width: 1280px;
-  margin-left: auto;
-  margin-right: auto;
-
-  @media (max-width: 768px) {
-    padding: 1.5rem;
-  }
-}
-
-// Profile info wrapper
-.profile-info-wrapper {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.5rem;
-}
-
-// Profile info card
-.profile-info-card {
-  background: rgba($white, 0.95);
-  border-radius: 12px;
-  padding: 1.5rem;
-  border: 1px solid $border-color;
-  backdrop-filter: blur(10px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
-  }
-}
-
-// Info row
-.info-row {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid rgba($border-color, 0.3);
-
-  &:last-child {
-    border-bottom: none;
-  }
-}
-
-// Info label
-.info-label {
-  flex: 0 0 35%;
-  font-weight: 600;
-  color: $neutral-color;
-  font-size: 1rem;
-  padding-right: 1rem;
-
-  @media (max-width: 576px) {
-    font-size: 0.9rem;
-  }
-}
-
-// Info value
-.info-value {
-  flex: 1;
-  font-weight: 400;
-  color: $data-color;
-  font-size: 1rem;
-  background: rgba($primary-color, 0.15);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background: rgba($primary-color, 0.2);
-  }
-
-  @media (max-width: 576px) {
-    font-size: 0.9rem;
+    padding: 3rem 1.5rem;
+    max-width: 1200px;
   }
 }
 
 // Profile header
 .profile-header {
-  padding: 2rem;
+  padding: 1.5rem;
   background: $white;
-  border-radius: 16px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
-  margin-top: 60px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+  margin-top: 80px;
 
   @media (min-width: 576px) {
-    padding: 2.5rem;
-    margin-top: 50px;
+    padding: 2rem;
+    margin-top: 60px;
   }
 
   @media (min-width: 992px) {
-    padding: 3rem;
+    padding: 2.5rem;
     margin-top: 40px;
   }
 
@@ -151,12 +68,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
 
     @media (min-width: 768px) {
       flex-direction: row;
       justify-content: center;
-      gap: 2rem;
+      gap: 1.5rem;
     }
   }
 
@@ -165,26 +82,26 @@ body {
   }
 
   .profile-image {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     object-fit: cover;
     border-radius: 50%;
-    border: 3px solid $border-color;
+    border: 2px solid $border-color;
     margin-bottom: 1rem;
-    transition: transform 0.3s ease;
 
     @media (min-width: 768px) {
+      width: 120px;
+      height: 120px;
+    }
+
+    @media (min-width: 992px) {
       width: 140px;
       height: 140px;
     }
 
-    @media (min-width: 992px) {
-      width: 160px;
-      height: 160px;
-    }
-
     &:hover {
-      transform: scale(1.08);
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
     }
   }
 
@@ -193,59 +110,52 @@ body {
     max-width: 100%;
 
     @media (min-width: 768px) {
-      text-align: inherit;
-      max-width: 600px;
+      text-align: inherit; // Respect direction (RTL/LTR)
+      max-width: 500px;
     }
   }
 
   .profile-name {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: $neutral-color;
     margin-bottom: 1rem;
 
     @media (min-width: 768px) {
-      font-size: 1.75rem;
+      font-size: 1.5rem;
     }
 
     @media (min-width: 992px) {
-      font-size: 2rem;
+      font-size: 1.75rem;
     }
   }
 
   .change-image-btn {
-    font-size: 0.9rem;
-    padding: 0.6rem 1.2rem;
-    border-radius: 10px;
-    background-color: $primary-color;
-    color: $white;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: darken($primary-color, 10%);
-    }
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
 
     @media (min-width: 768px) {
-      font-size: 1rem;
-      padding: 0.75rem 1.75rem;
+      font-size: 0.9rem;
+      padding: 0.6rem 1.5rem;
     }
   }
 
   .message-section {
-    background: rgba($accent-color, 0.1);
+    background-color: rgba($primary-color, 0.05);
     border: 1px solid $border-color;
-    border-radius: 10px;
-    padding: 1.25rem;
-    margin-top: 1.5rem;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
 
     .message-title {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
       color: $neutral-color;
     }
 
     .message-content {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: $data-color;
     }
   }
@@ -255,55 +165,55 @@ body {
 .nav-tabs {
   display: flex;
   justify-content: center;
-  gap: 0.75rem;
-  margin-bottom: 2rem;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
   flex-wrap: wrap;
-  padding: 0 1rem;
+  padding: 0 0.5rem;
 
   .nav-tab {
     background: $white;
     border: 1px solid $border-color;
-    border-radius: 10px;
-    padding: 0.75rem 1.25rem;
-    font-size: 0.9rem;
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: $neutral-color;
     cursor: pointer;
     flex: 1 1 auto;
-    min-width: 100px;
-    max-width: 180px;
+    min-width: 80px;
+    max-width: 150px;
     text-align: center;
-    transition: all 0.3s ease;
 
     @media (min-width: 768px) {
-      font-size: 1rem;
-      padding: 1rem 2rem;
-      min-width: 120px;
-      max-width: 220px;
+      font-size: 0.9rem;
+      padding: 0.75rem 1.5rem;
+      min-width: 100px;
+      max-width: 200px;
     }
 
     &.active {
       background: $primary-color;
       color: $white;
       border-color: $primary-color;
-      box-shadow: 0 4px 12px rgba($primary-color, 0.25);
+      box-shadow: 0 2px 8px rgba($primary-color, 0.2);
     }
 
     &:hover {
-      background: rgba($primary-color, 0.15);
+      background: rgba($primary-color, 0.1);
       border-color: $primary-color;
-      transform: translateY(-3px);
+      transform: translateY(-2px);
+      transition: all 0.3s ease;
     }
 
     .badge {
       position: absolute;
-      top: -10px;
-      right: -10px;
+      top: -8px;
+      right: -8px;
       background-color: $danger-color;
       color: $white;
       border-radius: 50%;
-      padding: 0.3rem 0.6rem;
-      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.7rem;
     }
   }
 }
@@ -311,39 +221,39 @@ body {
 // Card styles
 .card {
   background: $white;
-  border-radius: 16px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
   border: none;
 
   .card-header {
-    background: linear-gradient(90deg, rgba($primary-color, 0.15) 0%, $white 100%);
+    background: linear-gradient(90deg, rgba($primary-color, 0.1) 0%, $white 100%);
     color: $neutral-color;
-    padding: 1rem 1.5rem;
+    padding: 0.75rem 1rem;
     border-bottom: 1px solid $border-color;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: 0.5rem;
 
     h3 {
       margin: 0;
       font-weight: 700;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: $neutral-color;
 
       @media (min-width: 768px) {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
       }
     }
   }
 
   .card-body {
-    padding: 1.5rem;
+    padding: 1rem;
 
     @media (min-width: 768px) {
-      padding: 2rem;
+      padding: 1.5rem;
     }
   }
 }
@@ -351,33 +261,31 @@ body {
 // Add Lecture section
 #add-lecture-section {
   .card-header {
-    background: linear-gradient(90deg, rgba($success-color, 0.15) 0%, $white 100%);
-    padding: 1rem 1.5rem;
-    border-radius: 16px 16px 0 0;
+    padding: 0.75rem 1rem;
+    border-radius: 12px 12px 0 0;
 
     h3 {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
       color: $neutral-color;
 
       @media (min-width: 768px) {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
       }
     }
   }
 
   .form-floating {
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
 
   .btn-success {
-    font-size: 1rem;
-    padding: 0.75rem 2rem;
-    border-radius: 10px;
+    font-size: 0.9rem;
+    padding: 0.5rem 1.5rem;
 
     @media (min-width: 768px) {
-      font-size: 1.1rem;
-      padding: 1rem 2.5rem;
+      font-size: 1rem;
+      padding: 0.75rem 2rem;
     }
   }
 }
@@ -385,17 +293,17 @@ body {
 // Students section
 #students-section {
   .card-header {
-    background: linear-gradient(90deg, rgba($primary-color, 0.15) 0%, $white 100%);
-    padding: 1rem 1.5rem;
-    border-radius: 16px 16px 0 0;
+    background: linear-gradient(90deg, rgba($primary-color, 0.1) 0%, $white 100%);
+    padding: 0.75rem 1rem;
+    border-radius: 12px 12px 0 0;
 
     h3 {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
       color: $neutral-color;
 
       @media (min-width: 768px) {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
       }
     }
   }
@@ -404,38 +312,38 @@ body {
 // Meetings section
 #meetings-section {
   .card-header {
-    background: linear-gradient(90deg, rgba($primary-color, 0.2) 0%, $white 100%);
-    padding: 1rem 1.5rem;
-    border-radius: 16px 16px 0 0;
+    background: linear-gradient(90deg, rgba($primary-color, 0.15) 0%, $white 100%);
+    padding: 0.75rem 1rem;
+    border-radius: 12px 12px 0 0;
 
     h3 {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
       color: $neutral-color;
 
       @media (min-width: 768px) {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
       }
     }
 
     .btn-primary {
-      font-size: 0.9rem;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
+      font-size: 0.8rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.3rem;
 
       .fa-plus {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
       }
 
       @media (min-width: 768px) {
-        font-size: 1rem;
-        padding: 0.75rem 1.25rem;
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
 
         .fa-plus {
-          font-size: 0.9rem;
+          font-size: 0.8rem;
         }
       }
     }
@@ -446,26 +354,26 @@ body {
       .mobile-meetings {
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+        gap: 1rem;
 
         .meeting-card {
           background: $white;
           border: 1px solid $border-color;
-          border-radius: 12px;
-          padding: 1.25rem;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+          border-radius: 8px;
+          padding: 1rem;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
           display: flex;
           flex-direction: column;
-          gap: 0.75rem;
+          gap: 0.5rem;
 
           .meeting-title {
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 600;
             color: $neutral-color;
           }
 
           .meeting-detail {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: $data-color;
           }
 
@@ -474,9 +382,8 @@ body {
             justify-content: flex-end;
 
             .btn-danger {
-              font-size: 0.9rem;
-              padding: 0.5rem 1rem;
-              border-radius: 8px;
+              font-size: 0.8rem;
+              padding: 0.4rem 0.8rem;
             }
           }
         }
@@ -494,17 +401,17 @@ body {
 // PDF Request section
 #pdf-request-section {
   .card-header {
-    background: linear-gradient(90deg, rgba($primary-color, 0.15) 0%, $white 100%);
-    padding: 1rem 1.5rem;
-    border-radius: 16px 16px 0 0;
+    background: linear-gradient(90deg, rgba($primary-color, 0.1) 0%, $white 100%);
+    padding: 0.75rem 1rem;
+    border-radius: 12px 12px 0 0;
 
     h3 {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
       color: $neutral-color;
 
       @media (min-width: 768px) {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
       }
     }
   }
@@ -513,118 +420,118 @@ body {
 // Calendar styles
 .calendar-container {
   max-width: 100%;
-  margin: 0 auto 1.5rem;
+  margin: 0 auto 1rem;
   overflow-x: auto;
 
   full-calendar {
     width: 100%;
     height: auto;
-    min-height: 250px;
+    min-height: 200px;
 
     @media (min-width: 768px) {
-      min-height: 400px;
+      min-height: 350px;
     }
 
     @media (min-width: 992px) {
-      min-height: 450px;
+      min-height: 400px;
     }
 
     .fc {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
 
       @media (max-width: 576px) {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
       }
 
       .fc-daygrid-day {
-        padding: 0.2rem;
+        padding: 0.15rem;
 
         @media (max-width: 576px) {
-          padding: 0.15rem;
+          padding: 0.1rem;
         }
       }
 
       .fc-toolbar {
-        padding: 0.5rem;
+        padding: 0.4rem;
         flex-wrap: wrap;
 
         @media (max-width: 576px) {
-          padding: 0.4rem;
+          padding: 0.3rem;
         }
 
         .fc-toolbar-title {
-          font-size: 1rem;
+          font-size: 0.85rem;
           font-weight: 600;
 
           @media (max-width: 576px) {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
           }
 
           @media (min-width: 768px) {
-            font-size: 1.1rem;
+            font-size: 1rem;
           }
         }
 
         .fc-button {
-          padding: 0.3rem 0.5rem;
-          font-size: 0.8rem;
+          padding: 0.2rem 0.4rem;
+          font-size: 0.7rem;
 
           @media (max-width: 576px) {
-            padding: 0.2rem 0.4rem;
-            font-size: 0.7rem;
+            padding: 0.15rem 0.3rem;
+            font-size: 0.6rem;
 
             .fc-icon {
-              font-size: 0.7rem;
+              font-size: 0.6rem;
             }
           }
 
           @media (min-width: 768px) {
-            padding: 0.4rem 0.6rem;
-            font-size: 0.9rem;
+            padding: 0.3rem 0.5rem;
+            font-size: 0.8rem;
           }
         }
       }
 
       .fc-col-header-cell {
-        padding: 0.2rem;
-        font-size: 0.8rem;
-
-        @media (max-width: 576px) {
-          font-size: 0.7rem;
-          padding: 0.15rem;
-        }
-
-        @media (min-width: 768px) {
-          font-size: 0.9rem;
-          padding: 0.25rem;
-        }
-      }
-
-      .fc-daygrid-day-number {
+        padding: 0.15rem;
         font-size: 0.7rem;
 
         @media (max-width: 576px) {
           font-size: 0.65rem;
-        }
-
-        @media (min-width: 768px) {
-          font-size: 0.85rem;
-        }
-      }
-
-      .fc-event {
-        font-size: 0.7rem;
-        padding: 0.15rem;
-        border-radius: 3px;
-
-        @media (max-width: 576px) {
-          font-size: 0.6rem;
           padding: 0.1rem;
         }
 
         @media (min-width: 768px) {
+          font-size: 0.85rem;
+          padding: 0.2rem;
+        }
+      }
+
+      .fc-daygrid-day-number {
+        font-size: 0.65rem;
+
+        @media (max-width: 576px) {
+          font-size: 0.6rem;
+        }
+
+        @media (min-width: 768px) {
           font-size: 0.8rem;
-          padding: 0.25rem;
+        }
+      }
+
+      .fc-event {
+        font-size: 0.6rem;
+        padding: 0.1rem;
+        border-radius: 2px;
+
+        @media (max-width: 576px) {
+          font-size: 0.55rem;
+          padding: 0.08rem;
+        }
+
+        @media (min-width: 768px) {
+          font-size: 0.75rem;
+          padding: 0.2rem;
         }
       }
     }
@@ -633,49 +540,49 @@ body {
 
 // Toast styles
 .toast-container {
-  z-index: 1060;
+  z-index: 1050;
 }
 
 .toast {
-  border-radius: 10px;
-  margin-bottom: 1rem;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   &.toast-success {
-    background-color: #d1fae5;
-    border: 1px solid #a7f3d0;
-    color: #065f46;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
   }
 
   &.toast-error {
-    background-color: #fee2e2;
-    border: 1px solid #fecaca;
-    color: #991b1b;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
   }
 
   &.toast-info {
-    background-color: #e0f2fe;
-    border: 1px solid #bae6fd;
-    color: #1e40af;
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
   }
 
   .toast-header {
     border-bottom: 1px solid $border-color;
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
 
     @media (min-width: 768px) {
-      padding: 1rem 1.25rem;
-      font-size: 1rem;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
     }
   }
 
   .toast-body {
-    padding: 1rem;
-    font-size: 0.9rem;
+    padding: 0.75rem;
+    font-size: 0.85rem;
 
     @media (min-width: 768px) {
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
   }
 }
@@ -693,23 +600,23 @@ body {
 
 // Form styles
 .form-floating {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 
   .form-control {
-    border-radius: 10px;
-    padding: 0.75rem;
-    font-size: 0.9rem;
-    height: calc(2.75rem + 2px);
+    border-radius: 8px;
+    padding: 0.6rem;
+    font-size: 0.85rem;
+    height: calc(2.5rem + 2px);
 
     @media (min-width: 768px) {
-      font-size: 1rem;
-      padding: 1rem;
-      height: calc(3.25rem + 2px);
+      font-size: 0.9rem;
+      padding: 0.75rem;
+      height: calc(3rem + 2px);
     }
 
     &:focus {
       border-color: $primary-color;
-      box-shadow: 0 0 0 4px rgba($primary-color, 0.15);
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
     }
 
     &.is-invalid {
@@ -718,41 +625,41 @@ body {
   }
 
   label {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: $data-color;
 
     @media (min-width: 768px) {
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
   }
 
   textarea.form-control {
-    height: 120px;
+    height: 100px;
     resize: vertical;
 
     @media (min-width: 768px) {
-      height: 140px;
+      height: 120px;
     }
   }
 }
 
 .invalid-feedback {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: $danger-color;
 }
 
 // Button styles
 .btn {
-  border-radius: 10px;
+  border-radius: 8px;
   font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.2s ease, transform 0.1s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
   &:hover {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
   }
 
   &.btn-primary {
@@ -760,7 +667,7 @@ body {
     color: $white;
 
     &:hover {
-      background-color: darken($primary-color, 12%);
+      background-color: darken($primary-color, 10%);
     }
   }
 
@@ -769,7 +676,7 @@ body {
     color: $primary-color;
 
     &:hover {
-      background: rgba($primary-color, 0.15);
+      background: rgba($primary-color, 0.1);
     }
   }
 
@@ -778,7 +685,7 @@ body {
     color: $white;
 
     &:hover {
-      background-color: darken($secondary-color, 12%);
+      background-color: darken($secondary-color, 10%);
     }
   }
 
@@ -787,7 +694,7 @@ body {
     color: $white;
 
     &:hover {
-      background-color: darken($success-color, 12%);
+      background-color: darken($success-color, 10%);
     }
   }
 
@@ -796,22 +703,22 @@ body {
     color: $white;
 
     &:hover {
-      background-color: darken($danger-color, 12%);
+      background-color: darken($danger-color, 10%);
     }
   }
 
   &.btn-sm {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
 
     @media (min-width: 768px) {
-      padding: 0.75rem 1.25rem;
-      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
     }
   }
 
   &[disabled] {
-    background-color: #d1d5db;
+    background-color: #cccccc;
     cursor: not-allowed;
   }
 }
@@ -820,32 +727,32 @@ body {
 .upload-section {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
   max-width: 100%;
-  margin: 0 auto 1.5rem;
+  margin: 0 auto 1rem;
 
   @media (min-width: 768px) {
-    max-width: 600px;
+    max-width: 500px;
   }
 
   .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 
     label {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: $neutral-color;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.25rem;
 
       @media (min-width: 768px) {
-        font-size: 1rem;
+        font-size: 0.9rem;
       }
     }
 
     .form-control {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
 
       @media (min-width: 768px) {
-        font-size: 1rem;
+        font-size: 0.9rem;
       }
     }
   }
@@ -859,7 +766,7 @@ body {
 
   &.table-hover {
     tbody tr:hover {
-      background-color: rgba($primary-color, 0.1);
+      background-color: rgba($primary-color, 0.05);
     }
   }
 
@@ -867,28 +774,28 @@ body {
     background-color: $background-color;
     font-weight: 600;
     color: $neutral-color;
-    padding: 1rem;
-    text-align: inherit;
+    padding: 0.75rem;
+    text-align: inherit; // Respect direction (RTL/LTR)
     border-bottom: 1px solid $border-color;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 
     @media (min-width: 768px) {
-      font-size: 1rem;
-      padding: 1.25rem;
+      font-size: 0.9rem;
+      padding: 1rem;
     }
   }
 
   td {
-    padding: 1rem;
-    text-align: inherit;
+    padding: 0.75rem;
+    text-align: inherit; // Respect direction (RTL/LTR)
     color: $data-color;
     font-weight: 400;
     border-bottom: 1px solid $border-color;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 
     @media (min-width: 768px) {
-      font-size: 1rem;
-      padding: 1.25rem;
+      font-size: 0.9rem;
+      padding: 1rem;
     }
   }
 }
@@ -896,34 +803,34 @@ body {
 .table-responsive {
   overflow-x: auto;
   width: 100%;
-  border-radius: 10px;
-  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
 }
 
 // Modal styles
 .modal-content {
-  border-radius: 16px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .modal-header {
   background: $white;
   color: $neutral-color;
   border-bottom: 1px solid $border-color;
-  padding: 1rem;
+  padding: 0.75rem;
 
   .modal-title {
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 1rem;
 
     @media (min-width: 576px) {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
     }
   }
 
   .btn-close {
-    background-size: 0.9rem;
-    opacity: 0.8;
+    background-size: 0.8rem;
+    opacity: 0.7;
 
     &:hover {
       opacity: 1;
@@ -932,32 +839,49 @@ body {
 }
 
 .modal-body {
-  padding: 1.5rem;
+  padding: 1rem;
 
   @media (min-width: 768px) {
-    padding: 2rem;
+    padding: 1.5rem;
   }
 }
 
 .modal-footer {
   border-top: 1px solid $border-color;
-  padding: 1rem;
+  padding: 0.75rem;
 
   .btn {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 
     @media (min-width: 768px) {
-      font-size: 1rem;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// Glass blur effect for dd.col-sm-8
+dl.row {
+  dd.col-sm-8 {
+    background: rgba($white, 0.4); // Semi-transparent white background
+    backdrop-filter: blur(8px); // Glass blur effect
+    -webkit-backdrop-filter: blur(8px); // For Safari compatibility
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    color: $data-color;
+    transition: background 0.3s ease;
+
+    @media (min-width: 768px) {
+      padding: 0.75rem 1rem;
+    }
+
+    &:hover {
+      background: rgba($white, 0.6); // Slightly more opaque on hover
     }
   }
 }
 
 // RTL-specific adjustments
 [dir="rtl"] {
-  body {
-    direction: rtl;
-  }
-
   .profile-header-content {
     @media (min-width: 768px) {
       flex-direction: row-reverse;
@@ -966,10 +890,10 @@ body {
 
   .profile-image-container {
     margin-left: 0;
-    margin-right: 2rem;
+    margin-right: 1.5rem;
 
     @media (min-width: 768px) {
-      margin-right: 2.5rem;
+      margin-right: 2rem;
     }
   }
 
@@ -977,7 +901,7 @@ body {
     .nav-tab {
       .badge {
         right: auto;
-        left: -10px;
+        left: -8px;
       }
     }
   }
@@ -996,15 +920,15 @@ body {
 
   .modal-footer {
     .btn {
-      margin-left: 0.75rem;
+      margin-left: 0.5rem;
       margin-right: 0;
     }
   }
 
-  .info-row {
-    .info-label {
-      padding-right: 0;
-      padding-left: 1rem;
+  // Adjust dd.col-sm-8 for RTL
+  dl.row {
+    dd.col-sm-8 {
+      text-align: right;
     }
   }
 }
