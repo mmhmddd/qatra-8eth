@@ -174,15 +174,24 @@ $black: #000000;
 
   .btn {
     font-weight: 600;
-    padding: 0.35rem 0.9rem;
     border-radius: 8px;
     border: none;
-    font-size: 0.9rem;
     transition: all 0.3s ease;
-    width: 100%;
     text-align: center;
-    padding: 0.3rem 0.8rem;
     height: 30px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &.btn-primary,
+    &.btn-danger {
+      min-width: 80px;
+      padding: 0.35rem 0.8rem;
+      font-size: 0.85rem;
+    }
 
     &.btn-primary {
       background-color: $accent-color;
@@ -234,7 +243,7 @@ $black: #000000;
     &.btn-language-toggle {
       background-color: rgba(255, 255, 255, 0.1);
       color: white;
-      padding: 0.4rem 1rem;
+      padding: 0.4rem 0.8rem;
       border-radius: 20px;
       display: flex;
       align-items: center;
@@ -243,17 +252,10 @@ $black: #000000;
       border: 1px solid rgba(255, 255, 255, 0.3);
       backdrop-filter: blur(4px);
       transition: all 0.3s ease;
-      width: 120px;
-
-      svg {
-        margin-right: 0.4rem;
-        width: 16px;
-        height: 16px;
-        stroke: white;
-      }
+      width: 50px;
 
       span {
-        font-weight: 500;
+        font-weight: 600;
       }
 
       &:hover {
@@ -326,40 +328,50 @@ $black: #000000;
         display: flex;
         flex-direction: column;
         align-items: center;
-      .navbar-nav {
-        gap: 0.6rem;
-        justify-content: center; /* Center nav items */
-        width: 100%; /* Ensure full width for centering */
-        flex-direction: column; /* Stack vertically */
-        align-items: center; /* Center horizontally */
 
-        .nav-link {
-          font-size: 0.9rem;
-          padding: 10px 16px;
+        .navbar-nav {
+          gap: 0.6rem;
+          justify-content: center;
+          width: 100%;
+          flex-direction: column;
+          align-items: center;
+          margin-bottom: 21px;
+
+          .nav-link {
+            font-size: 0.9rem;
+            padding: 10px 16px;
+            max-width: 280px;
+            text-align: center;
+          }
+        }
+
+        .buttons-container {
+          gap: 0.6rem;
           max-width: 280px;
-          text-align: center; /* Center text */
-        }
-      }
+          width: 100%;
+          justify-content: center;
+          flex-direction: column;
+          align-items: center;
 
-      .buttons-container {
-        gap: 0.6rem;
-        max-width: 280px;
-        width: 100%; /* Ensure full width for centering */
-        justify-content: center; /* Center buttons */
-        flex-direction: column; /* Stack vertically */
-        align-items: center; /* Center horizontally */
+          .mobile-auth-buttons {
+            max-width: 260px;
+            width: 100%;
+            align-items: center;
 
-        .mobile-auth-buttons {
-          max-width: 260px;
-          width: 100%; /* Ensure full width */
-          align-items: center; /* Center buttons */
-        }
+            .btn {
+              &.btn-primary,
+              &.btn-danger {
+                min-width: 200px;
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+              }
 
-        .btn {
-          max-width: 260px;
-          padding: 0.5rem 1rem;
-          font-size: 0.9rem;
-          text-align: center; /* Center text */
+              &.btn-language-toggle {
+                width: 50px;
+                padding: 0.4rem 0.8rem;
+              }
+            }
+          }
         }
       }
     }
@@ -396,7 +408,7 @@ $black: #000000;
     }
 
     &.scrolled {
-      height: 50px;
+      height: 60px;
 
       .navbar-brand {
         img {
@@ -414,42 +426,49 @@ $black: #000000;
         display: flex;
         flex-direction: column;
         align-items: center;
-      }
 
-      .navbar-nav {
-        gap: 0.5rem;
-        justify-content: center;
-        width: 100%;
-        flex-direction: column;
-        align-items: center;
+        .navbar-nav {
+          gap: 0.5rem;
+          justify-content: center;
+          width: 100%;
+          flex-direction: column;
+          align-items: center;
 
-        .nav-link {
-          font-size: 0.85rem;
+          .nav-link {
+            font-size: 0.85rem;
+            max-width: 250px;
+            padding: 8px 12px;
+            text-align: center;
+          }
+        }
+
+        .buttons-container {
           max-width: 250px;
-          padding: 8px 12px;
-          text-align: center; /* Center text */
-        }
-      }
+          gap: 0.5rem;
+          width: 100%;
+          justify-content: center;
+          flex-direction: column;
+          align-items: center;
 
-      .buttons-container {
-        max-width: 250px;
-        gap: 0.5rem;
-        width: 100%; /* Ensure full width for centering */
-        justify-content: center; /* Center buttons */
-        flex-direction: column; /* Stack vertically */
-        align-items: center; /* Center horizontally */
+          .mobile-auth-buttons {
+            max-width: 230px;
+            width: 100%;
+            align-items: center;
 
-        .mobile-auth-buttons {
-          max-width: 230px;
-          width: 100%; /* Ensure full width */
-          align-items: center; /* Center buttons */
-        }
+            .btn {
+              &.btn-primary,
+              &.btn-danger {
+                min-width: 180px;
+                padding: 0.45rem 0.8rem;
+                font-size: 0.85rem;
+              }
 
-        .btn {
-          max-width: 230px;
-          padding: 0.45rem 0.8rem;
-          font-size: 0.85rem;
-          text-align: center; /* Center text */
+              &.btn-language-toggle {
+                width: 50px;
+                padding: 0.4rem 0.8rem;
+              }
+            }
+          }
         }
       }
     }
@@ -498,21 +517,4 @@ body {
       margin-top: 50px;
     }
   }
-}}
-@media (max-width: 996px) and (max-width: 400px) {
-    .navbar.scrolled[_ngcontent-ng-c4237714425] {
-        height: 60px;
-    }
-  }
-
-
-@media (max-width: 996px) {
-    .navbar[_ngcontent-ng-c4237714425] .navbar-collapse.show[_ngcontent-ng-c4237714425] .navbar-nav[_ngcontent-ng-c4237714425] {
-        gap: 0.6rem;
-        justify-content: center;
-        width: 100%;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 21px;
-    }
 }

@@ -5,7 +5,7 @@
       <img src="../../../assets/images/home/scalewhitelogo.png" alt="Logo" />
     </a>
 
-    <!-- Toggle button for mobile - moved to be direct sibling -->
+    <!-- Toggle button for mobile -->
     <button
       class="navbar-toggler d-lg-none"
       type="button"
@@ -17,25 +17,20 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-<div class="d-none d-lg-flex flex-column align-items-end gap-2 order-lg-3">
-  <button
-    class="btn btn-language-toggle"
-    (click)="toggleLanguage()"
-    [disabled]="isProfileRoute"
-    [title]="currentLanguage === 'ar' ? 'Switch to English' : 'التبديل إلى العربية'"
-    type="button">
-    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
-      <path d="M8 1a7 7 0 0 0-7 7 7 7 0 0 0 7 7 7 7 0 0 0 7-7 7 7 0 0 0-7-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>
-      <path d="M4 8h8"/>
-      <path d="M8 4v8"/>
-    </svg>
-    <span class="d-none d-sm-inline">{{ getLanguageButtonText() }}</span>
-  </button>
+    <div class="d-none d-lg-flex align-items-center gap-2 order-lg-3">
+      <button
+        class="btn btn-language-toggle"
+        (click)="toggleLanguage()"
+        [disabled]="isProfileRoute"
+        [title]="currentLanguage === 'ar' ? 'Switch to English' : 'التبديل إلى العربية'"
+        type="button">
+        <span>{{ currentLanguage === 'ar' ? 'AR' : 'EN' }}</span>
+      </button>
 
-  <button class="btn" [ngClass]="isLoggedIn() ? 'btn-danger' : 'btn-primary'" (click)="handleAuthAction()">
-    {{ isLoggedIn() ? ('nav.logout' | translate) : ('nav.login' | translate) }}
-  </button>
-</div>
+      <button class="btn" [ngClass]="isLoggedIn() ? 'btn-danger' : 'btn-primary'" (click)="handleAuthAction()">
+        {{ isLoggedIn() ? ('nav.logout' | translate) : ('nav.login' | translate) }}
+      </button>
+    </div>
 
     <div
       class="collapse navbar-collapse"
@@ -93,12 +88,7 @@
             (click)="toggleLanguage()"
             [title]="currentLanguage === 'ar' ? 'Switch to English' : 'التبديل إلى العربية'"
             type="button">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
-              <path d="M8 1a7 7 0 0 0-7 7 7 7 0 0 0 7 7 7 7 0 0 0 7-7 7 7 0 0 0-7-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>
-              <path d="M4 8h8"/>
-              <path d="M8 4v8"/>
-            </svg>
-            <span>{{ getLanguageButtonText() }}</span>
+            <span>{{ currentLanguage === 'ar' ? 'AR' : 'EN' }}</span>
           </button>
 
           <button class="btn mb-2" [ngClass]="isLoggedIn() ? 'btn-danger' : 'btn-primary'" (click)="handleAuthAction()">
