@@ -1,7 +1,21 @@
 <app-sidebar></app-sidebar>
 <main>
   <div class="join-requests-container">
-    <h2>جميع طلبات الانضمام</h2>
+    <!-- Header Section -->
+    <div class="page-header">
+      <h2>جميع طلبات الانضمام</h2>
+      <div class="page-actions">
+        <button
+          class="export-btn"
+          (click)="exportToExcel()"
+          [disabled]="isLoading || filteredRequests.length === 0"
+          title="تصدير إلى Excel">
+          <span class="export-icon">📊</span>
+          تصدير إلى Excel
+        </button>
+      </div>
+    </div>
+
     <div class="filter-container">
       <label for="statusFilter">تصفية حسب الحالة: </label>
       <select id="statusFilter" [(ngModel)]="selectedStatus" (change)="filterRequests()">
@@ -26,7 +40,7 @@
                 {{ request.status | statusTranslate }}
               </span>
               <span *ngIf="header.key === 'email'" style="text-decoration: none">
-                <a [href]="'mailto:' + request.email" class="text-primary" target="_blank" style="text-decoration: none">
+                <a [href]="'mailto:' + request.email" class="text-primary" style="text-decoration: none">
                   {{ request.email || 'غير متوفر' }}
                 </a>
               </span>

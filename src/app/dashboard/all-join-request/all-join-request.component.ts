@@ -5,6 +5,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { SidebarComponent } from '../../shared/sidebar/sidebar.component';
 import { JoinRequestService, JoinRequest, JoinRequestResponse } from '../../core/services/join-request.service';
 import { Router } from '@angular/router';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 @Pipe({
   name: 'statusTranslate',
@@ -206,5 +208,53 @@ export class AllJoinRequestComponent implements OnInit {
     setTimeout(() => {
       this.toastMessage = null;
     }, 3000);
+  }
+
+  exportToExcel(): void {
+    // Prepare data for Excel
+    const exportData = this.filteredRequests.map(request => ({
+      'الاسم': request.name || 'غير متوفر',
+      'البريد الإلكتروني': request.email || 'غير متوفر',
+      'رقم الهاتف': request.phone || 'غير متوفر',
+      'التخصص الجامعي': request.academicSpecialization || 'غير متوفر',
+      'تاريخ التقديم': request.createdAt || 'غير متوفر',
+      'الحالة': this.translateStatus(request.status || '')
+    }));
+
+    // Define column headers in Arabic
+    const headers = {
+      'الاسم': 'الاسم',
+      'البريد الإلكتروني': 'البريد الإلكتروني',
+      'رقم الهاتف': 'رقم الهاتف',
+      'التخصص الجامعي': 'التخصص الجامعي',
+      'تاريخ التقديم': 'تاريخ التقديم',
+      'الحالة': 'الحالة'
+    };
+
+    // Create worksheet
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+    XLSX.utils.sheet_add_aoa(worksheet, [Object.values(headers)], { origin: 'A1' });
+
+    // Create workbook and add the worksheet
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'طلبات الانضمام');
+
+    // Generate Excel file and trigger download
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(data, `join_requests_${new Date().toISOString().split('T')[0]}.xlsx`);
+  }
+
+  private translateStatus(status: string): string {
+    switch (status?.toLowerCase()) {
+      case 'approved':
+        return 'موافق عليه';
+      case 'rejected':
+        return 'مرفوض';
+      case 'pending':
+        return 'معلق';
+      default:
+        return 'غير معروف';
+    }
   }
 }
