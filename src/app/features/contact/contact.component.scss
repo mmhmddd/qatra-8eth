@@ -84,7 +84,7 @@ $whatsapp-color: #25d366;
       align-items: center;
       justify-content: center;
       text-align: center;
-      min-width: 220px; /* Ensures all buttons are the same width */
+      min-width: 220px;
     }
 
     .hero-button {
@@ -143,6 +143,7 @@ $whatsapp-color: #25d366;
 .hero-content [data-delay] {
   animation-delay: var(--delay);
 }
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   .hero-card {
@@ -219,7 +220,7 @@ $whatsapp-color: #25d366;
 
   .hero-card {
     padding: 0.5rem;
-    box-shadow: none; /* Remove shadow on small screens for simplicity */
+    box-shadow: none;
   }
 
   .hero-content .hero-title {
@@ -246,6 +247,7 @@ $whatsapp-color: #25d366;
     margin: 0;
   }
 }
+
 .faq-section {
   padding: 5rem 0;
   background: linear-gradient(135deg, $white 0%, #f8f9fa 50%, #e9ecef 100%);
@@ -333,7 +335,6 @@ $whatsapp-color: #25d366;
       overflow: hidden;
       transition: all 0.4s ease;
 
-      // Default closed state
       max-height: 0;
       opacity: 0;
       padding: 0 2rem;
@@ -345,7 +346,6 @@ $whatsapp-color: #25d366;
         transition: transform 0.3s ease 0.1s;
       }
 
-      // Open state (controlled by Angular animation)
       &.open {
         max-height: 300px;
         opacity: 1;
@@ -358,7 +358,8 @@ $whatsapp-color: #25d366;
     }
   }
 }
-// Enhanced Contact Details Section
+
+/* Enhanced Contact Details Section */
 .contact-details {
   padding: 5rem 0;
   background: linear-gradient(135deg, $white 0%, #f8f9fa 50%, #e9ecef 100%);
@@ -397,8 +398,8 @@ $whatsapp-color: #25d366;
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center content horizontally */
-    padding: 2rem; /* Adjusted padding for better balance */
+    align-items: center;
+    padding: 2rem;
 
     &::before {
       content: '';
@@ -433,7 +434,6 @@ $whatsapp-color: #25d366;
       gap: 0.8rem;
       margin-bottom: 1rem;
       margin-right: -33px;
-
     }
 
     i {
@@ -455,10 +455,10 @@ $whatsapp-color: #25d366;
       font-family: 'Amiri', serif;
       font-size: 1.1rem;
       color: $neutral-color;
-      margin: 0; /* Remove margin to align with h4 */
+      margin: 0;
       line-height: 1.6;
       text-align: center;
-      padding-top: 0.5rem; /* Add padding to balance vertical spacing */
+      padding-top: 0.5rem;
 
       a {
         color: $accent-color;
@@ -488,7 +488,6 @@ $whatsapp-color: #25d366;
     }
   }
 
-  /* Responsive adjustments */
   @media (max-width: 768px) {
     .equal-height-row {
       flex-direction: column;
@@ -511,7 +510,8 @@ $whatsapp-color: #25d366;
     }
   }
 }
-// Enhanced Contact Form Section
+
+/* Enhanced Contact Form Section */
 .contact-form {
   padding: 5rem 0;
   background: linear-gradient(135deg, $light-gray 0%, $white 50%, $light-gray 100%);
@@ -555,6 +555,14 @@ $whatsapp-color: #25d366;
       transform: translateY(-5px);
       box-shadow: 0 20px 60px rgba($black, 0.15);
     }
+  }
+
+  .form-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
   }
 
   .form-label {
@@ -609,13 +617,16 @@ $whatsapp-color: #25d366;
     color: $white;
     font-family: 'Amiri', serif;
     font-weight: 700;
-    font-size: 1.2rem;
-    padding: 1rem 3rem;
-    border-radius: 50px;
+    font-size: 1rem;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
     border: none;
     transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
+    display: block;
+    max-width: 200px;
+    text-align: center;
 
     &::before {
       content: '';
@@ -645,6 +656,43 @@ $whatsapp-color: #25d366;
     }
   }
 
+  .btn-clear {
+    background: linear-gradient(135deg, $neutral-color, darken($neutral-color, 10%));
+    color: $white;
+    font-family: 'Amiri', serif;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    border: none;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    display: block;
+    max-width: 200px;
+    text-align: center;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba($white, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    &:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 25px rgba($neutral-color, 0.4);
+
+      &::before {
+        left: 100%;
+      }
+    }
+  }
+
   #form-status {
     font-family: 'Amiri', serif;
     font-size: 1.1rem;
@@ -669,7 +717,7 @@ $whatsapp-color: #25d366;
   75% { transform: translateX(5px); }
 }
 
-// Enhanced Map Section
+/* Enhanced Map Section */
 .map-section {
   padding: 5rem 0;
   background: linear-gradient(135deg, $white 0%, #f8f9fa 50%, #e9ecef 100%);
@@ -765,7 +813,7 @@ $whatsapp-color: #25d366;
   }
 }
 
-// Enhanced Responsive Design
+/* Enhanced Responsive Design */
 @media (max-width: 1200px) {
   .hero-title {
     font-size: 3rem;
@@ -871,9 +919,24 @@ $whatsapp-color: #25d366;
   .contact-card.glass-card .card-body {
     padding: 1.25rem;
   }
+
+  .form-actions {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .btn-submit,
+  .btn-clear {
+    font-size: 0.9rem;
+    padding: 0.6rem 1.5rem;
+    max-width: 180px;
+    display: block;
+    text-align: center;
+  }
 }
 
-// Additional utility classes
+/* Additional utility classes */
 .fade-in {
   animation: fadeInUp 0.8s ease-out;
 }
@@ -893,10 +956,9 @@ $whatsapp-color: #25d366;
   border: 1px solid rgba($white, 0.2);
 }
 
-// Smooth scrolling enhancement
+/* Smooth scrolling enhancement */
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
   }
 }
-

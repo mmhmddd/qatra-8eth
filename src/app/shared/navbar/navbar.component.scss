@@ -53,7 +53,7 @@ $black: #000000;
     align-items: center;
     justify-content: space-between;
     max-width: 100%;
-    padding: 0;
+    padding: 0 1rem;
   }
 
   .navbar-brand {
@@ -106,6 +106,7 @@ $black: #000000;
     justify-content: center;
     gap: 1.5rem;
     margin: 0;
+    padding: 0;
 
     .nav-item {
       position: relative;
@@ -285,6 +286,7 @@ $black: #000000;
       position: relative;
       height: 100%;
       margin-top: -95px;
+      padding: 0 0.5rem;
     }
 
     .navbar-brand {
@@ -300,6 +302,7 @@ $black: #000000;
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-left: 18px;
 
       .navbar-toggler-icon {
         width: 22px;
@@ -328,6 +331,7 @@ $black: #000000;
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
 
         .navbar-nav {
           gap: 0.6rem;
@@ -335,13 +339,23 @@ $black: #000000;
           width: 100%;
           flex-direction: column;
           align-items: center;
-          margin-bottom: 21px;
+          margin-bottom: 0.75rem;
+          padding: 0;
+          list-style: none;
+
+          .nav-item {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+          }
 
           .nav-link {
             font-size: 0.9rem;
             padding: 10px 16px;
             max-width: 280px;
+            width: 100%;
             text-align: center;
+            margin: 0 auto;
           }
         }
 
@@ -354,9 +368,12 @@ $black: #000000;
           align-items: center;
 
           .mobile-auth-buttons {
-            max-width: 260px;
+            max-width: 280px;
             width: 100%;
             align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
 
             .btn {
               &.btn-primary,
@@ -364,11 +381,15 @@ $black: #000000;
                 min-width: 200px;
                 padding: 0.5rem 1rem;
                 font-size: 0.9rem;
+                width: 100%;
+                max-width: 280px;
+                margin: 0 auto;
               }
 
               &.btn-language-toggle {
                 width: 50px;
                 padding: 0.4rem 0.8rem;
+                margin: 0 auto;
               }
             }
           }
@@ -382,6 +403,10 @@ $black: #000000;
   .navbar {
     height: 65px;
     padding: 0.3rem 0.4rem;
+
+    .container-fluid {
+      padding: 0 0.4rem;
+    }
 
     .navbar-brand {
       display: flex;
@@ -426,6 +451,7 @@ $black: #000000;
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
 
         .navbar-nav {
           gap: 0.5rem;
@@ -433,12 +459,23 @@ $black: #000000;
           width: 100%;
           flex-direction: column;
           align-items: center;
+          margin-bottom: 0.6rem;
+          padding: 0;
+          list-style: none;
+
+          .nav-item {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+          }
 
           .nav-link {
             font-size: 0.85rem;
             max-width: 250px;
             padding: 8px 12px;
+            width: 100%;
             text-align: center;
+            margin: 0 auto;
           }
         }
 
@@ -451,9 +488,12 @@ $black: #000000;
           align-items: center;
 
           .mobile-auth-buttons {
-            max-width: 230px;
+            max-width: 250px;
             width: 100%;
             align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
 
             .btn {
               &.btn-primary,
@@ -461,11 +501,15 @@ $black: #000000;
                 min-width: 180px;
                 padding: 0.45rem 0.8rem;
                 font-size: 0.85rem;
+                width: 100%;
+                max-width: 250px;
+                margin: 0 auto;
               }
 
               &.btn-language-toggle {
                 width: 50px;
                 padding: 0.4rem 0.8rem;
+                margin: 0 auto;
               }
             }
           }
