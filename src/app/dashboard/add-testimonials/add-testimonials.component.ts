@@ -94,7 +94,7 @@ export class AddTestimonialsComponent implements OnInit {
       image: this.newTestimonial.image
     }).subscribe({
       next: (testimonial) => {
-        this.success = `تم إضافة ${testimonial.name} بنجاح`;
+        this.success = `تم إضافة رأي ${testimonial.name} بنجاح`;
         this.error = '';
         this.resetForm();
         this.loadTestimonials();

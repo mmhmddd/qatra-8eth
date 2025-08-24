@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Pdf, PdfService } from '../../core/services/pdf.service';
 import { TranslationService } from '../../core/services/translation.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+
 @Component({
   selector: 'app-library',
   standalone: true,
@@ -28,7 +29,6 @@ export class LibraryComponent implements OnInit {
     country: ''
   };
 
-  // Academic level-to-class mapping for CSS
   private academicLevelClassMap: { [key: string]: string } = {
     'أول': 'level-أول',
     'ثاني': 'level-ثاني',
@@ -65,15 +65,17 @@ export class LibraryComponent implements OnInit {
     this.loadPdfs();
   }
 
-  /**
-   * Load PDFs from service and initialize filters
-   */
+
   private loadPdfs(): void {
     this.pdfService.getPdfs()
       .subscribe({
         next: (pdfs) => {
-          this.pdfs = pdfs;
-          this.filteredPdfs = pdfs;
+          this.pdfs = pdfs.sort((a, b) => {
+            const dateA = new Date(a.createdAt);
+            const dateB = new Date(b.createdAt);
+            return dateB.getTime() - dateA.getTime();
+          });
+          this.filteredPdfs = [...this.pdfs];
           this.errorMessage = pdfs.length === 0 ? this.translationService.translate('library.noPdfs') : null;
           this.initializeFilters(pdfs);
         },
@@ -84,9 +86,6 @@ export class LibraryComponent implements OnInit {
       });
   }
 
-  /**
-   * Initialize filter options from PDF data
-   */
   private initializeFilters(pdfs: Pdf[]): void {
     this.subjects = [...new Set(pdfs.map(pdf => pdf.subject).filter(subject => subject))].sort();
     this.creators = [...new Set(pdfs.map(pdf => pdf.creatorName).filter(creator => creator))].sort();
@@ -94,20 +93,15 @@ export class LibraryComponent implements OnInit {
     this.countries = [...new Set(pdfs.map(pdf => pdf.country).filter(country => country))].sort();
   }
 
-  /**
-   * Search PDFs by title and description
-   */
+
   searchPdfs(): void {
     this.filterPdfs();
   }
 
-  /**
-   * Filter PDFs based on search term and selected filters
-   */
+
   filterPdfs(): void {
     let tempPdfs = [...this.pdfs];
 
-    // Filter by title and description search
     if (this.searchTerm.trim()) {
       const searchLower = this.searchTerm.toLowerCase().trim();
       tempPdfs = tempPdfs.filter(pdf =>
@@ -116,29 +110,24 @@ export class LibraryComponent implements OnInit {
       );
     }
 
-    // Filter by subject
     if (this.filters.subject) {
       tempPdfs = tempPdfs.filter(pdf => pdf.subject === this.filters.subject);
     }
 
-    // Filter by creator
     if (this.filters.creatorName) {
       tempPdfs = tempPdfs.filter(pdf => pdf.creatorName === this.filters.creatorName);
     }
 
-    // Filter by academic level
     if (this.filters.academicLevel) {
       tempPdfs = tempPdfs.filter(pdf => pdf.academicLevel === this.filters.academicLevel);
     }
 
-    // Filter by country
     if (this.filters.country) {
       tempPdfs = tempPdfs.filter(pdf => pdf.country === this.filters.country);
     }
 
     this.filteredPdfs = tempPdfs;
 
-    // Show message if no results found
     if (tempPdfs.length === 0 && this.pdfs.length > 0) {
       this.errorMessage = this.translationService.translate('library.noResults');
     } else if (tempPdfs.length > 0) {
@@ -146,9 +135,7 @@ export class LibraryComponent implements OnInit {
     }
   }
 
-  /**
-   * Clear all search and filter criteria
-   */
+
   clearSearch(): void {
     this.searchTerm = '';
     this.filters = {
@@ -161,9 +148,7 @@ export class LibraryComponent implements OnInit {
     this.errorMessage = this.pdfs.length === 0 ? this.translationService.translate('library.noPdfs') : null;
   }
 
-  /**
-   * Open PDF file in new tab
-   */
+
   openPdf(id: string): void {
     if (!id) {
       this.showErrorMessage(this.translationService.translate('library.invalidId'));
@@ -196,9 +181,7 @@ export class LibraryComponent implements OnInit {
       });
   }
 
-  /**
-   * Share PDF link
-   */
+
   sharePdf(id: string): void {
     if (!id) {
       this.showErrorMessage(this.translationService.translate('library.invalidId'));
@@ -220,9 +203,7 @@ export class LibraryComponent implements OnInit {
     }
   }
 
-  /**
-   * Fallback method for copying text to clipboard
-   */
+
   private fallbackCopyTextToClipboard(text: string): void {
     const textArea = document.createElement('textarea');
     textArea.value = text;
@@ -243,27 +224,21 @@ export class LibraryComponent implements OnInit {
     }
   }
 
-  /**
-   * Show success message
-   */
+
   private showSuccessMessage(message: string): void {
     this.successMessage = message;
     this.errorMessage = null;
     this.clearMessages();
   }
 
-  /**
-   * Show error message
-   */
+
   private showErrorMessage(message: string): void {
     this.errorMessage = message;
     this.successMessage = null;
     this.clearMessages();
   }
 
-  /**
-   * Clear messages after a delay
-   */
+
   private clearMessages(): void {
     setTimeout(() => {
       this.successMessage = null;
@@ -271,16 +246,12 @@ export class LibraryComponent implements OnInit {
     }, 4000);
   }
 
-  /**
-   * Get CSS class for academic level
-   */
+
   getAcademicLevelClass(level: string): string {
     return this.academicLevelClassMap[level] || 'level-default';
   }
 
-  /**
-   * Track PDFs by ID for better performance
-   */
+
   trackByPdfId(index: number, pdf: Pdf): string {
     return pdf.id;
   }

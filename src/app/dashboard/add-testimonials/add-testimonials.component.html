@@ -1,21 +1,13 @@
 <div class="container">
-  <!-- Sidebar -->
   <app-sidebar></app-sidebar>
-
   <div class="content">
-    <!-- Add Testimonial Section -->
     <div class="add-testimonial-section">
       <h2>إدارة الآراء</h2>
-
-      <!-- Success and Error Messages -->
       <div *ngIf="success" class="success-message">{{ success }}</div>
       <div *ngIf="error" class="error-message">{{ error }}</div>
-
-      <!-- Add Testimonial Form -->
       <div class="add-testimonial-form">
         <h3>إضافة رأي</h3>
         <form (ngSubmit)="addTestimonial()" #addTestimonialForm="ngForm">
-          <!-- Image Preview -->
           <div class="form-group" *ngIf="newTestimonial.imagePreview">
             <label>معاينة الصورة</label>
             <img [src]="newTestimonial.imagePreview" alt="معاينة الصورة" class="testimonial-image" />
@@ -107,8 +99,6 @@
           <button type="submit" class="btn primary" [disabled]="addTestimonialForm.invalid">إضافة رأي</button>
         </form>
       </div>
-
-      <!-- Testimonials Table -->
       <div class="testimonial-table" *ngIf="testimonials.length; else noTestimonials">
         <h3>قائمة الآراء</h3>
         <table>
@@ -126,10 +116,11 @@
           <tbody>
             <tr *ngFor="let testimonial of testimonials">
               <ng-container *ngIf="editingTestimonial?.id === testimonial.id; else showTestimonial">
-                <!-- Edit Form -->
                 <td>
-                  <img *ngIf="editImagePreview" [src]="editImagePreview" alt="صورة الشهادة" class="testimonial-image" />
-                  <img *ngIf="!editImagePreview && testimonial.image" [src]="getImageUrl(testimonial.image)" alt="صورة الشهادة" class="testimonial-image" />
+                  <div class="image-container">
+                    <img *ngIf="editImagePreview" [src]="editImagePreview" alt="صورة الشهادة" class="testimonial-image" />
+                    <img *ngIf="!editImagePreview && testimonial.image" [src]="getImageUrl(testimonial.image)" alt="صورة الشهادة" class="testimonial-image" />
+                  </div>
                 </td>
                 <td>
                   <input
@@ -183,8 +174,10 @@
               </ng-container>
               <ng-template #showTestimonial>
                 <td>
-                  <img *ngIf="testimonial.image" [src]="getImageUrl(testimonial.image)" alt="صورة الشهادة" class="testimonial-image" />
-                  <span *ngIf="!testimonial.image">لا توجد صورة</span>
+                  <div class="image-container">
+                    <img *ngIf="testimonial.image" [src]="getImageUrl(testimonial.image)" alt="صورة الشهادة" class="testimonial-image" />
+                    <span *ngIf="!testimonial.image">لا توجد صورة</span>
+                  </div>
                 </td>
                 <td>{{ testimonial.name }}</td>
                 <td>{{ testimonial.major }}</td>
@@ -200,7 +193,6 @@
           </tbody>
         </table>
       </div>
-
       <ng-template #noTestimonials>
         <p>لا توجد شهادات</p>
       </ng-template>
