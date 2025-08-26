@@ -346,7 +346,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  // التحقق من اتجاه النص
   isRtl(): boolean {
     return this.translationService.isRtl();
   }

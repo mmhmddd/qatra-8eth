@@ -29,7 +29,11 @@
         <div class="col-md-3 col-lg-2 col-xl-2 mb-3">
           <h6 class="footer-heading">روابط إضافية</h6>
           <div class="footer-nav">
-            <p><a [routerLink]="['/last-news']" routerLinkActive="router-link-active" class="footer-link">معرض الصور</a></p>
+            <p>
+              <a [routerLink]="['/last-news']" [fragment]="'gallerysection'" routerLinkActive="router-link-active" class="footer-link">
+                معرض الصور
+              </a>
+            </p>
             <p><a [routerLink]="['/last-news']" routerLinkActive="router-link-active" class="footer-link">اخر الاخبار</a></p>
             <p><a [routerLink]="['/profile']" routerLinkActive="router-link-active" class="footer-link">الملف الشخصي</a></p>
           </div>

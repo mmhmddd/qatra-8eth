@@ -94,16 +94,20 @@
       <h2 class="section-title">{{ 'home.aboutTitle' | translate }}</h2>
 
       <div class="content-text">
-        <p class="lead-text">
-          {{ 'home.aboutDescription' | translate }}
-        </p>
+      <p class="lead-text">
+        {{ 'home.aboutDescription' | translate }}
+      </p>
+      <p class="lead-text">
+        {{ 'home.aboutDescription2' | translate }}
+      </p>
+
 
         <p class="description-text" *ngIf="currentLanguage === 'ar'">
           هدفنا الرئيسي هو إيصال العِلم إلى اكبر قدر مِن الطُلابِ، وزيادة الوعي لأهمية التعلُم وما لهُ أثر على النفس المتُلقية، وتغذية عقول الأطفال والشباب بما هو مُفيد. 
         </p>
 
         <p class="description-text" *ngIf="currentLanguage === 'ar'">
-          والتعليم عن بعد يكون من خلال الأنترنت مثل تطبيقات الزوم والتيمز وغيرُهما حيث تكون الحصص مباشرة ويتم تسجيلها من قبل المتطوع ومراجعتها من مختصين لتأكيد سير عملية التعليم بنجاح.
+          رسالتنا الأساسية إيصال العِلم إلى جميع فئات المُجتمع ونشر الخير وكسب الأجر والأستفادة من طاقات الشباب في ما هو قائم على الإصلاح ونشر العِلم
         </p>
       </div>
 
@@ -230,7 +234,7 @@
       <p class="section-description" data-aos="fade-up" data-aos-delay="300">{{ 'home.helpDescription' | translate }}</p>
     </div>
     <div class="help-actions" data-aos="fade-up" data-aos-delay="400">
-      <a href="https://wa.me/962795686452?text=تواصل%20للتبرع1" class="help-btn btn-donate" data-aos="zoom-in" data-aos-delay="500" target="_blank">{{ 'home.donateContact' | translate }}</a>
+      <a href="https://wa.me/962795686452?text=تواصل%20للتبرع" class="help-btn btn-donate" data-aos="zoom-in" data-aos-delay="500" target="_blank">{{ 'home.donateContact' | translate }}</a>
       <a routerLink="/join-us" (click)="navigateToJoinUs($event)" class="help-btn btn-join" data-aos="zoom-in" data-aos-delay="600">{{ 'home.joinUs' | translate }}</a>
     </div>
   </div>

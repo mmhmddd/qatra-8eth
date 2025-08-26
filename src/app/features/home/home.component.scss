@@ -77,19 +77,19 @@ $black: #000000;
   }
 
   .carousel-img {
-    object-fit: cover; // Changed to cover for better scaling
+    object-fit: cover;
     height: 100%;
     width: 100%;
     transition: transform 0.8s ease-in-out;
     filter: brightness(0.7);
-    margin-top: 0; // Removed margin-top for full height utilization
+    margin-top: 0;
 
     @media (max-width: 768px) {
-      height: 100%; // Ensure image takes full container height
+      height: 100%;
     }
 
     @media (max-width: 576px) {
-      height: 100%; // Ensure image takes full container height
+      height: 100%;
     }
   }
 
@@ -1109,4 +1109,13 @@ $black: #000000;
         height: 100%;
         height: 323px;
     }
+}
+
+
+
+
+
+.hero-wrapper[_ngcontent-ng-c3619772291] .carousel-item[_ngcontent-ng-c3619772291] {
+    transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+    height: 88%;
 }
