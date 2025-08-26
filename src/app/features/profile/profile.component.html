@@ -298,7 +298,7 @@
                          [attr.aria-label]="translationService.translate('profile.lectureLink') || 'رابط المحاضرة'"
                          [attr.aria-describedby]="lectureForm.get('link')?.invalid && lectureForm.get('link')?.touched ? 'linkError' : null"
                          placeholder="https://example.com" />
-                  <label for="lectureLink">{{ translationService.translate('profile.lectureLink') || 'رابط المحاضرة' }}</label>
+                  <label style="background-color: #007bff;" for="lectureLink">{{ translationService.translate('profile.lectureLink') || 'رابط المحاضرة' }}</label>
                   <div *ngIf="lectureForm.get('link')?.invalid && lectureForm.get('link')?.touched"
                        id="linkError"
                        class="invalid-feedback">
@@ -321,7 +321,7 @@
                          [class.is-invalid]="lectureForm.get('name')?.invalid && lectureForm.get('name')?.touched"
                          [attr.aria-label]="translationService.translate('profile.lectureName') || 'اسم المحاضرة'"
                          [attr.aria-describedby]="lectureForm.get('name')?.invalid && lectureForm.get('name')?.touched ? 'nameError' : null" />
-                  <label for="lectureName">{{ translationService.translate('profile.lectureName') || 'اسم المحاضرة' }}</label>
+                  <label  style="background-color: #007bff;" for="lectureName">{{ translationService.translate('profile.lectureName') || 'اسم المحاضرة' }}</label>
                   <div *ngIf="lectureForm.get('name')?.invalid && lectureForm.get('name')?.touched"
                        id="nameError"
                        class="invalid-feedback">
