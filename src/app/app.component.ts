@@ -33,6 +33,7 @@ export class AppComponent implements OnInit {
         url.startsWith('/add-leaderboards') ||
         url.startsWith('/add-gallery') ||
         url.startsWith('/low-lecture-members') ||
+        url.startsWith('/lectures-request') ||
         url.startsWith('/tree') ||
         !!url.match(/^\/member\/[^\/]+$/) ||
         url.startsWith('/login');
