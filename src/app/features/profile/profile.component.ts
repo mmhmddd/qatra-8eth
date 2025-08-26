@@ -101,24 +101,83 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
   };
 
-  subjectKeys = [
-    'mathematics', 'physics', 'chemistry', 'biology', 'arabic',
-    'english', 'history', 'geography', 'islamic_studies',
-    'computer_science', 'philosophy', 'psychology', 'economics', 'statistics'
-  ];
+subjectKeys = [
+  'islamic_education',
+  'arabic',
+  'mathematics',
+  'life_sciences',
+  'social_studies',
+  'art_education',
+  'physical_education',
+  'music_education',
+  'english',
+  'national_civic_education',
+  'technology',
+  'media_education',
+  'history_of_jordan',
+  'financial_literacy',
+  'digital_skills',
+  'physics',
+  'chemistry',
+  'biology',
+  'earth_environmental_sciences',
+  'philosophy',
+  'geography',
+  'computer_science'
+];
 
-  subjectsTranslations = {
-    ar: [
-      'الرياضيات', 'الفيزياء', 'الكيمياء', 'الأحياء', 'اللغة العربية',
-      'اللغة الإنجليزية', 'التاريخ', 'الجغرافيا', 'العلوم الإسلامية',
-      'الحاسوب', 'الفلسفة', 'علم النفس', 'الاقتصاد', 'الإحصاء'
-    ],
-    en: [
-      'Mathematics', 'Physics', 'Chemistry', 'Biology', 'Arabic Language',
-      'English Language', 'History', 'Geography', 'Islamic Studies',
-      'Computer Science', 'Philosophy', 'Psychology', 'Economics', 'Statistics'
-    ]
-  };
+
+subjectsTranslations = {
+  ar: [
+    'التربية الإسلامية',
+    'اللغة العربية',
+    'الرياضيات',
+    'العلوم الحياتية',
+    'الدراسات الاجتماعية',
+    'التربية الفنية',
+    'التربية الرياضية',
+    'التربية الموسيقية',
+    'اللغة الإنجليزية',
+    'التربية الوطنية والمدنية',
+    'التكنولوجيا',
+    'التربية الإعلامية',
+    'تاريخ الأردن',
+    'الثقافة المالية',
+    'المهارات الرقمية',
+    'الفيزياء',
+    'الكيمياء',
+    'الأحياء',
+    'علوم الأرض والبيئة',
+    'الفلسفة',
+    'الجغرافيا',
+    'حاسوب'
+  ],
+  en: [
+    'Islamic Education',
+    'Arabic Language',
+    'Mathematics',
+    'Life Sciences',
+    'Social Studies',
+    'Art Education',
+    'Physical Education',
+    'Music Education',
+    'English Language',
+    'National and Civic Education',
+    'Technology',
+    'Media Education',
+    'History of Jordan',
+    'Financial Literacy',
+    'Digital Skills',
+    'Physics',
+    'Chemistry',
+    'Biology',
+    'Earth and Environmental Sciences',
+    'Philosophy',
+    'Geography',
+    'Computer Science'
+  ]
+};
+
 
   semesters = ['الفصل الأول', 'الفصل الثاني'];
   countries = ['الأردن', 'فلسطين'];
@@ -316,7 +375,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     const title = this.translationService.translate(titleKey) || 'Notification';
-    const message = this.translationService.translate(messageKey) || 'Operation completed successfully';
+    const message = this.translationService.translate(messageKey) || 'تمت العمليه بنجاح';
 
     if (!message || message.trim() === '') {
       console.error(`ProfileComponent: Translated message is empty (source: ${source || 'unknown'})`, { messageKey, translated: message });
