@@ -277,6 +277,7 @@ body {
       font-size: 0.9rem;
       height: calc(2.5rem + 2px);
       transition: all 0.2s ease;
+      background-color: $white;
 
       @media (min-width: 768px) {
         font-size: 1rem;
@@ -287,6 +288,11 @@ body {
       &:focus {
         border-color: $primary-color;
         box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+        background-color: $white;
+      }
+
+      &:not(:placeholder-shown) {
+        background-color: $white;
       }
 
       &:not(:placeholder-shown) ~ label,
@@ -654,6 +660,7 @@ body {
     font-size: 0.9rem;
     height: calc(2.5rem + 2px);
     transition: all 0.2s ease;
+    background-color: $white;
 
     @media (min-width: 768px) {
       font-size: 1rem;
@@ -664,6 +671,11 @@ body {
     &:focus {
       border-color: $primary-color;
       box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+      background-color: $white;
+    }
+
+    &:not(:placeholder-shown) {
+      background-color: $white;
     }
 
     &:not(:placeholder-shown) ~ label,
