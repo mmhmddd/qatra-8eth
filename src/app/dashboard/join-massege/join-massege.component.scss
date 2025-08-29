@@ -1,0 +1,426 @@
+$primary-color: #1e88e5; // Modern blue
+$secondary-color: #1565c0; // Darker blue for hover
+$accent-color: #ff6d00; // Vibrant orange
+$neutral-color: #607d8b; // Modern gray
+$dark-color: #263238; // Darker shade for text
+$light-gray: #f5f7fa; // Softer background
+$white: #ffffff;
+$black: #212121;
+$success-color: #4caf50; // Green for success
+$error-color: #d32f2f; // Red for error
+$border-color: #e0e0e0;
+$font-family-arabic: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+$font-size-base: 16px;
+$font-size-sm: 14px;
+$spacer: 1rem;
+$border-radius: 8px;
+$box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+$box-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  font-family: $font-family-arabic;
+  direction: rtl;
+}
+
+.content {
+  flex: 1;
+  padding: $spacer * 2;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+h2 {
+  color: $dark-color;
+  margin-bottom: $spacer * 2;
+  font-size: 1.75rem;
+  font-weight: 600;
+  text-align: center;
+  animation: fadeIn 1s ease-out;
+}
+
+.alert-container {
+  margin-bottom: $spacer * 1.5;
+
+  .alert {
+    padding: $spacer * 0.75;
+    border-radius: $border-radius;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: $font-size-base;
+    font-weight: 500;
+    animation: fadeIn 0.5s ease-out;
+
+    &.alert-success {
+      background: linear-gradient(135deg, lighten($success-color, 20%) 0%, $success-color 100%);
+      color: $white;
+      border-right: 4px solid darken($success-color, 10%);
+    }
+
+    &.alert-danger {
+      background: linear-gradient(135deg, lighten($error-color, 10%) 0%, $error-color 100%);
+      color: $white;
+      border-right: 4px solid darken($error-color, 10%);
+    }
+
+    .btn-close {
+      filter: brightness(0) invert(1);
+      opacity: 0.7;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    i {
+      font-size: 1.1em;
+    }
+  }
+}
+
+.add-message {
+  background-color: $white;
+  padding: $spacer * 2;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  margin-bottom: $spacer * 2;
+  animation: fadeIn 1.2s ease-out;
+
+  &:hover {
+    box-shadow: $box-shadow-lg;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+  }
+
+  h3 {
+    color: $dark-color;
+    margin-bottom: $spacer * 1.5;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+}
+
+.add-message-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacer;
+
+  .form-control {
+    border: 2px solid $border-color;
+    border-radius: $border-radius;
+    padding: $spacer * 0.75;
+    font-size: $font-size-base;
+    font-family: $font-family-arabic;
+    resize: vertical;
+    height: 100px;
+    transition: all 0.3s ease;
+
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 0.2rem rgba($primary-color, 0.25);
+      outline: none;
+    }
+
+    &.is-invalid {
+      border-color: $error-color;
+      animation: shake 0.5s ease-in-out;
+    }
+  }
+
+  .invalid-feedback {
+    color: $white;
+    font-size: $font-size-sm;
+    background: $error-color;
+    padding: $spacer * 0.5;
+    border-radius: $border-radius;
+    margin-top: $spacer * 0.25;
+  }
+
+  .btn {
+    align-self: flex-end;
+    padding: $spacer * 0.75 $spacer * 1.5;
+    font-size: $font-size-base;
+    font-weight: 600;
+    border-radius: $border-radius;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+
+    &.btn-primary {
+      background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+      color: $white;
+      border: none;
+
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, $secondary-color 0%, darken($secondary-color, 10%) 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba($primary-color, 0.3);
+      }
+
+      &:disabled {
+        background: $neutral-color;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+.messages-list {
+  h3 {
+    color: $dark-color;
+    margin-bottom: $spacer * 1.5;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+}
+
+.no-messages {
+  color: $neutral-color;
+  text-align: center;
+  padding: $spacer * 2;
+  font-size: $font-size-base;
+  background-color: $white;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+}
+
+.message-card {
+  background-color: $white;
+  padding: $spacer * 1.5;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  margin-bottom: $spacer;
+  animation: fadeIn 1s ease-out;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: $box-shadow-lg;
+    transform: translateY(-2px);
+  }
+
+  p {
+    color: $dark-color;
+    margin: 0 0 $spacer;
+    font-size: $font-size-base;
+    line-height: 1.6;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: $spacer;
+  justify-content: flex-end;
+
+  .btn {
+    padding: $spacer * 0.5 $spacer;
+    font-size: $font-size-sm;
+    border-radius: $border-radius;
+    transition: all 0.3s ease;
+    color: $white;
+    border: none;
+
+    &.btn-toggle {
+      background: linear-gradient(135deg, $accent-color 0%, darken($accent-color, 10%) 100%);
+
+      &:hover {
+        background: linear-gradient(135deg, darken($accent-color, 10%) 0%, darken($accent-color, 20%) 100%);
+        transform: translateY(-1px);
+      }
+    }
+
+    &.btn-edit {
+      background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+
+      &:hover {
+        background: linear-gradient(135deg, $secondary-color 0%, darken($secondary-color, 10%) 100%);
+        transform: translateY(-1px);
+      }
+    }
+
+    &.btn-delete {
+      background: linear-gradient(135deg, $error-color 0%, darken($error-color, 10%) 100%);
+
+      &:hover {
+        background: linear-gradient(135deg, darken($error-color, 10%) 0%, darken($error-color, 20%) 100%);
+        transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba($black, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+
+  .modal-content {
+    background: $white;
+    border-radius: $border-radius;
+    padding: $spacer * 2;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: $box-shadow-lg;
+    position: relative;
+    animation: fadeIn 0.5s ease-out;
+
+    h3 {
+      color: $dark-color;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: $spacer * 1.5;
+    }
+
+    p {
+      color: $neutral-color;
+      font-size: $font-size-base;
+      margin-bottom: $spacer * 1.5;
+    }
+
+    .edit-message-form {
+      display: flex;
+      flex-direction: column;
+      gap: $spacer;
+
+      .form-control {
+        border: 2px solid $border-color;
+        border-radius: $border-radius;
+        padding: $spacer * 0.75;
+        font-size: $font-size-base;
+        font-family: $font-family-arabic;
+        resize: vertical;
+        height: 100px;
+        transition: all 0.3s ease;
+
+        &:focus {
+          border-color: $primary-color;
+          box-shadow: 0 0 0 0.2rem rgba($primary-color, 0.25);
+          outline: none;
+        }
+
+        &.is-invalid {
+          border-color: $error-color;
+          animation: shake 0.5s ease-in-out;
+        }
+      }
+
+      .invalid-feedback {
+        color: $white;
+        font-size: $font-size-sm;
+        background: $error-color;
+        padding: $spacer * 0.5;
+        border-radius: $border-radius;
+        margin-top: $spacer * 0.25;
+      }
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: $spacer;
+      justify-content: flex-end;
+
+      .btn {
+        padding: $spacer * 0.75 $spacer * 1.5;
+        font-size: $font-size-base;
+        border-radius: $border-radius;
+        transition: all 0.3s ease;
+
+        &.btn-primary {
+          background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+          color: $white;
+          border: none;
+
+          &:hover {
+            background: linear-gradient(135deg, $secondary-color 0%, darken($secondary-color, 10%) 100%);
+            transform: translateY(-1px);
+          }
+        }
+
+        &.btn-secondary {
+          background: linear-gradient(135deg, $neutral-color 0%, darken($neutral-color, 10%) 100%);
+          color: $white;
+          border: none;
+
+          &:hover {
+            background: linear-gradient(135deg, darken($neutral-color, 10%) 0%, darken($neutral-color, 20%) 100%);
+            transform: translateY(-1px);
+          }
+        }
+
+        &.btn-delete {
+          background: linear-gradient(135deg, $error-color 0%, darken($error-color, 10%) 100%);
+          color: $white;
+          border: none;
+
+          &:hover:not(:disabled) {
+            background: linear-gradient(135deg, darken($error-color, 10%) 0%, darken($error-color, 20%) 100%);
+            transform: translateY(-1px);
+          }
+
+          &:disabled {
+            background: $neutral-color;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: $spacer;
+  }
+
+  .add-message,
+  .message-card {
+    padding: $spacer * 1.5;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: $spacer * 1.5;
+  }
+}

@@ -43,7 +43,7 @@ $info-color: #17a2b8;
   animation: slideIn 0.5s ease-out, fadeOut 0.5s ease-out 3.5s forwards;
   transition: transform 0.2s ease;
 
-  &.toast-success {
+  &.bg-success {
     border-left: 5px solid $success-color;
     .toast-header {
       background-color: lighten($success-color, 40%);
@@ -54,7 +54,7 @@ $info-color: #17a2b8;
     }
   }
 
-  &.toast-error {
+  &.bg-danger {
     border-left: 5px solid $danger-color;
     .toast-header {
       background-color: lighten($danger-color, 40%);
@@ -318,6 +318,7 @@ dl.row {
     text-align: center;
     color: $neutral-color;
     border-bottom: 1px solid $border-color;
+    vertical-align: middle;
   }
 
   a {
@@ -328,11 +329,35 @@ dl.row {
       text-decoration: underline;
     }
   }
+
+  .lecture-link {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+
+    a {
+      display: inline-block;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .action-column {
+    min-width: 100px;
+  }
 }
 
 .table-responsive {
   border-radius: 6px;
-  overflow: hidden;
+  overflow-x: auto;
+
+  .table {
+    min-width: 800px; // Ensure table doesn't collapse too much on smaller screens
+  }
 }
 
 .list-group {
@@ -418,6 +443,14 @@ dl.row {
     th, td {
       padding: 0.5rem;
       text-align: center;
+    }
+
+    .lecture-link {
+      max-width: 150px;
+    }
+
+    .action-column {
+      min-width: 80px;
     }
   }
 

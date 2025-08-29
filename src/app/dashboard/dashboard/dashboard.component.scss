@@ -1,4 +1,3 @@
-
 $primary-color: #00adb5;
 $secondary-color: #0097b2;
 $accent-color: #ff914d;
@@ -42,31 +41,40 @@ $red-color: #D32F2F;
       position: absolute;
       left: 1.5rem;
       top: 50%;
-      z-index: 100;
+      z-index: 1000;
       transform: translateY(-50%);
 
       .notification-icon {
         position: relative;
         cursor: pointer;
-        font-size: clamp(1.3rem, 3vw, 1.6rem);
+        font-size: clamp(1.4rem, 3.5vw, 1.8rem);
         color: $primary-color;
-        transition: color 0.3s ease;
+        transition: color 0.3s ease, transform 0.2s ease;
+        padding: 0.5rem;
 
         &:hover {
-          color: darken($primary-color, 10%);
+          color: darken($primary-color, 15%);
+          transform: scale(1.1);
         }
 
         .badge {
           position: absolute;
-          top: -10px;
-          right: -10px;
+          top: -8px;
+          right: -8px;
           background: $accent-color;
           color: $white;
           border-radius: 50%;
-          padding: 0.3rem 0.6rem;
-          font-size: 0.85rem;
-          font-weight: 600;
-          box-shadow: 0 2px 4px rgba($black, 0.2);
+          padding: 0.4rem 0.7rem;
+          font-size: 0.9rem;
+          font-weight: 700;
+          box-shadow: 0 2px 6px rgba($black, 0.3);
+          animation: pulse 2s infinite ease-in-out;
+
+          @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+          }
         }
       }
 
@@ -75,59 +83,114 @@ $red-color: #D32F2F;
         top: 100%;
         left: 0;
         background: $white;
-        border-radius: 10px;
-        box-shadow: 0 6px 12px rgba($black, 0.15);
-        width: 320px;
-        max-height: 400px;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba($black, 0.2);
+        width: clamp(300px, 90vw, 360px);
+        max-height: 450px;
         overflow-y: auto;
         z-index: 1000;
-        padding: 1.2rem;
+        padding: 1.5rem;
         border: 1px solid rgba($black, 0.05);
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+
+        &.show {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        &::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: $light-gray;
+          border-radius: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: $primary-color;
+          border-radius: 10px;
+        }
 
         .notifications-header {
-          font-size: 1.3rem;
+          font-size: 1.4rem;
           font-weight: 700;
           color: $dark-color;
-          padding-bottom: 0.75rem;
-          border-bottom: 1px solid rgba($black, 0.1);
-          margin-bottom: 0.75rem;
+          padding-bottom: 1rem;
+          border-bottom: 2px solid rgba($primary-color, 0.2);
+          margin-bottom: 1rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .close-btn {
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: $neutral-color;
+            transition: color 0.3s ease;
+
+            &:hover {
+              color: $primary-color;
+            }
+          }
         }
 
         .no-notifications {
           color: $neutral-color;
           text-align: center;
-          padding: 1.2rem;
-          font-size: 0.95rem;
+          padding: 1.5rem;
+          font-size: 1rem;
+          font-weight: 500;
+          background: rgba($light-gray, 0.5);
+          border-radius: 8px;
         }
 
         .notification-item {
-          padding: 1rem;
+          padding: 1.2rem;
           border-bottom: 1px solid rgba($black, 0.05);
-          transition: background-color 0.3s ease;
+          transition: background-color 0.3s ease, transform 0.2s ease;
+          margin-bottom: 0.5rem;
+          border-radius: 8px;
+          animation: slideIn 0.3s ease forwards;
 
           &:last-child {
             border-bottom: none;
+            margin-bottom: 0;
           }
 
           &.unread {
-            background: #f0f8ff;
-            border-left: 3px solid $primary-color;
+            background: #e6f7fa;
+            border-left: 4px solid $primary-color;
+            box-shadow: inset 0 0 8px rgba($primary-color, 0.3);
           }
 
           p {
             margin: 0;
-            font-size: 0.95rem;
+            font-size: 1rem;
             color: $dark-color;
-            line-height: 1.5;
+            line-height: 1.6;
+            word-wrap: break-word;
+            white-space: normal;
+            max-width: 100%;
           }
 
           small {
             color: $neutral-color;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            display: block;
+            margin-top: 0.5rem;
           }
 
           &:hover {
-            background: rgba($primary-color, 0.05);
+            background: rgba($primary-color, 0.1);
+            transform: translateX(4px);
+          }
+
+          @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
           }
         }
       }
@@ -171,44 +234,6 @@ $red-color: #D32F2F;
 
   .content-area {
     min-height: calc(100vh - 120px);
-  }
-
-  .chart-section {
-    margin-bottom: 2.5rem;
-    background: linear-gradient(145deg, $white 0%, #f9fafb 100%);
-    padding: 2rem;
-    border-radius: 12px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 16px rgba($black, 0.15);
-    }
-
-    h2 {
-      text-align: center;
-      color: $dark-color;
-      font-size: clamp(1.3rem, 3vw, 1.6rem);
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      letter-spacing: 0.5px;
-    }
-
-    .pie-chart-container {
-      max-width: 300px;
-      margin: 0 auto;
-      padding: 1rem;
-      background: rgba($white, 0.9);
-      border-radius: 8px;
-    }
-
-    .chart-container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 1rem;
-      background: rgba($white, 0.9);
-      border-radius: 8px;
-    }
   }
 
   .dashboard-card {
@@ -311,7 +336,8 @@ $red-color: #D32F2F;
 
         .notifications-dropdown {
           width: 100%;
-          max-width: 280px;
+          max-width: 320px;
+          padding: 1rem;
         }
       }
     }
@@ -320,16 +346,6 @@ $red-color: #D32F2F;
       flex-direction: column;
       gap: 1.2rem;
       padding: 1.2rem;
-    }
-
-    .chart-section {
-      padding: 1.2rem;
-
-      .pie-chart-container,
-      .chart-container {
-        max-width: 100%;
-        padding: 0.8rem;
-      }
     }
   }
 }
@@ -363,14 +379,30 @@ $red-color: #D32F2F;
     }
   }
 
-  .chart-section {
-    h2 {
-      font-size: clamp(1.1rem, 3vw, 1.3rem);
-    }
+  .notification-area {
+    .notifications-dropdown {
+      max-width: 280px;
+      max-height: 400px;
 
-    .pie-chart-container,
-    .chart-container {
-      max-width: 100%;
+      .notifications-header {
+        font-size: 1.2rem;
+      }
+
+      .no-notifications {
+        font-size: 0.9rem;
+      }
+
+      .notification-item {
+        padding: 1rem;
+
+        p {
+          font-size: 0.95rem;
+        }
+
+        small {
+          font-size: 0.85rem;
+        }
+      }
     }
   }
 }

@@ -84,6 +84,14 @@ export const routes: Routes = [
     path: 'low-lecture-members',
     loadComponent: () => import('./dashboard/low-lecture-members/low-lecture-members.component').then(m => m.LowLectureMembersComponent),
   },
+  {
+    path: 'statistics',
+    loadComponent: () => import('./dashboard/statistics/statistics.component').then(m => m.StatisticsComponent),
+  },
+  {
+    path: 'join-massege',
+    loadComponent: () => import('./dashboard/join-massege/join-massege.component').then(m => m.JoinMessageComponent),
+  },
 
   {
     path: 'login',

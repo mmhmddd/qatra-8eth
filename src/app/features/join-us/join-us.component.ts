@@ -9,10 +9,12 @@ import {
   ValidationErrors
 } from '@angular/forms';
 import { JoinRequestService } from '../../core/services/join-request.service';
+import { JoinUsService, Message } from '../../core/services/join-us.service';
 import { TranslationService } from '../../core/services/translation.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { CommonModule } from '@angular/common';
 import { Subject, takeUntil, timer } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export class CustomValidators {
   static fullName(control: AbstractControl): ValidationErrors | null {
@@ -80,6 +82,7 @@ export class JoinUsComponent implements OnInit, OnDestroy {
   isSubmitting = false;
   emailExistsError = false;
   generalError: string | null = null;
+  joinStatusMessage: Message | null = null;
 
   private destroy$ = new Subject<void>();
   private existingEmails: Set<string> = new Set();
@@ -87,6 +90,7 @@ export class JoinUsComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private joinRequestService: JoinRequestService,
+    private joinUsService: JoinUsService,
     public translationService: TranslationService
   ) {
     this.initializeForm();
@@ -95,6 +99,7 @@ export class JoinUsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadExistingEmails();
     this.setupFormChangeListeners();
+    this.loadJoinStatusMessage();
   }
 
   ngOnDestroy(): void {
@@ -143,6 +148,19 @@ export class JoinUsComponent implements OnInit, OnDestroy {
           Validators.maxLength(500)
         ]
       ]
+    });
+  }
+
+  private loadJoinStatusMessage(): void {
+    this.joinUsService.getMessages().pipe(takeUntil(this.destroy$)).subscribe({
+      next: (response) => {
+        const visibleMessages = response.messages.filter((msg: Message) => msg.isVisible);
+        this.joinStatusMessage = visibleMessages.length > 0 ? visibleMessages[0] : null;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error fetching join status message:', error);
+        this.joinStatusMessage = null; // Fallback to default open message
+      }
     });
   }
 
@@ -314,6 +332,10 @@ export class JoinUsComponent implements OnInit, OnDestroy {
 
   dismissGeneralError(): void {
     this.generalError = null;
+  }
+
+  dismissJoinStatus(): void {
+    this.joinStatusMessage = null;
   }
 
   resetForm(): void {

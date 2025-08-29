@@ -1,4 +1,3 @@
-
 <div class="dashboard-wrapper">
   <app-sidebar></app-sidebar>
 
@@ -11,8 +10,11 @@
           <i class="fas fa-bell"></i>
           <span *ngIf="unreadNotificationsCount > 0" class="badge">{{ unreadNotificationsCount }}</span>
         </div>
-        <div *ngIf="showNotifications" class="notifications-dropdown">
-          <div class="notifications-header">الإشعارات</div>
+        <div *ngIf="showNotifications" class="notifications-dropdown" [ngClass]="{'show': showNotifications}">
+          <div class="notifications-header">
+            الإشعارات
+            <span class="close-btn" (click)="closeNotifications()">&times;</span>
+          </div>
           <div *ngIf="!notifications?.length" class="no-notifications">لا توجد إشعارات جديدة</div>
           <div *ngFor="let notification of notifications" class="notification-item" [ngClass]="{'unread': !notification.read}">
             <p>{{ notification.message }}</p>
@@ -39,7 +41,6 @@
         {{ error }}
         <button type="button" class="btn-close" (click)="error = null"></button>
       </div>
-
 
       <!-- Dashboard Cards -->
       <div class="row g-4">
@@ -116,34 +117,6 @@
           </div>
         </div>
       </div>
-
-
-
-      <!-- Pie Chart Section -->
-      <section class="chart-section" style="margin-top: 12px;">
-        <h2>إحصائيات الطلبات</h2>
-        <div class="pie-chart-container">
-          <canvas baseChart
-            [data]="pieChartData"
-            [options]="pieChartOptions"
-            [type]="pieChartType"
-            [labels]="pieChartLabels">
-          </canvas>
-        </div>
-      </section>
-
-      <!-- Bar Chart Section: Top 5 Volunteers -->
-      <section class="chart-section">
-        <h2>أعلى 5 متطوعين بساعات التطوع</h2>
-        <div class="chart-container">
-          <canvas baseChart
-            [data]="barChartData"
-            [options]="barChartOptions"
-            [type]="barChartType"
-            [labels]="barChartLabels">
-          </canvas>
-        </div>
-      </section>
 
       <router-outlet></router-outlet>
     </section>

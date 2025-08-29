@@ -1,0 +1,94 @@
+<div class="container">
+  <app-sidebar></app-sidebar>
+
+  <div class="content">
+    <h2>إدارة رسائل الانضمام</h2>
+
+    <!-- Success/Error Alert Container -->
+    <div class="alert-container">
+      <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        {{ successMessage }}
+        <button type="button" class="btn-close" (click)="dismissAlert()" aria-label="Close"></button>
+      </div>
+      <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        {{ errorMessage }}
+        <button type="button" class="btn-close" (click)="dismissAlert()" aria-label="Close"></button>
+      </div>
+    </div>
+
+    <!-- Add Message Form -->
+    <div class="add-message" *ngIf="isAdmin">
+      <h3>إضافة رسالة جديدة</h3>
+      <form (ngSubmit)="createMessage()" class="add-message-form">
+        <textarea
+          [(ngModel)]="newMessageContent"
+          name="newMessageContent"
+          placeholder="أدخل محتوى الرسالة"
+          required
+          class="form-control"
+          [class.is-invalid]="newMessageContentError"
+        ></textarea>
+        <div *ngIf="newMessageContentError" class="invalid-feedback">
+          محتوى الرسالة مطلوب
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!newMessageContent?.trim()">إضافة</button>
+      </form>
+    </div>
+
+    <!-- Messages List -->
+    <div class="messages-list">
+      <h3>الرسائل الحالية</h3>
+      <div *ngIf="messages.length === 0" class="no-messages">
+        لا توجد رسائل متاحة
+      </div>
+      <div *ngFor="let message of messages" class="message-card">
+        <p>{{ message.content }}</p>
+        <div class="actions" *ngIf="isAdmin">
+          <button class="btn btn-toggle" (click)="toggleVisibility(message.id, !message.isVisible)">
+            {{ message.isVisible ? 'إخفاء' : 'إظهار' }}
+          </button>
+          <button class="btn btn-edit" (click)="openEditModal(message)">تعديل</button>
+          <button class="btn btn-delete" (click)="openDeleteModal(message.id)">حذف</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" *ngIf="showEditModal">
+      <div class="modal-content">
+        <h3>تعديل الرسالة</h3>
+        <form (ngSubmit)="saveEditedMessage()" class="edit-message-form">
+          <textarea
+            [(ngModel)]="editMessageContent"
+            name="editMessageContent"
+            placeholder="أدخل محتوى الرسالة الجديد"
+            required
+            class="form-control"
+            [class.is-invalid]="editMessageContentError"
+          ></textarea>
+          <div *ngIf="editMessageContentError" class="invalid-feedback">
+            محتوى الرسالة مطلوب
+          </div>
+          <div class="modal-actions">
+            <button type="submit" class="btn btn-primary">حفظ</button>
+            <button type="button" class="btn btn-secondary" (click)="closeEditModal()">إلغاء</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" *ngIf="showDeleteModal">
+      <div class="modal-content">
+        <h3>تأكيد الحذف</h3>
+        <p>هل أنت متأكد من حذف هذه الرسالة؟</p>
+        <div class="modal-actions">
+          <button class="btn btn-delete" [disabled]="!deleteMessageId" (click)="deleteMessage(deleteMessageId!)">حذف</button>
+          <button class="btn btn-secondary" (click)="closeDeleteModal()">إلغاء</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

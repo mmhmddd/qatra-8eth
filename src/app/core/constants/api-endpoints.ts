@@ -90,6 +90,22 @@ export const ApiEndpoints = {
     edit: (id: string) => `${base}/gallery/images/${id.trim()}`,
     delete: (id: string) => `${base}/gallery/images/${id.trim()}`,
   },
+  messages: {
+    create: `${base}/messages/create`,
+    list: `${base}/messages/list`,
+    update: (id: string) => {
+      if (!id || typeof id !== 'string' || id.trim() === '' || !/^[0-9a-fA-F]{24}$/.test(id.trim())) {
+        throw new Error('Invalid message ID: Must be a valid MongoDB ObjectId');
+      }
+      return `${base}/messages/${id.trim()}`;
+    },
+    delete: (id: string) => {
+      if (!id || typeof id !== 'string' || id.trim() === '' || !/^[0-9a-fA-F]{24}$/.test(id.trim())) {
+        throw new Error('Invalid message ID: Must be a valid MongoDB ObjectId');
+      }
+      return `${base}/messages/${id.trim()}`;
+    },
+  },
   admin: {
     sendMessage: `${base}/admin/send-message`,
     editMessage: `${base}/admin/edit-message`,

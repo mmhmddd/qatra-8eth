@@ -11,8 +11,14 @@
       <div class="form-card">
         <h2 class="form-title text-center mb-4">{{ 'joinUs.formTitle' | translate }}</h2>
 
-        <!-- Error Alert Container -->
+        <!-- Error and Status Alert Container -->
         <div id="error-container">
+          <!-- Join Status Message -->
+          <div *ngIf="joinStatusMessage" class="alert alert-warning alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            {{ joinStatusMessage.content || ('joinUs.joinStatusOpen' | translate) }}
+          </div>
+
           <!-- Email Exists Error -->
           <div *ngIf="emailExistsError" class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="fas fa-exclamation-triangle me-2"></i>

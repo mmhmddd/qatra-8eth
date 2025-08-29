@@ -1,0 +1,29 @@
+<app-sidebar></app-sidebar>
+
+<section class="statistics-wrapper">
+  <!-- Pie Chart Section -->
+  <section class="chart-section" style="margin-top: 12px;">
+    <h2>إحصائيات الطلبات</h2>
+    <div class="pie-chart-container">
+      <canvas baseChart
+        [data]="pieChartData"
+        [options]="pieChartOptions"
+        [type]="pieChartType"
+        [labels]="pieChartLabels">
+      </canvas>
+    </div>
+  </section>
+
+  <!-- Bar Chart Section: Top 5 Volunteers -->
+  <section class="chart-section">
+    <h2>أعلى 10 متطوعين بساعات التطوع</h2>
+    <div class="chart-container">
+      <canvas baseChart
+        [data]="barChartData"
+        [options]="barChartOptions"
+        [type]="barChartType"
+        [labels]="barChartLabels">
+      </canvas>
+    </div>
+  </section>
+</section>
