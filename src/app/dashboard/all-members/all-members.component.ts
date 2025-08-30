@@ -71,8 +71,11 @@ export class AllMembersComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response: JoinRequestResponse) => {
           if (response.success && response.members) {
-            this.approvedMembers = response.members;
-            this.filteredMembers = response.members;
+            // Sort members by createdAt in descending order (newest first)
+            this.approvedMembers = response.members.sort((a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
+            this.filteredMembers = [...this.approvedMembers];
             this.successMessage = response.message || 'تم جلب الأعضاء المعتمدين بنجاح';
             this.errorMessage = null;
             this.isLoading = false;
@@ -171,7 +174,8 @@ export class AllMembersComponent implements OnInit, OnDestroy {
       'عدد المحاضرات': member.lectureCount || 0,
       'عدد المواد': member.subjectsCount || 0,
       'المواد': member.subjects.join(', ') || 'غير محدد',
-      'عدد الطلاب': member.numberOfStudents || 0
+      'عدد الطلاب': member.numberOfStudents || 0,
+      'تاريخ الإنشاء': member.createdAt ? new Date(member.createdAt).toLocaleString('ar-EG') : 'غير محدد'
     }));
 
     // Create worksheet
@@ -187,7 +191,8 @@ export class AllMembersComponent implements OnInit, OnDestroy {
       'عدد المحاضرات': 'عدد المحاضرات',
       'عدد المواد': 'عدد المواد',
       'المواد': 'المواد',
-      'عدد الطلاب': 'عدد الطلاب'
+      'عدد الطلاب': 'عدد الطلاب',
+      'تاريخ الإنشاء': 'تاريخ الإنشاء'
     };
     XLSX.utils.sheet_add_aoa(worksheet, [Object.values(headers)], { origin: 'A1' });
 

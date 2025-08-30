@@ -25,8 +25,9 @@ export class SidebarComponent {
     { label: 'إضافة متصدر', icon: 'fas fa-plus', link: '/add-leaderboards' },
     { label: 'إضافة صوره الي المعرض ', icon: 'fas fa-plus', link: '/add-gallery' },
     { label: 'العضاء المقصرون', icon: 'fas fa-user-times', link: '/low-lecture-members', class: 'low-lecture-members' },
-    { label: 'احصائات', icon: 'fas fa-statistics', link: '/statistics', class: 'statistics' },
-    { label: 'رسائل صفحة الانضمام', icon: 'fas fa-statistics', link: '/join-massege', class: 'join-massege' }
+    { label: 'احصائات', icon: 'fas fa-chart-bar', link: '/statistics', class: 'statistics' },
+    { label: 'رسائل صفحة الانضمام', icon: 'fas fa-envelope', link: '/join-message', class: 'join-massege' }
+
 
   ];
 

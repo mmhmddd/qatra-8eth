@@ -2,17 +2,19 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { SidebarComponent } from '../../shared/sidebar/sidebar.component';
-import { JoinRequestService, JoinRequestResponse } from '../../core/services/join-request.service';
+import { JoinRequestService, JoinRequestResponse, JoinRequest } from '../../core/services/join-request.service';
+import { LowLecturesService, LowLectureMembersResponse, LowLectureMember } from '../../core/services/low-lectures.service';
 import { NotificationResponse, AppNotification, NotificationService } from '../../core/services/Notification.service';
 import { filter } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { forkJoin } from 'rxjs';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule, RouterModule, SidebarComponent],
-  templateUrl: './dashboard.component.html',
+  templateUrl: './dashboard.Component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
@@ -39,6 +41,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private router: Router,
     private joinRequestService: JoinRequestService,
+    private lowLecturesService: LowLecturesService,
     private notificationService: NotificationService,
     private cdr: ChangeDetectorRef
   ) {
@@ -147,5 +150,164 @@ export class DashboardComponent implements OnInit {
 
   navigateTo(link: string): void {
     this.router.navigate([link]);
+  }
+
+  exportToExcel(): void {
+    forkJoin({
+      membersResponse: this.joinRequestService.getAll(), // Changed to getAll() to include all members
+      lowLectureResponse: this.lowLecturesService.getLowLectureMembers(),
+    }).subscribe({
+      next: ({ membersResponse, lowLectureResponse }) => {
+        if (membersResponse.success && membersResponse.members) {
+          const members: JoinRequest[] = membersResponse.members;
+          const lowLectureMembers: LowLectureMember[] = lowLectureResponse.success ? lowLectureResponse.members : [];
+
+          // Prepare Members sheet data
+          const memberData = members.map(member => ({
+            ID: member.id || member._id,
+            Name: member.name,
+            Email: member.email,
+            Phone: member.phone || member.number,
+            AcademicSpecialization: member.academicSpecialization,
+            Address: member.address,
+            Status: member.status, // Includes Pending, Approved, Rejected
+            VolunteerHours: member.volunteerHours,
+            NumberOfStudents: member.numberOfStudents,
+            Subjects: member.subjects?.join(', ') || '',
+            SubjectsCount: member.subjectsCount,
+            LectureCount: member.lectureCount,
+            CreatedAt: member.createdAt,
+            ProfileImage: member.profileImage || '',
+          }));
+
+          // Prepare Students sheet data
+          const studentData: any[] = [];
+          members.forEach(member => {
+            member.students?.forEach(student => {
+              studentData.push({
+                MemberID: member.id || member._id,
+                MemberName: member.name,
+                MemberStatus: member.status,
+                StudentName: student.name,
+                StudentEmail: student.email,
+                StudentPhone: student.phone,
+                StudentGrade: student.grade || '',
+                StudentSubjects: student.subjects?.map(sub => `${sub.name} (Min Lectures: ${sub.minLectures})`).join('; ') || '',
+              })});
+          });
+
+          // Prepare Lectures sheet data
+          const lectureData: any[] = [];
+          members.forEach(member => {
+            member.lectures?.forEach(lecture => {
+              lectureData.push({
+                MemberID: member.id || member._id,
+                MemberName: member.name,
+                MemberStatus: member.status,
+                LectureID: lecture._id,
+                LectureName: lecture.name,
+                Subject: lecture.subject,
+                StudentEmail: lecture.studentEmail,
+                Date: lecture.date,
+                Duration: lecture.duration,
+                Link: lecture.link,
+              });
+            });
+          });
+
+          // Prepare Messages sheet data
+          const messageData: any[] = [];
+          members.forEach(member => {
+            member.messages?.forEach(message => {
+              messageData.push({
+                MemberID: member.id || member._id,
+                MemberName: member.name,
+                MemberStatus: member.status,
+                MessageID: message._id,
+                Content: message.content,
+                CreatedAt: message.createdAt,
+                DisplayUntil: message.displayUntil,
+              });
+            });
+          });
+
+          // Prepare Meetings sheet data
+          const meetingData: any[] = [];
+          members.forEach(member => {
+            member.meetings?.forEach(meeting => {
+              meetingData.push({
+                MemberID: member.id || member._id,
+                MemberName: member.name,
+                MemberStatus: member.status,
+                MeetingID: meeting.id || meeting._id,
+                Title: meeting.title,
+                Date: meeting.date instanceof Date ? meeting.date.toISOString() : meeting.date,
+                StartTime: meeting.startTime,
+                EndTime: meeting.endTime,
+              });
+            });
+          });
+
+          // Prepare Low Lecture Members sheet data
+          const lowLectureData: any[] = lowLectureMembers.map(member => ({
+            MemberID: member._id,
+            MemberName: member.name,
+            Email: member.email,
+            LowLectureWeekCount: member.lowLectureWeekCount,
+            UnderTargetStudents: member.underTargetStudents
+              ?.map(student =>
+                `${student.studentName} (${student.studentEmail}, Grade: ${student.academicLevel}, Subjects: ${student.underTargetSubjects
+                  .map(sub => `${sub.name} (Min: ${sub.minLectures}, Delivered: ${sub.deliveredLectures})`)
+                  .join('; ')})`
+              )
+              .join('; ') || '',
+            Lectures: member.lectures
+              ?.map(lecture => `${lecture.name} (Subject: ${lecture.subject}, Date: ${lecture.createdAt}, Link: ${lecture.link})`)
+              .join('; ') || '',
+          }));
+
+          // Create workbook and append sheets
+          const wb: XLSX.WorkBook = XLSX.utils.book_new();
+          const memberWs: XLSX.WorkSheet = XLSX.utils.json_to_sheet(memberData);
+          XLSX.utils.book_append_sheet(wb, memberWs, 'Members');
+
+          if (studentData.length > 0) {
+            const studentWs: XLSX.WorkSheet = XLSX.utils.json_to_sheet(studentData);
+            XLSX.utils.book_append_sheet(wb, studentWs, 'Students');
+          }
+
+          if (lectureData.length > 0) {
+            const lectureWs: XLSX.WorkSheet = XLSX.utils.json_to_sheet(lectureData);
+            XLSX.utils.book_append_sheet(wb, lectureWs, 'Lectures');
+          }
+
+          if (messageData.length > 0) {
+            const messageWs: XLSX.WorkSheet = XLSX.utils.json_to_sheet(messageData);
+            XLSX.utils.book_append_sheet(wb, messageWs, 'Messages');
+          }
+
+          if (meetingData.length > 0) {
+            const meetingWs: XLSX.WorkSheet = XLSX.utils.json_to_sheet(meetingData);
+            XLSX.utils.book_append_sheet(wb, meetingWs, 'Meetings');
+          }
+
+          if (lowLectureData.length > 0) {
+            const lowLectureWs: XLSX.WorkSheet = XLSX.utils.json_to_sheet(lowLectureData);
+            XLSX.utils.book_append_sheet(wb, lowLectureWs, 'LowLectureMembers');
+          }
+
+          // Export the file
+          XLSX.writeFile(wb, 'all_members_data.xlsx');
+        } else {
+          this.error = membersResponse.message || 'فشل في جلب بيانات الأعضاء';
+          this.cdr.detectChanges();
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        this.error = err.error?.message || 'فشل في تصدير البيانات إلى Excel';
+        console.error('Error exporting to Excel:', err);
+        this.cdr.detectChanges();
+      },
+    });
   }
 }
