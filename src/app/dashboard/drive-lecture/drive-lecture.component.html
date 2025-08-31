@@ -1,0 +1,97 @@
+<div class="container">
+  <app-sidebar></app-sidebar>
+
+  <div class="content">
+    <h2>إدارة طلبات المحاضرات</h2>
+
+    <!-- Alert Container -->
+    <div class="alert-container">
+      <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        {{ successMessage }}
+        <button type="button" class="btn-close" (click)="dismissAlert()" aria-label="Close"></button>
+      </div>
+      <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        {{ error }}
+        <button type="button" class="btn-close" (click)="dismissAlert()" aria-label="Close"></button>
+      </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div *ngIf="loading" class="loading">جارٍ تحميل طلبات المحاضرات...</div>
+
+    <!-- Requests List -->
+    <div class="requests-list">
+      <h3>طلبات المحاضرات المعلقة</h3>
+      <div *ngIf="!loading && pendingRequests.length === 0" class="no-requests">
+        لا توجد طلبات محاضرات معلقة
+      </div>
+      <div *ngFor="let request of pendingRequests" class="request-card">
+        <div class="request-header" (click)="toggleCard(request._id)">
+          <div class="request-summary">
+            <span>{{ request.subject }}</span>
+            <span>{{ request.user?.name || 'غير متوفر' }}</span>
+            <span>{{ request.lectureDate | date: 'mediumDate' }}</span>
+          </div>
+          <i class="fas" [ngClass]="expandedCards[request._id] ? 'fa-chevron-down' : 'fa-chevron-up'"></i>
+        </div>
+        <div class="request-details" [ngClass]="{'expanded': expandedCards[request._id], 'collapsed': !expandedCards[request._id]}">
+          <p><strong>المعرف:</strong> {{ request._id }}</p>
+          <p><strong>البريد الإلكتروني للطالب:</strong> {{ request.studentEmail }}</p>
+          <p><strong>الموضوع:</strong> {{ request.subject }}</p>
+          <p><strong>الرابط:</strong> <a [href]="request.link" target="_blank" rel="noopener noreferrer">{{ request.link }}</a></p>
+          <p><strong>الاسم:</strong> {{ request.name }}</p>
+          <p><strong>تاريخ المحاضرة:</strong> {{ request.lectureDate | date: 'medium' }}</p>
+          <p><strong>المدة (بالدقائق):</strong> {{ request.duration }}</p>
+          <p><strong>تاريخ الإنشاء:</strong> {{ request.createdAt | date: 'medium' }}</p>
+          <p><strong>الحالة:</strong> {{ request.status }}</p>
+          <p><strong>اسم المستخدم:</strong> {{ request.user?.name || 'غير متوفر' }}</p>
+          <p><strong>البريد الإلكتروني للمستخدم:</strong> {{ request.user?.email || 'غير متوفر' }}</p>
+          <div class="actions">
+            <button class="btn btn-accept" (click)="openAcceptModal(request._id)">قبول</button>
+            <button class="btn btn-reject" (click)="openRejectModal(request._id)">رفض</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Accept Modal -->
+    <div class="modal" *ngIf="showAcceptModal">
+      <div class="modal-content">
+        <h3>قبول طلب المحاضرة</h3>
+        <form (ngSubmit)="acceptRequest()" class="accept-form">
+          <textarea
+            [(ngModel)]="acceptNote"
+            name="acceptNote"
+            placeholder="أدخل ملاحظة القبول (اختياري)"
+            class="form-control"
+          ></textarea>
+          <div class="modal-actions">
+            <button type="submit" class="btn btn-accept">قبول</button>
+            <button type="button" class="btn btn-secondary" (click)="closeAcceptModal()">إلغاء</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Reject Modal -->
+    <div class="modal" *ngIf="showRejectModal">
+      <div class="modal-content">
+        <h3>رفض طلب المحاضرة</h3>
+        <form (ngSubmit)="rejectRequest()" class="reject-form">
+          <textarea
+            [(ngModel)]="rejectNote"
+            name="rejectNote"
+            placeholder="أدخل ملاحظة الرفض (اختياري)"
+            class="form-control"
+          ></textarea>
+          <div class="modal-actions">
+            <button type="submit" class="btn btn-reject">رفض</button>
+            <button type="button" class="btn btn-secondary" (click)="closeRejectModal()">إلغاء</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

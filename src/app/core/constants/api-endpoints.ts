@@ -30,19 +30,25 @@ export const ApiEndpoints = {
   },
   lectures: {
     upload: `${base}/lectures`,
-    update: (lectureId: string) => {
-      if (!lectureId || typeof lectureId !== 'string' || lectureId.trim() === '' || !/^[0-9a-fA-F]{24}$/.test(lectureId.trim())) {
-        throw new Error('Invalid lecture ID: Must be a valid MongoDB ObjectId');
+    pending: `${base}/lectures/requests`,
+    accept: (requestId: string) => {
+      if (!requestId || typeof requestId !== 'string' || requestId.trim() === '' || !/^[0-9a-fA-F]{24}$/.test(requestId.trim())) {
+        throw new Error('Invalid request ID: Must be a valid MongoDB ObjectId');
       }
-      return `${base}/lectures/${lectureId.trim()}`;
+      return `${base}/lectures/requests/accept/${requestId.trim()}`;
     },
-    delete: (lectureId: string) => {
-      if (!lectureId || typeof lectureId !== 'string' || lectureId.trim() === '' || !/^[0-9a-fA-F]{24}$/.test(lectureId.trim())) {
-        throw new Error('Invalid lecture ID: Must be a valid MongoDB ObjectId');
+    reject: (requestId: string) => {
+      if (!requestId || typeof requestId !== 'string' || requestId.trim() === '' || !/^[0-9a-fA-F]{24}$/.test(requestId.trim())) {
+        throw new Error('Invalid request ID: Must be a valid MongoDB ObjectId');
       }
-      return `${base}/lectures/${lectureId.trim()}`;
+      return `${base}/lectures/requests/reject/${requestId.trim()}`;
     },
-    list: `${base}/lectures`,
+    deleteRequest: (requestId: string) => {
+      if (!requestId || typeof requestId !== 'string' || requestId.trim() === '' || !/^[0-9a-fA-F]{24}$/.test(requestId.trim())) {
+        throw new Error('Invalid request ID: Must be a valid MongoDB ObjectId');
+      }
+      return `${base}/lectures/requests/${requestId.trim()}`;
+    },
     lowLectureMembers: `${base}/lectures/low-lecture-members`,
     removeLowLectureMember: (memberId: string) => {
       if (!memberId || typeof memberId !== 'string' || memberId.trim() === '' || !/^[0-9a-fA-F]{24}$/.test(memberId.trim())) {

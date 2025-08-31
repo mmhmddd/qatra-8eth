@@ -111,6 +111,10 @@ export const routes: Routes = [
     loadComponent: () => import('./shared/reset-password-component/reset-password-component.component').then(m => m.ResetPasswordComponent)
   },
   {
+    path: 'drive-lecture',
+    loadComponent: () => import('./dashboard/drive-lecture/drive-lecture.component').then(m => m.DriveLectureComponent)
+  },
+  {
     path: 'tree',
     loadComponent: () => import('./features/tree/tree.component').then(m => m.TreeComponent)
   },

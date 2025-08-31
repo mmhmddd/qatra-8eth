@@ -101,83 +101,81 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
   };
 
-subjectKeys = [
-  'islamic_education',
-  'arabic',
-  'mathematics',
-  'life_sciences',
-  'social_studies',
-  'art_education',
-  'physical_education',
-  'music_education',
-  'english',
-  'national_civic_education',
-  'technology',
-  'media_education',
-  'history_of_jordan',
-  'financial_literacy',
-  'digital_skills',
-  'physics',
-  'chemistry',
-  'biology',
-  'earth_environmental_sciences',
-  'philosophy',
-  'geography',
-  'computer_science'
-];
+  subjectKeys = [
+    'islamic_education',
+    'arabic',
+    'mathematics',
+    'life_sciences',
+    'social_studies',
+    'art_education',
+    'physical_education',
+    'music_education',
+    'english',
+    'national_civic_education',
+    'technology',
+    'media_education',
+    'history_of_jordan',
+    'financial_literacy',
+    'digital_skills',
+    'physics',
+    'chemistry',
+    'biology',
+    'earth_environmental_sciences',
+    'philosophy',
+    'geography',
+    'computer_science'
+  ];
 
-
-subjectsTranslations = {
-  ar: [
-    'التربية الإسلامية',
-    'اللغة العربية',
-    'الرياضيات',
-    'العلوم الحياتية',
-    'الدراسات الاجتماعية',
-    'التربية الفنية',
-    'التربية الرياضية',
-    'التربية الموسيقية',
-    'اللغة الإنجليزية',
-    'التربية الوطنية والمدنية',
-    'التكنولوجيا',
-    'التربية الإعلامية',
-    'تاريخ الأردن',
-    'الثقافة المالية',
-    'المهارات الرقمية',
-    'الفيزياء',
-    'الكيمياء',
-    'الأحياء',
-    'علوم الأرض والبيئة',
-    'الفلسفة',
-    'الجغرافيا',
-    'حاسوب'
-  ],
-  en: [
-    'Islamic Education',
-    'Arabic Language',
-    'Mathematics',
-    'Life Sciences',
-    'Social Studies',
-    'Art Education',
-    'Physical Education',
-    'Music Education',
-    'English Language',
-    'National and Civic Education',
-    'Technology',
-    'Media Education',
-    'History of Jordan',
-    'Financial Literacy',
-    'Digital Skills',
-    'Physics',
-    'Chemistry',
-    'Biology',
-    'Earth and Environmental Sciences',
-    'Philosophy',
-    'Geography',
-    'Computer Science'
-  ]
-};
-
+  subjectsTranslations = {
+    ar: [
+      'التربية الإسلامية',
+      'اللغة العربية',
+      'الرياضيات',
+      'العلوم الحياتية',
+      'الدراسات الاجتماعية',
+      'التربية الفنية',
+      'التربية الرياضية',
+      'التربية الموسيقية',
+      'اللغة الإنجليزية',
+      'التربية الوطنية والمدنية',
+      'التكنولوجيا',
+      'التربية الإعلامية',
+      'تاريخ الأردن',
+      'الثقافة المالية',
+      'المهارات الرقمية',
+      'الفيزياء',
+      'الكيمياء',
+      'الأحياء',
+      'علوم الأرض والبيئة',
+      'الفلسفة',
+      'الجغرافيا',
+      'حاسوب'
+    ],
+    en: [
+      'Islamic Education',
+      'Arabic Language',
+      'Mathematics',
+      'Life Sciences',
+      'Social Studies',
+      'Art Education',
+      'Physical Education',
+      'Music Education',
+      'English Language',
+      'National and Civic Education',
+      'Technology',
+      'Media Education',
+      'History of Jordan',
+      'Financial Literacy',
+      'Digital Skills',
+      'Physics',
+      'Chemistry',
+      'Biology',
+      'Earth and Environmental Sciences',
+      'Philosophy',
+      'Geography',
+      'Computer Science'
+    ]
+  };
 
   semesters = ['الفصل الأول', 'الفصل الثاني'];
   countries = ['الأردن', 'فلسطين'];
@@ -287,12 +285,13 @@ subjectsTranslations = {
 
   dateValidator(control: AbstractControl): { [key: string]: any } | null {
     const date = control.value;
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     const maxDate = new Date();
     maxDate.setFullYear(maxDate.getFullYear() + 1);
-    const maxDateStr = maxDate.toISOString().split('T')[0];
+    const inputDate = new Date(date);
 
-    if (date < today || date > maxDateStr) {
+    if (date && (inputDate < today || inputDate > maxDate)) {
       return { invalidDate: true };
     }
     return null;
@@ -333,7 +332,7 @@ subjectsTranslations = {
   getTranslatedAcademicLevels(): string[] {
     const currentLang = this.translationService.getCurrentLanguage();
     return currentLang === 'en'
-      ? ['High School', "Bachelor's Degree", "Master's Degree", 'PhD', 'Diploma', 'Graduate Studies']
+      ? ['First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth', 'First Secondary', 'Secondary (Tawjihi)']
       : this.academicLevels;
   }
 
@@ -345,6 +344,16 @@ subjectsTranslations = {
     const maxDate = new Date();
     maxDate.setFullYear(maxDate.getFullYear() + 1);
     return maxDate.toISOString().split('T')[0];
+  }
+
+  getMinDateTime(): string {
+    return new Date().toISOString().slice(0, 16);
+  }
+
+  getMaxDateTime(): string {
+    const maxDate = new Date();
+    maxDate.setFullYear(maxDate.getFullYear() + 1);
+    return maxDate.toISOString().slice(0, 16);
   }
 
   getStudentSubjects(student: Student): string {
@@ -375,7 +384,7 @@ subjectsTranslations = {
     }
 
     const title = this.translationService.translate(titleKey) || 'Notification';
-    const message = this.translationService.translate(messageKey) || 'تمت العمليه بنجاح';
+    const message = this.translationService.translate(messageKey) || messageKey;
 
     if (!message || message.trim() === '') {
       console.error(`ProfileComponent: Translated message is empty (source: ${source || 'unknown'})`, { messageKey, translated: message });
@@ -680,11 +689,12 @@ subjectsTranslations = {
       this.isUploadingLecture = false;
       return;
     }
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     const maxDate = new Date();
     maxDate.setFullYear(maxDate.getFullYear() + 1);
-    const maxDateStr = maxDate.toISOString().split('T')[0];
-    if (date < today || date > maxDateStr) {
+    const inputDate = new Date(date);
+    if (inputDate < today || inputDate > maxDate) {
       this.showToast('error', 'profile.error', 'profile.invalidDate', 'uploadLecture');
       this.isUploadingLecture = false;
       return;
@@ -695,8 +705,11 @@ subjectsTranslations = {
       return;
     }
 
+    const lectureDate = new Date(date).toISOString();
+    const durationInHours = duration / 60; // Convert minutes to hours
+
     this.isUploadingLecture = true;
-    this.lectureService.uploadLecture(studentEmail, subject, link, name).subscribe({
+    this.lectureService.uploadLecture(studentEmail, subject, link, name, lectureDate, durationInHours).subscribe({
       next: (response: LectureResponse) => {
         if (response.success) {
           this.lectureForm.reset();

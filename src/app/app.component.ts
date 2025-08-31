@@ -37,6 +37,7 @@ export class AppComponent implements OnInit {
         url.startsWith('/join-massege') ||
         url.startsWith('/tree') ||
         url.startsWith('/statistics') ||
+        url.startsWith('/drive-lecture') ||
         !!url.match(/^\/member\/[^\/]+$/) ||
         url.startsWith('/login');
       console.log('Current route:', url, 'isDashboardRoute:', this.isDashboardRoute);
