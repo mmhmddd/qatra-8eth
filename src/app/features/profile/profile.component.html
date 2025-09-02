@@ -1,25 +1,29 @@
 <div class="container-fluid p-0" [dir]="translationService.isRtl() ? 'rtl' : 'ltr'">
   <main class="main-content container">
     <!-- Toast Container for Notifications -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
-      <div *ngFor="let toast of toasts"
-           class="toast"
-           [id]="toast.id"
-           [ngClass]="{'toast-success': toast.type === 'success', 'toast-error': toast.type === 'error', 'toast-info': toast.type === 'info'}"
-           role="alert"
-           aria-live="assertive"
-           aria-atomic="true">
-        <div class="toast-header">
-          <strong class="me-auto">{{ toast.title }}</strong>
-          <button type="button" class="btn-close" (click)="closeToast(toast.id)" [attr.aria-label]="translationService.translate('common.close') || ''">
-            {{ translationService.translate('common.close') || '' }}
-          </button>
-        </div>
-        <div class="toast-body">
-          {{ toast.message }}
-        </div>
-      </div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
+  <div *ngFor="let toast of toasts"
+       class="toast"
+       [id]="toast.id"
+       [ngClass]="{'toast-success': toast.type === 'success', 'toast-error': toast.type === 'error', 'toast-info': toast.type === 'info'}"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true"
+       [attr.data-testid]="'toast-' + toast.id">
+    <div class="toast-header">
+      <strong class="me-auto">{{ toast.title }}</strong>
+      <button type="button"
+              class="btn-close"
+              (click)="closeToast(toast.id)"
+              [attr.aria-label]="translationService.translate('common.close') || 'Close'">
+        {{ translationService.translate('common.close') || 'Close' }}
+      </button>
     </div>
+    <div class="toast-body">
+      {{ toast.message }}
+    </div>
+  </div>
+</div>
 
     <!-- Loading State -->
     <div *ngIf="!profile" class="d-flex justify-content-center my-5">
@@ -284,7 +288,7 @@
               </div>
             </div>
 
-            <div class="col-md-4 col-sm-6">
+            <div class="col-md-4 col-sm-6" style="background-color:white">
               <div class="form-floating">
                 <input id="lectureLink"
                        formControlName="link"

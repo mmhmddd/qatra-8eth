@@ -259,9 +259,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const token = this.authService.getToken();
     console.log('ProfileComponent: Validating auth:', { userId, token });
     if (!token || !userId || !this.authService.isLoggedIn()) {
-      if (!this.isInitialLoad) {
-        this.showToast('error', 'profile.error', 'profile.unauthorizedError', 'validateAuth');
-      }
       this.authService.logout();
       this.router.navigate(['/login']);
       return false;
@@ -368,54 +365,137 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }).join(', ');
   }
 
-  private showToast(type: 'success' | 'error' | 'info', titleKey: string, messageKey: string, source?: string): void {
+  private showToast(type: 'success' | 'error' | 'info', titleKey: string, messageKey: string, source: string): void {
+    // Suppress toasts during initial load
     if (this.isInitialLoad) {
-      console.log(`ProfileComponent: Suppressing toast during initial load (source: ${source || 'unknown'}):`, { type, titleKey, messageKey });
+      console.log(`ProfileComponent: Suppressing toast during initial load (source: ${source}):`, { type, titleKey, messageKey });
       return;
     }
 
-    if (!titleKey || titleKey.trim() === '') {
-      console.error(`ProfileComponent: Invalid title key (source: ${source || 'unknown'})`, { titleKey });
-      titleKey = 'profile.error';
-    }
-    if (!messageKey || messageKey.trim() === '') {
-      console.error(`ProfileComponent: Invalid message key (source: ${source || 'unknown'})`, { messageKey });
-      messageKey = 'profile.unknownError';
+    // Only show toasts for specified operations
+    const allowedSources = [
+      'onFileSelected',
+      'onPdfFileSelected',
+      'uploadProfileImage',
+      'onSubmitLecture',
+      'uploadLecture',
+      'uploadPdfRequest',
+      'changePassword',
+      'navigateToForgotPassword',
+      'addMeeting',
+      'deleteMeeting'
+    ];
+
+    if (!allowedSources.includes(source)) {
+      console.log(`ProfileComponent: Suppressing toast for non-allowed source: ${source}`);
+      return;
     }
 
-    const title = this.translationService.translate(titleKey) || 'Notification';
-    const message = this.translationService.translate(messageKey) || messageKey;
+    // Helper function to resolve nested translation keys in Arabic
+    const resolveTranslation = (key: string): string => {
+      try {
+        const translation = this.translationService.translate(key);
+        if (!translation || translation === key) {
+          console.warn(`ProfileComponent: Translation missing for key: ${key}`);
+          // Provide Arabic fallback messages based on type and key
+          switch (type) {
+            case 'success':
+              return {
+                'profile.imageUploadedSuccess': 'تم تحميل الصورة بنجاح',
+                'profile.lectureUploadedSuccess': 'تم تحميل المحاضرة بنجاح',
+                'profile.pdfRequestSubmittedSuccess': 'تم إرسال طلب PDF بنجاح',
+                'profile.passwordChangedSuccess': 'تم تغيير كلمة المرور بنجاح',
+                'profile.meetingAddedSuccess': 'تم إضافة الاجتماع بنجاح',
+                'profile.meetingDeletedSuccess': 'تم حذف الاجتماع بنجاح',
+                'profile.fileSelectedSuccess': 'تم اختيار الملف بنجاح',
+                'profile.pdfFileSelectedSuccess': 'تم اختيار ملف PDF بنجاح'
+              }[key] || 'تمت العملية بنجاح';
+            case 'error':
+              return {
+                'profile.fileSizeError': 'حجم الملف كبير جدًا',
+                'profile.invalidFileType': 'نوع الملف غير صالح',
+                'profile.noFileSelected': 'لم يتم اختيار ملف',
+                'profile.pdfFileSizeError': 'حجم ملف PDF كبير جدًا',
+                'profile.invalidPdfFileType': 'نوع ملف PDF غير صالح',
+                'profile.formInvalid': 'النموذج غير صالح',
+                'profile.noStudentsAvailable': 'لا يوجد طلاب متاحون',
+                'profile.invalidStudent': 'الطالب غير صالح',
+                'profile.invalidSubject': 'المادة غير صالحة',
+                'profile.invalidDate': 'التاريخ غير صالح',
+                'profile.invalidDuration': 'المدة غير صالحة',
+                'profile.imageUploadFailed': 'فشل تحميل الصورة',
+                'profile.lectureUploadFailed': 'فشل تحميل المحاضرة',
+                'profile.pdfRequestFailed': 'فشل إرسال طلب PDF',
+                'profile.missing_fields': 'الحقول مفقودة',
+                'profile.same_password': 'كلمة المرور الجديدة مطابقة للقديمة',
+                'profile.validation.password.minlength': 'كلمة المرور قصيرة جدًا',
+                'profile.password_change_error': 'فشل تغيير كلمة المرور',
+                'profile.unauthorizedError': 'غير مصرح',
+                'profile.invalidRequest': 'طلب غير صالح',
+                'profile.serverError': 'خطأ في الخادم',
+                'profile.networkError': 'خطأ في الشبكة',
+                'profile.invalidMeetingId': 'معرف الاجتماع غير صالح',
+                'profile.meetingAddFailed': 'فشل إضافة الاجتماع',
+                'profile.meetingDeleteFailed': 'فشل حذف الاجتماع'
+              }[key] || 'حدث خطأ. يرجى المحاولة مرة أخرى';
+            case 'info':
+              return {
+                'profile.navigateToForgotPassword': 'تم التوجيه إلى صفحة نسيت كلمة المرور',
+                'profile.changeImageOpened': 'تم فتح قسم تغيير الصورة',
+                'profile.changeImageClosed': 'تم إغلاق قسم تغيير الصورة',
+                'profile.meetingDetails': 'تفاصيل الاجتماع'
+              }[key] || 'معلومات';
+            default:
+              return key;
+          }
+        }
+        return translation;
+      } catch (err) {
+        console.error(`ProfileComponent: Error resolving translation for key: ${key}`, err);
+        return key;
+      }
+    };
+
+    const title = resolveTranslation(titleKey) || (type === 'success' ? 'نجاح' : type === 'error' ? 'خطأ' : 'معلومات');
+    const message = resolveTranslation(messageKey) || messageKey;
 
     if (!message || message.trim() === '') {
-      console.error(`ProfileComponent: Translated message is empty (source: ${source || 'unknown'})`, { messageKey, translated: message });
+      console.error(`ProfileComponent: Message is empty (source: ${source})`, { messageKey, message });
       return;
     }
 
+    // Check for duplicate toasts
     if (this.toasts.some(toast => toast.message === message && toast.source === source && toast.type === type)) {
-      console.log(`ProfileComponent: Ignoring duplicate toast (source: ${source || 'unknown'}):`, { type, title, message });
+      console.log(`ProfileComponent: Ignoring duplicate toast (source: ${source}):`, { type, title, message });
       return;
     }
 
     const id = Math.random().toString(36).substr(2, 9);
     this.toasts = [...this.toasts, { id, type, title, message, source }];
-    console.log(`ProfileComponent: Showing toast (source: ${source || 'unknown'}):`, { id, type, title, message });
 
-    setTimeout(() => {
-      const toastElement = document.querySelector(`.toast[id="${id}"]`);
-      if (toastElement) {
-        const bootstrapToast = new BootstrapToast(toastElement, {
-          autohide: true,
-          delay: 5000
-        });
-        toastElement.addEventListener('hidden.bs.toast', () => {
+    const showToastWithRetry = (attempts: number = 3, delay: number = 200): void => {
+      setTimeout(() => {
+        const toastElement = document.querySelector(`.toast[id="${id}"]`);
+        if (toastElement) {
+          const bootstrapToast = new BootstrapToast(toastElement, {
+            autohide: true,
+            delay: 5000
+          });
+          toastElement.addEventListener('hidden.bs.toast', () => {
+            this.closeToast(id);
+          });
+          bootstrapToast.show();
+        } else if (attempts > 0) {
+          console.warn(`ProfileComponent: Toast element not found for ID: ${id}, retrying (${attempts} attempts left)`);
+          showToastWithRetry(attempts - 1, delay * 2);
+        } else {
+          console.error(`ProfileComponent: Failed to find toast element for ID: ${id} after retries`);
           this.closeToast(id);
-        });
-        bootstrapToast.show();
-      } else {
-        console.error(`ProfileComponent: Toast element not found for ID: ${id}`);
-        this.closeToast(id);
-      }
-    }, 100);
+        }
+      }, delay);
+    };
+
+    showToastWithRetry();
   }
 
   closeToast(id: string): void {
@@ -425,9 +505,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   loadProfile(): void {
     const userId = this.authService.getUserId();
     if (!userId) {
-      if (!this.isInitialLoad) {
-        this.showToast('error', 'profile.error', 'profile.unauthorizedError', 'loadProfile');
-      }
       this.authService.logout();
       this.router.navigate(['/login']);
       return;
@@ -448,27 +525,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
           } else {
             this.lectureForm.disable();
           }
-          if (this.profile.numberOfStudents > 0 && this.profile.students.length === 0 && !this.isInitialLoad) {
-            this.showToast('error', 'profile.error', 'profile.studentDataMismatch', 'loadProfile');
-          }
           this.loadLowLectureMembers();
           this.updateCalendarEvents();
-        } else {
-          console.warn('ProfileComponent: Failed to load profile:', response.message);
-          if (!this.isInitialLoad && response.message) {
-            const messageKey = response.message === 'no_token' || response.message === 'invalid_headers'
-              ? 'profile.unauthorizedError'
-              : 'profile.loadError';
-            this.showToast('error', 'profile.error', messageKey, 'loadProfile');
-          }
+        } else if (response.message && !this.isInitialLoad) {
+          // Only show error toast if not initial load and there's an error
+          this.showToast('error', 'profile.error', response.message === 'no_token' || response.message === 'invalid_headers'
+            ? 'profile.unauthorizedError'
+            : 'profile.loadError', 'loadProfile');
         }
       },
       error: (err: any) => {
         console.error('ProfileComponent: Error loading profile:', err);
-        if (!this.isInitialLoad) {
-          const messageKey = this.getErrorMessage(err);
-          this.showToast('error', 'profile.error', messageKey, 'loadProfile');
-        }
         if (err.error === 'no_token' || err.error === 'invalid_headers' || err.status === 401) {
           this.authService.logout();
           this.router.navigate(['/login']);
@@ -552,21 +619,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
           const memberData = response.members.find(m => m.id === userId);
           this.showLectureWarning = !!memberData && memberData.underTargetStudents.length > 0;
           this.lowLectureWeekCount = memberData?.lowLectureWeekCount || 0;
-          if (this.showLectureWarning && !this.isInitialLoad) {
-            this.showToast('error', 'profile.warning', 'profile.lowLectureWarning', 'loadLowLectureMembers');
-          }
-        } else {
-          console.warn('ProfileComponent: Failed to load low lecture members:', response.message);
-          if (!this.isInitialLoad && response.message) {
-            this.showToast('error', 'profile.error', response.message || 'profile.lowLectureLoadError', 'loadLowLectureMembers');
-          }
         }
       },
       error: (err: any) => {
         console.error('ProfileComponent: Error loading low lecture members:', err);
-        if (!this.isInitialLoad) {
-          this.showToast('error', 'profile.error', this.getErrorMessage(err), 'loadLowLectureMembers');
-        }
       }
     });
   }
@@ -597,8 +653,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
         return;
       }
       this.selectedFile = file;
+      this.showToast('success', 'profile.success', 'profile.fileSelectedSuccess', 'onFileSelected');
     } else {
       this.selectedFile = null;
+      this.showToast('error', 'profile.error', 'profile.noFileSelected', 'onFileSelected');
     }
   }
 
@@ -617,8 +675,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
         return;
       }
       this.selectedPdfFile = file;
+      this.showToast('success', 'profile.success', 'profile.pdfFileSelectedSuccess', 'onPdfFileSelected');
     } else {
       this.selectedPdfFile = null;
+      this.showToast('error', 'profile.error', 'profile.noFileSelected', 'onPdfFileSelected');
     }
   }
 
@@ -637,9 +697,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
           }
           this.showUploadField = false;
           this.selectedFile = null;
-          this.showToast('success', 'profile.success', 'profile.imageUploaded', 'uploadProfileImage');
+          this.showToast('success', 'profile.success', 'profile.imageUploadedSuccess', 'uploadProfileImage');
         } else {
-          this.showToast('error', 'profile.error', response.message || 'profile.imageUploadError', 'uploadProfileImage');
+          this.showToast('error', 'profile.error', response.message || 'profile.imageUploadFailed', 'uploadProfileImage');
         }
         this.isUploading = false;
       },
@@ -653,6 +713,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   changeImage(): void {
     this.showUploadField = !this.showUploadField;
+    this.showToast('info', 'profile.info', this.showUploadField ? 'profile.changeImageOpened' : 'profile.changeImageClosed', 'changeImage');
   }
 
   onSubmitLecture(): void {
@@ -706,7 +767,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     const lectureDate = new Date(date).toISOString();
-    const durationInHours = duration / 60; // Convert minutes to hours
+    const durationInHours = duration / 60;
 
     this.isUploadingLecture = true;
     this.lectureService.uploadLecture(studentEmail, subject, link, name, lectureDate, durationInHours).subscribe({
@@ -718,9 +779,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
             this.lectureForm.get(key)?.markAsUntouched();
           });
           this.loadProfile();
-          this.showToast('success', 'profile.success', 'profile.lectureUploaded', 'uploadLecture');
+          this.showToast('success', 'profile.success', 'profile.lectureUploadedSuccess', 'uploadLecture');
         } else {
-          this.showToast('error', 'profile.error', response.message || 'profile.lectureUploadError', 'uploadLecture');
+          this.showToast('error', 'profile.error', response.message || 'profile.lectureUploadFailed', 'uploadLecture');
         }
         this.isUploadingLecture = false;
       },
@@ -755,9 +816,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
             this.pdfRequestForm.get(key)?.markAsUntouched();
           });
           this.selectedPdfFile = null;
-          this.showToast('success', 'profile.success', 'profile.pdfRequestSubmitted', 'uploadPdfRequest');
+          this.showToast('success', 'profile.success', 'profile.pdfRequestSubmittedSuccess', 'uploadPdfRequest');
         } else {
-          this.showToast('error', 'profile.error', response.message || 'profile.pdfRequestError', 'uploadPdfRequest');
+          this.showToast('error', 'profile.error', response.message || 'profile.pdfRequestFailed', 'uploadPdfRequest');
         }
         this.isUploadingPdfRequest = false;
       },
@@ -786,7 +847,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   changePassword(): void {
     if (!this.currentPassword || !this.newPassword) {
       this.errorCode = 'missing_fields';
-      this.showToast('error', 'profile.error', 'profile.password_fields_required', 'changePassword');
+      this.showToast('error', 'profile.error', 'profile.missing_fields', 'changePassword');
       return;
     }
     if (this.currentPassword === this.newPassword) {
@@ -803,7 +864,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.profileService.updatePassword(this.currentPassword, this.newPassword).subscribe({
       next: (response: UpdatePasswordResponse) => {
         if (response.success) {
-          this.showToast('success', 'profile.success', 'profile.passwordChanged', 'changePassword');
+          this.showToast('success', 'profile.success', 'profile.passwordChangedSuccess', 'changePassword');
           this.closePasswordModal();
         } else {
           this.errorCode = response.message || 'profile.password_change_error';
@@ -825,6 +886,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   navigateToForgotPassword(): void {
     this.closePasswordModal();
     this.router.navigate(['/forgot-password']);
+    this.showToast('info', 'profile.info', 'profile.navigateToForgotPassword', 'navigateToForgotPassword');
   }
 
   setActiveSection(section: string): void {
@@ -858,11 +920,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.profileService.addMeeting(title, date, startTime, endTime).subscribe({
       next: (response: any) => {
         if (response.success) {
-          this.showToast('success', 'profile.success', 'profile.meetingAdded', 'addMeeting');
+          this.showToast('success', 'profile.success', 'profile.meetingAddedSuccess', 'addMeeting');
           this.closeMeetingModal();
           this.loadProfile();
         } else {
-          this.showToast('error', 'profile.error', response.message || 'profile.meetingAddError', 'addMeeting');
+          this.showToast('error', 'profile.error', response.message || 'profile.meetingAddFailed', 'addMeeting');
         }
         this.isAddingMeeting = false;
       },
@@ -884,10 +946,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.profileService.deleteMeeting(meetingId).subscribe({
       next: (response: any) => {
         if (response.success) {
-          this.showToast('success', 'profile.success', 'profile.meetingDeleted', 'deleteMeeting');
+          this.showToast('success', 'profile.success', 'profile.meetingDeletedSuccess', 'deleteMeeting');
           this.loadProfile();
         } else {
-          this.showToast('error', 'profile.error', response.message || 'profile.meetingDeleteError', 'deleteMeeting');
+          this.showToast('error', 'profile.error', response.message || 'profile.meetingDeleteFailed', 'deleteMeeting');
         }
         this.isDeletingMeeting[meetingId] = false;
       },
@@ -903,10 +965,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const meetingId = arg.event.id;
     const meeting = this.profile?.meetings.find(m => m.id === meetingId);
     if (meeting) {
-      this.showToast('info', 'profile.meetingDetails',
-        `${meeting.title}: ${meeting.date} ${meeting.startTime}-${meeting.endTime}`,
-        'handleEventClick'
-      );
+      this.showToast('info', 'profile.meetingDetails', `${meeting.title}: ${meeting.date} ${meeting.startTime}-${meeting.endTime}`, 'handleEventClick');
     }
   }
 

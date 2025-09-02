@@ -261,9 +261,9 @@ export class JoinRequestService {
         message: 'معرف العضو مطلوب'
       }));
     }
-    console.log('Fetching member with ID:', id); // تسجيل الـ ID للتحقق
-    return this.http.get<any>(ApiEndpoints.joinRequests.getMember(id), { headers: this.getAuthHeaders() }).pipe( // غيرت إلى <any> لتجنب افتراضات صارمة
-      tap(response => console.log('Raw getMember response:', response)), // تسجيل الاستجابة الكاملة
+    console.log('Fetching member with ID:', id);
+    return this.http.get<any>(ApiEndpoints.joinRequests.getMember(id), { headers: this.getAuthHeaders() }).pipe(
+      tap(response => console.log('Raw getMember response:', response)),
       map(response => {
         if (response.success && response.member) {
           const member = response.member;
@@ -318,7 +318,6 @@ export class JoinRequestService {
             }
           };
         } else {
-          // معالجة حالة success: false بدون إلقاء خطأ فوري
           return {
             success: false,
             message: response.message || 'العضو غير موجود أو بيانات غير كاملة',
@@ -554,6 +553,49 @@ export class JoinRequestService {
           success: false,
           message: error.error?.message || 'فشل في حذف العضو، تحقق من المعرف أو الاتصال بالخادم',
           error: error.statusText || error.message
+        }));
+      })
+    );
+  }
+
+  deleteLecture(lectureId: string): Observable<JoinRequestResponse> {
+    if (!lectureId || typeof lectureId !== 'string' || lectureId.trim() === '' || !/^[0-9a-fA-F]{24}$/.test(lectureId.trim())) {
+      return throwError(() => ({
+        success: false,
+        message: 'معرف المحاضرة غير صالح: يجب أن يكون معرف MongoDB ObjectId صالحًا'
+      }));
+    }
+
+    return this.http.delete<{ message: string; lectureCount: number; volunteerHours: number }>(
+      ApiEndpoints.lectures.deleteLecture(lectureId),
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      tap(response => console.log('Raw deleteLecture response:', response)),
+      map(response => ({
+        success: true,
+        message: response.message || 'تم حذف المحاضرة بنجاح',
+        data: {
+          lectureCount: response.lectureCount,
+          volunteerHours: response.volunteerHours
+        }
+      })),
+      catchError(error => {
+        console.error('Error deleting lecture:', error);
+        let errorMessage = 'فشل في حذف المحاضرة، تحقق من المعرف أو الاتصال بالخادم';
+        if (error.status === 400) {
+          errorMessage = 'معرف المحاضرة غير صالح';
+        } else if (error.status === 404) {
+          errorMessage = 'المحاضرة غير موجودة';
+        } else if (error.status === 401) {
+          errorMessage = 'غير مصرح - يرجى تسجيل الدخول مرة أخرى';
+        } else if (error.status === 403) {
+          errorMessage = 'ليس لديك صلاحية لحذف المحاضرة';
+        }
+        return throwError(() => ({
+          success: false,
+          message: errorMessage,
+          error: error.statusText || error.message,
+          status: error.status
         }));
       })
     );

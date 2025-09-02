@@ -128,7 +128,7 @@ export class ShowMemberComponent implements OnInit, OnDestroy {
           const messages = response.member.messages || [];
           const activeMessages = messages.filter(msg => new Date(msg.displayUntil) > new Date());
           if (activeMessages.length > 0) {
-            this.activeMessage = activeMessages[0]; // Take the first active message
+            this.activeMessage = activeMessages[0];
           } else {
             this.activeMessage = null;
           }
@@ -303,15 +303,46 @@ export class ShowMemberComponent implements OnInit, OnDestroy {
     return subjects.map(s => `${s.name} (${s.minLectures} محاضرة)`).join(', ');
   }
 
-  deleteLecture(index: number): void {
-    if (!this.member?.lectures) return;
-    this.member.lectures.splice(index, 1);
-    this.checkLectureWarning();
-    this.toasts.push({
-      id: 'success-' + Date.now(),
-      type: 'success',
-      title: 'نجاح',
-      message: 'تم حذف المحاضرة بنجاح'
+  deleteLecture(lectureId: string): void {
+    if (!this.member?.id || !lectureId) {
+      this.toasts.push({
+        id: 'error-' + Date.now(),
+        type: 'error',
+        title: 'خطأ',
+        message: 'معرف المحاضرة أو العضو غير متوفر'
+      });
+      return;
+    }
+
+    if (!confirm('هل أنت متأكد من حذف هذه المحاضرة؟')) {
+      return;
+    }
+
+    this.joinRequestService.deleteLecture(lectureId).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: response => {
+        if (response.success && response.data) {
+          this.member!.lectures = this.member!.lectures.filter(lecture => lecture._id !== lectureId);
+          this.member!.lectureCount = response.data.lectureCount;
+          this.member!.volunteerHours = response.data.volunteerHours;
+          this.checkLectureWarning();
+          this.toasts.push({
+            id: 'success-' + Date.now(),
+            type: 'success',
+            title: 'نجاح',
+            message: response.message
+          });
+        }
+      },
+      error: err => {
+        this.toasts.push({
+          id: 'error-' + Date.now(),
+          type: 'error',
+          title: 'خطأ',
+          message: err.message
+        });
+      }
     });
   }
 
@@ -577,5 +608,9 @@ export class ShowMemberComponent implements OnInit, OnDestroy {
 
   formatDate(date: string | Date): string {
     return new Date(date).toLocaleString('ar-EG');
+  }
+
+  trackByLecture(index: number, lecture: any): string {
+    return lecture._id;
   }
 }

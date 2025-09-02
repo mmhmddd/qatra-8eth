@@ -49,6 +49,12 @@ export const ApiEndpoints = {
       }
       return `${base}/lectures/requests/${requestId.trim()}`;
     },
+    deleteLecture: (lectureId: string) => {
+      if (!lectureId || typeof lectureId !== 'string' || lectureId.trim() === '' || !/^[0-9a-fA-F]{24}$/.test(lectureId.trim())) {
+        throw new Error('Invalid lecture ID: Must be a valid MongoDB ObjectId');
+      }
+      return `${base}/lectures/${lectureId.trim()}`;
+    },
     lowLectureMembers: `${base}/lectures/low-lecture-members`,
     removeLowLectureMember: (memberId: string) => {
       if (!memberId || typeof memberId !== 'string' || memberId.trim() === '' || !/^[0-9a-fA-F]{24}$/.test(memberId.trim())) {

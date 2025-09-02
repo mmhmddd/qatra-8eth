@@ -991,7 +991,7 @@ dl.row {
 
   .modal-footer {
     .btn {
-      
+
       margin-left: 0.5rem;
       margin-right: 0;
     }
@@ -1002,4 +1002,94 @@ dl.row {
       text-align: right ;
     }
   }
+}
+.form-floating {
+  margin-bottom: 0.5rem;
+
+  .form-control {
+    border-radius: 8px;
+    padding: 1rem 0.75rem 0.5rem;
+    font-size: 0.9rem;
+    height: calc(2.5rem + 2px);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Removed background-color transition */
+    background-color: $white !important; /* Enforce white background */
+
+    @media (min-width: 768px) {
+      font-size: 1rem;
+      padding: 1.25rem 1rem 0.75rem;
+      height: calc(3rem + 2px);
+    }
+
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+      background-color: $white !important; /* White on focus */
+    }
+
+    &:not(:placeholder-shown) {
+      background-color: $white !important; /* White when filled */
+    }
+
+    &:valid, &:invalid {
+      background-color: $white !important; /* Override Bootstrap's :valid/:invalid */
+    }
+
+    &.is-invalid {
+      border-color: $danger-color;
+      background-color: $white !important; /* White when invalid */
+    }
+
+    /* Handle browser autofill styles */
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+      background-color: $white !important;
+      -webkit-box-shadow: 0 0 0 1000px $white inset !important;
+      box-shadow: 0 0 0 1000px $white inset !important;
+      -webkit-text-fill-color: $neutral-color !important; /* Ensure text color remains consistent */
+    }
+  }
+
+  label {
+    font-size: 0.9rem;
+    color: $data-color;
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    transition: all 0.2s ease;
+    pointer-events: none;
+    background-color: transparent;
+
+    @media (min-width: 768px) {
+      font-size: 1rem;
+      top: 1rem;
+      left: 1rem;
+    }
+
+    /* Ensure label doesn't affect input background */
+    &:not(:placeholder-shown) ~ label,
+    &:focus ~ label {
+      transform: translateY(-0.5rem) scale(0.75);
+      top: 0.25rem;
+      color: $neutral-color;
+      background-color: transparent;
+      padding: 0 0.25rem;
+    }
+  }
+
+  textarea.form-control {
+    height: 120px;
+    padding-top: 1.5rem;
+
+    @media (min-width: 768px) {
+      height: 150px;
+      padding-top: 1.75rem;
+    }
+  }
+}
+
+.invalid-feedback {
+  font-size: 0.8rem;
+  color: $danger-color;
 }

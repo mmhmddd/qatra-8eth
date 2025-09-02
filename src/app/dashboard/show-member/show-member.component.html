@@ -29,9 +29,7 @@
 
       <!-- No Member Found -->
       <div *ngIf="!member && !isLoading" class="alert alert-warning text-center">
-        العضو غير موجود /
-
-System: أو حدث خطأ.
+        العضو غير موجود أو حدث خطأ.
       </div>
 
       <!-- Member Details Card -->
@@ -214,7 +212,7 @@ System: أو حدث خطأ.
               </div>
               <div class="col-md-12">
                 <div class="mb-3">
-                  <label for="studentSubjects" the="form-label">المواد (مفصولة بفواصل)</label>
+                  <label for="studentSubjects" class="form-label">المواد (مفصولة بفواصل)</label>
                   <input type="text" class="form-control" id="studentSubjects" [(ngModel)]="newStudent.subjectsString" name="subjectsString" (ngModelChange)="updateNewStudentSubjects($event)" placeholder="أدخل المواد مفصولة بفواصل (مثال: رياضيات, علوم)" dir="rtl">
                   <div *ngIf="studentErrors.subjects" class="invalid-feedback">{{ studentErrors.subjects }}</div>
                 </div>
@@ -289,7 +287,7 @@ System: أو حدث خطأ.
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let lecture of member.lectures; let i = index">
+                <tr *ngFor="let lecture of member.lectures; let i = index; trackBy: trackByLecture">
                   <td>{{ lecture.name || 'غير محدد' }}</td>
                   <td>{{ lecture.studentEmail || 'غير محدد' }}</td>
                   <td>{{ lecture.subject || 'غير محدد' }}</td>
@@ -300,7 +298,7 @@ System: أو حدث خطأ.
                     <span *ngIf="!lecture.link">غير متوفر</span>
                   </td>
                   <td>
-                    <button class="btn btn-danger btn-sm" (click)="deleteLecture(i)">حذف</button>
+                    <button class="btn btn-danger btn-sm" (click)="deleteLecture(lecture._id)">حذف</button>
                   </td>
                 </tr>
               </tbody>

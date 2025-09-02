@@ -1,7 +1,7 @@
 $primary-color: #00adb5;
 $secondary-color: #0097b2;
 $accent-color: #ff914d;
-$success-color: #28a745;
+$success-color: #22c55e; // Used for buttons, toasts use specific colors
 $danger-color: #dc3545;
 $neutral-color: #495057;
 $background-color: #f4f6f9;
@@ -33,53 +33,107 @@ $info-color: #17a2b8;
 
 .toast-container {
   max-width: 400px;
+  z-index: 1050;
 }
 
 .toast {
-  min-width: 300px;
   border-radius: 8px;
-  background-color: $white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  animation: slideIn 0.5s ease-out, fadeOut 0.5s ease-out 3.5s forwards;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 300px;
   transition: transform 0.2s ease;
 
-  &.bg-success {
-    border-left: 5px solid $success-color;
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &.toast-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+
     .toast-header {
-      background-color: lighten($success-color, 40%);
-      color: darken($success-color, 10%);
+      background-color: #d4edda;
+      border-bottom: 1px solid #c3e6cb;
+      color: #155724;
     }
+
     .toast-body {
-      color: darken($success-color, 10%);
+      color: #155724;
     }
   }
 
-  &.bg-danger {
-    border-left: 5px solid $danger-color;
+  &.toast-error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+
     .toast-header {
-      background-color: lighten($danger-color, 40%);
-      color: darken($danger-color, 10%);
+      background-color: #f8d7da;
+      border-bottom: 1px solid #f5c6cb;
+      color: #721c24;
     }
+
     .toast-body {
-      color: darken($danger-color, 10%);
+      color: #721c24;
+    }
+  }
+
+  &.toast-info {
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+
+    .toast-header {
+      background-color: #d1ecf1;
+      border-bottom: 1px solid #bee5eb;
+      color: #0c5460;
+    }
+
+    .toast-body {
+      color: #0c5460;
     }
   }
 
   .toast-header {
     border-bottom: 1px solid $border-color;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
     font-weight: 600;
-    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+
+    .me-auto {
+      margin-right: auto;
+      margin-left: 0;
+    }
+
+    @media (min-width: 768px) {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+    }
   }
 
   .toast-body {
-    padding: 1rem;
-    font-size: 0.95rem;
+    padding: 0.75rem;
+    font-size: 0.85rem;
+
+    @media (min-width: 768px) {
+      font-size: 0.9rem;
+    }
   }
 
   .btn-close {
     opacity: 0.8;
+    padding: 0.5rem;
+    background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23155724'%3E%3Cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707A1 1 0 01.293.293z'/%3E%3C/svg%3E") center/1em auto no-repeat;
+
     &:hover {
       opacity: 1;
+    }
+
+    @media (min-width: 768px) {
+      padding: 0.75rem;
     }
   }
 }
@@ -130,6 +184,7 @@ $info-color: #17a2b8;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   border: none;
   margin-bottom: 1.5rem;
+  transition: box-shadow 0.2s ease;
 
   .card-header {
     background: $primary-color;
@@ -142,12 +197,60 @@ $info-color: #17a2b8;
       font-weight: 500;
       font-size: 1.25rem;
       text-align: center;
+      color: $white;
     }
   }
 
   .card-body {
     padding: 1.5rem;
     text-align: center;
+  }
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.lecture-card {
+  background: $white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid $border-color;
+  margin-bottom: 2rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, $secondary-color, darken($secondary-color, 10%));
+    padding: 1.25rem;
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h4 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: $white;
+      margin: 0;
+    }
+
+    .badge {
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      background-color: $info-color;
+      color: $white;
+    }
+  }
+
+  .card-body {
+    padding: 2rem;
   }
 }
 
@@ -329,25 +432,105 @@ dl.row {
       text-decoration: underline;
     }
   }
+}
+
+.lecture-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  &.table-striped {
+    tbody tr:nth-child(odd) {
+      background-color: lighten($background-color, 2%);
+    }
+    tbody tr:nth-child(even) {
+      background-color: $white;
+    }
+  }
+
+  &.table-hover {
+    tbody tr:hover {
+      background-color: rgba($primary-color, 0.1);
+      transition: background-color 0.2s ease;
+    }
+  }
+
+  th {
+    background: linear-gradient(180deg, $background-color, darken($background-color, 5%));
+    font-weight: 600;
+    color: $neutral-color;
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 2px solid $border-color;
+    font-size: 1rem;
+  }
+
+  td {
+    padding: 1rem;
+    text-align: center;
+    color: $neutral-color;
+    border-bottom: 1px solid $border-color;
+    vertical-align: middle;
+    font-size: 0.95rem;
+  }
 
   .lecture-link {
-    max-width: 200px;
+    max-width: 250px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    display: block;
 
     a {
-      display: inline-block;
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      color: $primary-color;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+
+      i {
+        font-size: 0.9rem;
+        color: $accent-color;
+        margin-left: 0.5rem;
+      }
+
+      &:hover {
+        color: darken($primary-color, 10%);
+        text-decoration: underline;
+      }
+    }
+
+    span {
+      color: #6c757d;
+      font-style: italic;
     }
   }
 
   .action-column {
-    min-width: 100px;
+    min-width: 120px;
+
+    .btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      background-color: $danger-color;
+      color: $white;
+
+      i {
+        font-size: 0.9rem;
+        margin-left: 0.5rem;
+      }
+
+      &:hover {
+        background-color: darken($danger-color, 10%);
+        transform: translateY(-1px);
+      }
+    }
   }
 }
 
@@ -356,7 +539,11 @@ dl.row {
   overflow-x: auto;
 
   .table {
-    min-width: 800px; // Ensure table doesn't collapse too much on smaller screens
+    min-width: 800px;
+  }
+
+  .lecture-table {
+    min-width: 600px;
   }
 }
 
@@ -402,22 +589,6 @@ dl.row {
   margin-left: 0.75rem;
 }
 
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
@@ -428,12 +599,59 @@ dl.row {
     padding: 1rem;
   }
 
+  .toast-container {
+    max-width: 90%;
+    padding: 0.75rem;
+  }
+
+  .toast {
+    min-width: 100%;
+    border-radius: 8px;
+
+    .toast-header {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    .toast-body {
+      padding: 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    .btn-close {
+      padding: 0.5rem;
+    }
+  }
+
   .card {
     margin-bottom: 1rem;
 
     .card-body {
       padding: 1rem;
       text-align: center;
+    }
+  }
+
+  .lecture-card {
+    margin-bottom: 1.5rem;
+
+    .card-header {
+      padding: 1rem;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      h4 {
+        font-size: 1.25rem;
+      }
+
+      .badge {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
+
+    .card-body {
+      padding: 1.5rem;
     }
   }
 
@@ -454,6 +672,31 @@ dl.row {
     }
   }
 
+  .lecture-table {
+    font-size: 0.9rem;
+
+    th, td {
+      padding: 0.75rem;
+    }
+
+    .lecture-link {
+      max-width: 150px;
+
+      a {
+        font-size: 0.85rem;
+      }
+    }
+
+    .action-column {
+      min-width: 100px;
+
+      .btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+    }
+  }
+
   .btn {
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
@@ -462,8 +705,27 @@ dl.row {
   .form-control, textarea.form-control {
     text-align: center;
   }
+}
 
-  .toast-container {
-    max-width: 90%;
+@media (max-width: 576px) {
+  .lecture-table {
+    font-size: 0.85rem;
+
+    th, td {
+      padding: 0.5rem;
+    }
+
+    .lecture-link {
+      max-width: 120px;
+    }
+
+    .action-column {
+      min-width: 80px;
+
+      .btn {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+      }
+    }
   }
 }
