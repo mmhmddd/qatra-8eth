@@ -46,7 +46,7 @@ export class ImageSectionComponent implements OnInit {
     if (currentUrl === '/gallery') {
       this.viewportScroller.scrollToAnchor('gallery');
     } else {
-      this.router.navigate(['/gallery'], { fragment: 'gallerysection' });
+      this.router.navigate(['/last-news'], { fragment: 'gallerysection' });
     }
   }
 }
