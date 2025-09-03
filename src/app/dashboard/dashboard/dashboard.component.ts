@@ -14,9 +14,10 @@ import * as XLSX from 'xlsx';
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule, RouterModule, SidebarComponent],
-  templateUrl: './dashboard.Component.html',
+  templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
+
 export class DashboardComponent implements OnInit {
   isSidebarCollapsed = false;
   activeNavIndex = 0;
