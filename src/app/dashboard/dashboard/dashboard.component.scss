@@ -291,6 +291,11 @@ $red-color: #D32F2F;
       .card-body i { color: #0033ff; }
       .card-title, .card-text { color: $dark-color; }
     }
+    &.card-request-drive {
+  background: linear-gradient(135deg, #ffffff 0%, #00c853 100%);
+      .card-body i { color: #ff00e1; }
+      .card-title, .card-text { color: $dark-color; }
+    }
 
     &:hover {
       transform: translateY(-8px);

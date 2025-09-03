@@ -4,7 +4,6 @@
   <div class="content">
     <h2>إدارة طلبات المحاضرات</h2>
 
-    <!-- Alert Container -->
     <div class="alert-container">
       <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="fas fa-check-circle me-2"></i>
@@ -18,10 +17,8 @@
       </div>
     </div>
 
-    <!-- Loading Indicator -->
     <div *ngIf="loading" class="loading">جارٍ تحميل طلبات المحاضرات...</div>
 
-    <!-- Requests List -->
     <div class="requests-list">
       <h3>طلبات المحاضرات المعلقة</h3>
       <div *ngIf="!loading && pendingRequests.length === 0" class="no-requests">
@@ -42,53 +39,59 @@
           <p><strong>الموضوع:</strong> {{ request.subject }}</p>
           <p><strong>الرابط:</strong> <a [href]="request.link" target="_blank" rel="noopener noreferrer">{{ request.link }}</a></p>
           <p><strong>الاسم:</strong> {{ request.name }}</p>
-          <p><strong>تاريخ المحاضرة:</strong> {{ request.lectureDate | date: 'medium' }}</p>
-          <p><strong>المدة (بالدقائق):</strong> {{ request.duration }}</p>
+          <p><strong>تاريخ المحاضرة:</strong> {{ request.lectureDate | date: 'HH:mm' }}</p>
+          <p><strong>المدة (بالدقائق):</strong> {{ (request.duration * 60) | number: '1.0-0' }}</p>
           <p><strong>تاريخ الإنشاء:</strong> {{ request.createdAt | date: 'medium' }}</p>
           <p><strong>الحالة:</strong> {{ request.status }}</p>
           <p><strong>اسم المستخدم:</strong> {{ request.user?.name || 'غير متوفر' }}</p>
           <p><strong>البريد الإلكتروني للمستخدم:</strong> {{ request.user?.email || 'غير متوفر' }}</p>
           <div class="actions">
-            <button class="btn btn-accept" (click)="openAcceptModal(request._id)">قبول</button>
-            <button class="btn btn-reject" (click)="openRejectModal(request._id)">رفض</button>
+            <button class="btn btn-accept" (click)="openAcceptModal(request._id)" [disabled]="actionLoading[request._id]">قبول</button>
+            <button class="btn btn-reject" (click)="openRejectModal(request._id)" [disabled]="actionLoading[request._id]">رفض</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Accept Modal -->
     <div class="modal" *ngIf="showAcceptModal">
       <div class="modal-content">
         <h3>قبول طلب المحاضرة</h3>
-        <form (ngSubmit)="acceptRequest()" class="accept-form">
+        <div *ngIf="modalLoading" class="modal-loading">
+          <i class="fas fa-spinner fa-spin"></i> جارٍ معالجة الطلب...
+        </div>
+        <form (ngSubmit)="acceptRequest()" class="accept-form" [ngClass]="{'disabled': modalLoading}">
           <textarea
             [(ngModel)]="acceptNote"
             name="acceptNote"
             placeholder="أدخل ملاحظة القبول (اختياري)"
             class="form-control"
+            [disabled]="modalLoading"
           ></textarea>
           <div class="modal-actions">
-            <button type="submit" class="btn btn-accept">قبول</button>
-            <button type="button" class="btn btn-secondary" (click)="closeAcceptModal()">إلغاء</button>
+            <button type="submit" class="btn btn-accept" [disabled]="modalLoading">قبول</button>
+            <button type="button" class="btn btn-secondary" (click)="closeAcceptModal()" [disabled]="modalLoading">إلغاء</button>
           </div>
         </form>
       </div>
     </div>
 
-    <!-- Reject Modal -->
     <div class="modal" *ngIf="showRejectModal">
       <div class="modal-content">
         <h3>رفض طلب المحاضرة</h3>
-        <form (ngSubmit)="rejectRequest()" class="reject-form">
+        <div *ngIf="modalLoading" class="modal-loading">
+          <i class="fas fa-spinner fa-spin"></i> جارٍ معالجة الطلب...
+        </div>
+        <form (ngSubmit)="rejectRequest()" class="reject-form" [ngClass]="{'disabled': modalLoading}">
           <textarea
             [(ngModel)]="rejectNote"
             name="rejectNote"
             placeholder="أدخل ملاحظة الرفض (اختياري)"
             class="form-control"
+            [disabled]="modalLoading"
           ></textarea>
           <div class="modal-actions">
-            <button type="submit" class="btn btn-reject">رفض</button>
-            <button type="button" class="btn btn-secondary" (click)="closeRejectModal()">إلغاء</button>
+            <button type="submit" class="btn btn-reject" [disabled]="modalLoading">رفض</button>
+            <button type="button" class="btn btn-secondary" (click)="closeRejectModal()" [disabled]="modalLoading">إلغاء</button>
           </div>
         </form>
       </div>

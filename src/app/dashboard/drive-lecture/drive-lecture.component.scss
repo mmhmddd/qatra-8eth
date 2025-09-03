@@ -8,7 +8,7 @@ $white: #ffffff;
 $black: #212121;
 $success-color: #4caf50; // Green for success
 $error-color: #d32f2f; // Red for error
-$border-color : #e0e0e0;
+$border-color: #e0e0e0;
 $font-family-arabic: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 $font-size-base: 16px;
 $font-size-sm: 14px;
@@ -47,6 +47,12 @@ $box-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
   to {
     max-height: 0;
     opacity: 0;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -249,6 +255,12 @@ h2 {
         background: linear-gradient(135deg, darken($success-color, 10%) 0%, darken($success-color, 20%) 100%);
         transform: translateY(-1px);
       }
+
+      &[disabled] {
+        background: lighten($success-color, 20%);
+        cursor: not-allowed;
+        transform: none;
+      }
     }
 
     &.btn-reject {
@@ -257,6 +269,12 @@ h2 {
       &:hover {
         background: linear-gradient(135deg, darken($error-color, 10%) 0%, darken($error-color, 20%) 100%);
         transform: translateY(-1px);
+      }
+
+      &[disabled] {
+        background: lighten($error-color, 20%);
+        cursor: not-allowed;
+        transform: none;
       }
     }
   }
@@ -292,11 +310,34 @@ h2 {
       margin-bottom: $spacer * 1.5;
     }
 
+    .modal-loading {
+      text-align: center;
+      padding: $spacer;
+      font-size: $font-size-base;
+      color: $neutral-color;
+      background-color: $white;
+      border-radius: $border-radius;
+      margin-bottom: $spacer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+
+      i.fa-spinner {
+        animation: spin 1s linear infinite;
+      }
+    }
+
     .accept-form,
     .reject-form {
       display: flex;
       flex-direction: column;
       gap: $spacer;
+
+      &.disabled {
+        opacity: 0.6;
+        pointer-events: none;
+      }
 
       .form-control {
         border: 2px solid $border-color;
@@ -312,6 +353,11 @@ h2 {
           border-color: $primary-color;
           box-shadow: 0 0 0 0.2rem rgba($primary-color, 0.25);
           outline: none;
+        }
+
+        &[disabled] {
+          background-color: $light-gray;
+          cursor: not-allowed;
         }
       }
     }
@@ -336,6 +382,12 @@ h2 {
             background: linear-gradient(135deg, darken($success-color, 10%) 0%, darken($success-color, 20%) 100%);
             transform: translateY(-1px);
           }
+
+          &[disabled] {
+            background: lighten($success-color, 20%);
+            cursor: not-allowed;
+            transform: none;
+          }
         }
 
         &.btn-reject {
@@ -347,6 +399,12 @@ h2 {
             background: linear-gradient(135deg, darken($error-color, 10%) 0%, darken($error-color, 20%) 100%);
             transform: translateY(-1px);
           }
+
+          &[disabled] {
+            background: lighten($error-color, 20%);
+            cursor: not-allowed;
+            transform: none;
+          }
         }
 
         &.btn-secondary {
@@ -357,6 +415,12 @@ h2 {
           &:hover {
             background: linear-gradient(135deg, darken($neutral-color, 10%) 0%, darken($neutral-color, 20%) 100%);
             transform: translateY(-1px);
+          }
+
+          &[disabled] {
+            background: lighten($neutral-color, 20%);
+            cursor: not-allowed;
+            transform: none;
           }
         }
       }
