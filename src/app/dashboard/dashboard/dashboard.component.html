@@ -1,7 +1,6 @@
 <div class="dashboard-wrapper">
-  <app-sidebar></app-sidebar>
+  <app-sidebar class="sidebar"></app-sidebar>
 
-  <!-- Main Content -->
   <main class="main-content">
     <header class="dashboard-header">
       <h1>لوحة التحكم</h1>
@@ -23,6 +22,7 @@
         </div>
       </div>
     </header>
+
     <div class="counters-container">
       <div class="counters">
         <span class="counter">
@@ -33,99 +33,84 @@
           <i class="fas fa-file-alt me-2"></i>
           عدد الطلبات: {{ joinRequestsCount }}
         </span>
-        <button class="btn btn-primary ms-3" (click)="exportToExcel()">تصدير الأعضاء إلى Excel</button>
-        <button class="btn btn-primary ms-3" (click)="exportStudentsToExcel()">تصدير تفاصيل الطلاب إلى Excel</button>
+        <button class="btn btn-primary" (click)="exportToExcel()">تصدير الأعضاء إلى Excel</button>
+        <button class="btn btn-primary" (click)="exportStudentsToExcel()">تصدير تفاصيل الطلاب إلى Excel</button>
       </div>
     </div>
+
     <section class="content-area">
-      <!-- Error Message -->
       <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
         {{ error }}
         <button type="button" class="btn-close" (click)="error = null"></button>
       </div>
 
-      <!-- Dashboard Cards -->
-      <div class="row g-4">
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <div class="card shadow-sm dashboard-card card-members" (click)="navigateTo('/all-members')">
-            <div class="card-body text-center">
-              <i class="fas fa-users fa-3x mb-3"></i>
-              <h5 class="card-title">عرض جميع الأعضاء</h5>
-              <p class="card-text">عرض قائمة الأعضاء المعتمدين</p>
-            </div>
+      <div class="dashboard-section">
+        <h2 class="section-header">إدارة الأعضاء والطلبات</h2>
+        <div class="dashboard-grid">
+          <div class="dashboard-tile tile-members" (click)="navigateTo('/all-members')">
+            <i class="fas fa-users"></i>
+            <h3 class="tile-title">عرض جميع الأعضاء</h3>
+            <p class="tile-text">عرض قائمة الأعضاء المعتمدين</p>
+          </div>
+          <div class="dashboard-tile tile-requests" (click)="navigateTo('/all-join-request')">
+            <i class="fas fa-file-alt"></i>
+            <h3 class="tile-title">عرض جميع الطلبات</h3>
+            <p class="tile-text">عرض طلبات الانضمام</p>
+          </div>
+          <div class="dashboard-tile tile-low-lecture" (click)="navigateTo('/low-lecture-members')">
+            <i class="fas fa-user-times"></i>
+            <h3 class="tile-title">الأعضاء المقصرون</h3>
+            <p class="tile-text">عرض قائمة الأعضاء المقصرين</p>
           </div>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <div class="card shadow-sm dashboard-card card-requests" (click)="navigateTo('/all-join-request')">
-            <div class="card-body text-center">
-              <i class="fas fa-file-alt fa-3x mb-3"></i>
-              <h5 class="card-title">عرض جميع الطلبات</h5>
-              <p class="card-text">عرض طلبات الانضمام</p>
-            </div>
+      </div>
+
+      <div class="dashboard-section">
+        <h2 class="section-header">إدارة المحتوى</h2>
+        <div class="dashboard-grid">
+          <div class="dashboard-tile tile-book" (click)="navigateTo('/upload-pdf')">
+            <i class="fas fa-book"></i>
+            <h3 class="tile-title">إضافة كتاب</h3>
+            <p class="tile-text">إضافة كتاب جديد إلى النظام</p>
+          </div>
+          <div class="dashboard-tile tile-opinion" (click)="navigateTo('/add-testimonials')">
+            <i class="fas fa-comment-dots"></i>
+            <h3 class="tile-title">إضافة رأي</h3>
+            <p class="tile-text">إضافة رأي عميل</p>
+          </div>
+          <div class="dashboard-tile tile-gallery" (click)="navigateTo('/add-gallery')">
+            <i class="fas fa-image"></i>
+            <h3 class="tile-title">إضافة صورة</h3>
+            <p class="tile-text">إضافة صورة في معرض الصور</p>
+          </div>
+
+            <div class="dashboard-tile tile-join-message" (click)="navigateTo('/join-massege')">
+            <i class="fas fa-file-alt"></i>
+            <h3 class="tile-title">رسالة صفحة الانضمام</h3>
+            <p class="tile-text">عرض رسالة صفحة الانضمام</p>
           </div>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <div class="card shadow-sm dashboard-card card-book" (click)="navigateTo('/upload-pdf')">
-            <div class="card-body text-center">
-              <i class="fas fa-book fa-3x mb-3"></i>
-              <h5 class="card-title">إضافة كتاب</h5>
-              <p class="card-text">إضافة كتاب جديد إلى النظام</p>
-            </div>
+      </div>
+
+      <div class="dashboard-section">
+        <h2 class="section-header">إدارة المحاضرات والمتصدرين</h2>
+        <div class="dashboard-grid">
+          <div class="dashboard-tile tile-leaderboard" (click)="navigateTo('/add-leaderboards')">
+            <i class="fas fa-trophy"></i>
+            <h3 class="tile-title">إضافة متصدر</h3>
+            <p class="tile-text">إضافة متصدر جديد</p>
           </div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <div class="card shadow-sm dashboard-card card-opinion" (click)="navigateTo('/add-testimonials')">
-            <div class="card-body text-center">
-              <i class="fas fa-comment-dots fa-3x mb-3"></i>
-              <h5 class="card-title">إضافة رأي</h5>
-              <p class="card-text">إضافة رأي عميل</p>
-            </div>
+          <div class="dashboard-tile tile-request-pdf" (click)="navigateTo('/lectures-request')">
+            <i class="fas fa-file-alt"></i>
+            <h3 class="tile-title">طلبات PDF المحاضرات</h3>
+            <p class="tile-text">عرض قائمة طلبات رفع المحاضرات</p>
           </div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <div class="card shadow-sm dashboard-card card-leaderboard" (click)="navigateTo('/add-leaderboards')">
-            <div class="card-body text-center">
-              <i class="fas fa-trophy fa-3x mb-3"></i>
-              <h5 class="card-title">إضافة متصدر</h5>
-              <p class="card-text">إضافة متصدر جديد</p>
-            </div>
+          <div class="dashboard-tile tile-request-drive" (click)="navigateTo('/drive-lecture')">
+            <i class="fas fa-file-alt"></i>
+            <h3 class="tile-title">طلبات محاضرات الـ Drive</h3>
+            <p class="tile-text">عرض قائمة طلبات رفع المحاضرات</p>
           </div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <div class="card shadow-sm dashboard-card card-gallery" (click)="navigateTo('/add-gallery')">
-            <div class="card-body text-center">
-              <i class="fas fa-image fa-3x mb-3"></i>
-              <h5 class="card-title">إضافة صورة</h5>
-              <p class="card-text">إضافة صورة في معرض الصور</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <div class="card shadow-sm dashboard-card card-low-lecture-members" (click)="navigateTo('/low-lecture-members')">
-            <div class="card-body text-center">
-              <i class="fas fa-user-times fa-3x mb-3"></i>
-              <h5 class="card-title">الأعضاء المقصرون</h5>
-              <p class="card-text">عرض قائمة الأعضاء المقصرين</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <div class="card shadow-sm dashboard-card card-request-pdf" (click)="navigateTo('/lectures-request')">
-            <div class="card-body text-center">
-              <i class="fas fa-file-alt fa-3x mb-3"></i>
-              <h5 class="card-title">طلبات pdf المحاضرات</h5>
-              <p class="card-text">عرض قائمة طلبات رفع المحاضرات</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <div class="card shadow-sm dashboard-card card-request-drive" (click)="navigateTo('/drive-lecture')">
-            <div class="card-body text-center">
-              <i class="fas fa-file-alt fa-3x mb-3"></i>
-              <h5 class="card-title">طلبات محاضرات ال drive</h5>
-              <p class="card-text">عرض قائمة طلبات رفع المحاضرات</p>
-            </div>
-          </div>
+
         </div>
       </div>
 

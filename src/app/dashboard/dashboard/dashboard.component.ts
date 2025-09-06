@@ -163,14 +163,12 @@ export class DashboardComponent implements OnInit {
             Address: string;
             Status: string;
             VolunteerHours: string;
-            NumberOfStudents: string;
             StudentCount: string;
             StudentDetails: string;
             Subjects: string;
             SubjectsCount: string;
             LectureCount: string;
             CreatedAt: string;
-            ProfileImage: string;
             MemberID: string;
             MemberName: string;
             MemberStatus: string;
@@ -208,14 +206,12 @@ export class DashboardComponent implements OnInit {
             Address: 'F5F5DC',
             Status: 'FFDAB9',
             VolunteerHours: 'E0FFFF',
-            NumberOfStudents: 'F0E68C',
             StudentCount: '98FB98',
             StudentDetails: 'F5DEB3',
             Subjects: 'B0C4DE',
             SubjectsCount: 'FFB6C1',
             LectureCount: 'AFEEEE',
             CreatedAt: 'E8E8E8',
-            ProfileImage: 'F0F8FF',
             MemberID: 'ADD8E6',
             MemberName: 'D3D3D3',
             MemberStatus: 'FFE4E1',
@@ -253,16 +249,14 @@ export class DashboardComponent implements OnInit {
             Address: member.address || '',
             Status: member.status || '',
             VolunteerHours: member.volunteerHours || 0,
-            NumberOfStudents: member.numberOfStudents || 0,
             StudentCount: member.students?.length || 0,
             StudentDetails: member.students?.map(student =>
-              `Name: ${student.name || ''}, Email: ${student.email || ''}, Phone: ${student.phone || ''}, Grade: ${student.grade || 'غير محدد'}, Subjects: ${student.subjects?.map(sub => `${sub.name || 'غير محدد'} (Min Lectures: ${sub.minLectures ?? 0})`).join('; ') || 'لا توجد مواد'}`
+              `Name: ${student.name || ''}, Email: ${student.email || ''}`
             ).join('\n') || '',
             Subjects: member.subjects?.join(', ') || '',
             SubjectsCount: member.subjectsCount || 0,
             LectureCount: member.lectureCount || 0,
             CreatedAt: member.createdAt || '',
-            ProfileImage: member.profileImage || '',
           }));
 
           const studentData: any[] = [];
