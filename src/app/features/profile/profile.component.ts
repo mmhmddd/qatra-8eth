@@ -79,6 +79,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private submitSubject = new Subject<void>();
   private destroy$ = new Subject<void>();
   private isInitialLoad = true;
+  filteredSubjectKeys: string[] = [];
 
   calendarOptions: CalendarOptions = {
     initialView: 'dayGridMonth',
@@ -178,7 +179,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   };
 
   semesters = ['الفصل الأول', 'الفصل الثاني'];
-  countries = ['الأردن', 'فلسطين'];
+  countries = ['الأردن', 'فلسطين','كل الدول'];
   academicLevels = [
     'أول',
     'ثاني',
@@ -245,6 +246,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.uploadLecture();
     });
     this.isInitialLoad = false;
+
+    // Listen for changes in studentEmail to filter subjects
+    this.lectureForm.get('studentEmail')?.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(email => {
+      console.log('ProfileComponent: studentEmail changed:', email);
+      this.updateFilteredSubjects(email);
+    });
   }
 
   ngOnDestroy(): void {
@@ -274,7 +283,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   subjectValidator(control: AbstractControl): { [key: string]: any } | null {
-    if (!this.subjectKeys.includes(control.value)) {
+    if (!this.filteredSubjectKeys.includes(control.value)) {
       return { invalidSubject: true };
     }
     return null;
@@ -314,6 +323,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
   getTranslatedSubjects(): string[] {
     const currentLang = this.translationService.getCurrentLanguage();
     return this.subjectsTranslations[currentLang as keyof typeof this.subjectsTranslations] || this.subjectsTranslations.en;
+  }
+
+  getTranslatedSubject(subjectKey: string): string {
+    const currentLang = this.translationService.getCurrentLanguage();
+    const translations = this.subjectsTranslations[currentLang as keyof typeof this.subjectsTranslations] || this.subjectsTranslations.en;
+    const index = this.subjectKeys.indexOf(subjectKey);
+    return index !== -1 ? translations[index] : subjectKey;
   }
 
   getTranslatedSemesters(): string[] {
@@ -365,14 +381,30 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }).join(', ');
   }
 
+  private updateFilteredSubjects(studentEmail: string): void {
+    console.log('ProfileComponent: Updating filtered subjects for email:', studentEmail);
+    const selectedStudent = this.profile?.students.find(student => student.email === studentEmail);
+    if (selectedStudent && selectedStudent.subjects && selectedStudent.subjects.length > 0) {
+      this.filteredSubjectKeys = selectedStudent.subjects.map(subject => subject.name);
+      console.log('ProfileComponent: Filtered subjects:', this.filteredSubjectKeys);
+      const currentSubject = this.lectureForm.get('subject')?.value;
+      if (currentSubject && !this.filteredSubjectKeys.includes(currentSubject)) {
+        console.log('ProfileComponent: Resetting subject as current value is invalid:', currentSubject);
+        this.lectureForm.get('subject')?.setValue('');
+      }
+    } else {
+      this.filteredSubjectKeys = [];
+      this.lectureForm.get('subject')?.setValue('');
+      console.log('ProfileComponent: No subjects found for student or no student selected');
+    }
+  }
+
   private showToast(type: 'success' | 'error' | 'info', titleKey: string, messageKey: string, source: string): void {
-    // Suppress toasts during initial load
     if (this.isInitialLoad) {
       console.log(`ProfileComponent: Suppressing toast during initial load (source: ${source}):`, { type, titleKey, messageKey });
       return;
     }
 
-    // Only show toasts for specified operations
     const allowedSources = [
       'onFileSelected',
       'onPdfFileSelected',
@@ -391,13 +423,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Helper function to resolve nested translation keys in Arabic
     const resolveTranslation = (key: string): string => {
       try {
         const translation = this.translationService.translate(key);
         if (!translation || translation === key) {
           console.warn(`ProfileComponent: Translation missing for key: ${key}`);
-          // Provide Arabic fallback messages based on type and key
           switch (type) {
             case 'success':
               return {
@@ -464,7 +494,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Check for duplicate toasts
     if (this.toasts.some(toast => toast.message === message && toast.source === source && toast.type === type)) {
       console.log(`ProfileComponent: Ignoring duplicate toast (source: ${source}):`, { type, title, message });
       return;
@@ -525,10 +554,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
           } else {
             this.lectureForm.disable();
           }
+          console.log('ProfileComponent: Loaded students:', this.profile.students);
+          this.updateFilteredSubjects(this.lectureForm.get('studentEmail')?.value || '');
           this.loadLowLectureMembers();
           this.updateCalendarEvents();
         } else if (response.message && !this.isInitialLoad) {
-          // Only show error toast if not initial load and there's an error
           this.showToast('error', 'profile.error', response.message === 'no_token' || response.message === 'invalid_headers'
             ? 'profile.unauthorizedError'
             : 'profile.loadError', 'loadProfile');
@@ -745,7 +775,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.isUploadingLecture = false;
       return;
     }
-    if (!this.subjectKeys.includes(subject)) {
+    if (!this.filteredSubjectKeys.includes(subject)) {
       this.showToast('error', 'profile.error', 'profile.invalidSubject', 'uploadLecture');
       this.isUploadingLecture = false;
       return;

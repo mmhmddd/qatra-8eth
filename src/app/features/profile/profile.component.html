@@ -167,192 +167,191 @@
       </div>
 
       <!-- Add Lecture Section -->
-      <div id="add-lecture-section" *ngIf="activeSection === 'add-lecture'" class="card shadow-sm mt-4">
-        <div class="card-header">
-          <h3 class="mb-0">{{ translationService.translate('profile.addLectureTab') || 'إضافة محاضرة' }}</h3>
-        </div>
-        <div class="card-body">
-          <div *ngIf="!profile?.students?.length" class="alert alert-warning mt-3" role="alert">
-            {{ translationService.translate('profile.noStudentsAvailable') || 'لا يوجد طلاب متاحون' }}
+<div id="add-lecture-section" *ngIf="activeSection === 'add-lecture'" class="card shadow-sm mt-4">
+  <div class="card-header">
+    <h3 class="mb-0">{{ translationService.translate('profile.addLectureTab') || 'إضافة محاضرة' }}</h3>
+  </div>
+  <div class="card-body">
+    <div *ngIf="!profile?.students?.length" class="alert alert-warning mt-3" role="alert">
+      {{ translationService.translate('profile.noStudentsAvailable') || 'لا يوجد طلاب متاحون' }}
+    </div>
+    <form [formGroup]="lectureForm" (ngSubmit)="onSubmitLecture()" class="row g-3">
+      <div class="col-md-4 col-sm-6">
+        <div class="form-floating">
+          <select id="lectureStudentEmail"
+                  formControlName="studentEmail"
+                  class="form-control"
+                  [class.is-invalid]="lectureForm.get('studentEmail')?.invalid && lectureForm.get('studentEmail')?.touched"
+                  [attr.aria-label]="translationService.translate('profile.lectureStudentEmail') || 'بريد الطالب الإلكتروني'"
+                  [attr.aria-describedby]="lectureForm.get('studentEmail')?.invalid && lectureForm.get('studentEmail')?.touched ? 'studentEmailError' : null">
+            <option value="" disabled>{{ translationService.translate('profile.selectStudent') || 'اختر الطالب' }}</option>
+            <option *ngFor="let student of profile.students" [value]="student.email">
+              {{ student.email }} ({{ student.name }})
+            </option>
+          </select>
+          <label for="lectureStudentEmail">{{ translationService.translate('profile.lectureStudentEmail') || 'بريد الطالب الإلكتروني' }}</label>
+          <div *ngIf="lectureForm.get('studentEmail')?.invalid && lectureForm.get('studentEmail')?.touched"
+               id="studentEmailError"
+               class="invalid-feedback">
+            <span *ngIf="lectureForm.get('studentEmail')?.errors?.['required']">
+              {{ translationService.translate('profile.validation.studentEmail.required') || 'بريد الطالب مطلوب' }}
+            </span>
+            <span *ngIf="lectureForm.get('studentEmail')?.errors?.['email']">
+              {{ translationService.translate('profile.validation.studentEmail.email') || 'بريد إلكتروني غير صالح' }}
+            </span>
+            <span *ngIf="lectureForm.get('studentEmail')?.errors?.['invalidStudent']">
+              {{ translationService.translate('profile.validation.studentEmail.invalid') || 'الطالب غير صالح' }}
+            </span>
           </div>
-          <form [formGroup]="lectureForm" (ngSubmit)="onSubmitLecture()" class="row g-3">
-            <div class="col-md-4 col-sm-6">
-              <div class="form-floating">
-                <select id="lectureStudentEmail"
-                        formControlName="studentEmail"
-                        class="form-control"
-                        [class.is-invalid]="lectureForm.get('studentEmail')?.invalid && lectureForm.get('studentEmail')?.touched"
-                        [attr.aria-label]="translationService.translate('profile.lectureStudentEmail') || 'بريد الطالب الإلكتروني'"
-                        [attr.aria-describedby]="lectureForm.get('studentEmail')?.invalid && lectureForm.get('studentEmail')?.touched ? 'studentEmailError' : null">
-                  <option value="" disabled>{{ translationService.translate('profile.selectStudent') || 'اختر الطالب' }}</option>
-                  <option *ngFor="let student of profile.students" [value]="student.email">
-                    {{ student.email }} ({{ student.name }})
-                  </option>
-                </select>
-                <label for="lectureStudentEmail">{{ translationService.translate('profile.lectureStudentEmail') || 'بريد الطالب الإلكتروني' }}</label>
-                <div *ngIf="lectureForm.get('studentEmail')?.invalid && lectureForm.get('studentEmail')?.touched"
-                     id="studentEmailError"
-                     class="invalid-feedback">
-                  <span *ngIf="lectureForm.get('studentEmail')?.errors?.['required']">
-                    {{ translationService.translate('profile.validation.studentEmail.required') || 'بريد الطالب مطلوب' }}
-                  </span>
-                  <span *ngIf="lectureForm.get('studentEmail')?.errors?.['email']">
-                    {{ translationService.translate('profile.validation.studentEmail.email') || 'بريد إلكتروني غير صالح' }}
-                  </span>
-                  <span *ngIf="lectureForm.get('studentEmail')?.errors?.['invalidStudent']">
-                    {{ translationService.translate('profile.validation.studentEmail.invalid') || 'الطالب غير صالح' }}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-4 col-sm-6">
-              <div class="form-floating">
-                <select id="lectureSubject"
-                        formControlName="subject"
-                        class="form-control"
-                        [class.is-invalid]="lectureForm.get('subject')?.invalid && lectureForm.get('subject')?.touched"
-                        [attr.aria-label]="translationService.translate('profile.lectureSubject') || 'مادة المحاضرة'"
-                        [attr.aria-describedby]="lectureForm.get('subject')?.invalid && lectureForm.get('subject')?.touched ? 'subjectError' : null">
-                  <option value="" disabled>{{ translationService.translate('profile.selectSubject') || 'اختر المادة' }}</option>
-                  <option *ngFor="let subject of subjectKeys; let i = index" [value]="subject">
-                    {{ getTranslatedSubjects()[i] }}
-                  </option>
-                </select>
-                <label for="lectureSubject">{{ translationService.translate('profile.lectureSubject') || 'مادة المحاضرة' }}</label>
-                <div *ngIf="lectureForm.get('subject')?.invalid && lectureForm.get('subject')?.touched"
-                     id="subjectError"
-                     class="invalid-feedback">
-                  <span *ngIf="lectureForm.get('subject')?.errors?.['required']">
-                    {{ translationService.translate('profile.validation.subject.required') || 'المادة مطلوبة' }}
-                  </span>
-                  <span *ngIf="lectureForm.get('subject')?.errors?.['invalidSubject']">
-                    {{ translationService.translate('profile.validation.subject.invalid') || 'المادة غير صالحة' }}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-4 col-sm-6">
-              <div class="form-floating">
-                <input id="lectureDate"
-                       formControlName="date"
-                       type="datetime-local"
-                       class="form-control"
-                       [class.is-invalid]="lectureForm.get('date')?.invalid && lectureForm.get('date')?.touched"
-                       [attr.aria-label]="translationService.translate('profile.lectureDate') || 'تاريخ المحاضرة'"
-                       [attr.aria-describedby]="lectureForm.get('date')?.invalid && lectureForm.get('date')?.touched ? 'dateError' : null"
-                       [min]="getMinDateTime()"
-                       [max]="getMaxDateTime()" />
-                <label for="lectureDate">{{ translationService.translate('profile.lectureDate') || 'تاريخ ووقت المحاضرة' }}</label>
-                <div *ngIf="lectureForm.get('date')?.invalid && lectureForm.get('date')?.touched"
-                     id="dateError"
-                     class="invalid-feedback">
-                  <span *ngIf="lectureForm.get('date')?.errors?.['required']">
-                    {{ translationService.translate('profile.validation.date.required') || 'التاريخ مطلوب' }}
-                  </span>
-                  <span *ngIf="lectureForm.get('date')?.errors?.['invalidDate']">
-                    {{ translationService.translate('profile.validation.date.invalid') || 'التاريخ غير صالح' }}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-4 col-sm-6">
-              <div class="form-floating">
-                <input id="lectureDuration"
-                       formControlName="duration"
-                       type="number"
-                       class="form-control"
-                       min="1"
-                       max="180"
-                       step="1"
-                       [class.is-invalid]="lectureForm.get('duration')?.invalid && lectureForm.get('duration')?.touched"
-                       [attr.aria-label]="translationService.translate('profile.lectureDuration') || 'مدة المحاضرة'"
-                       [attr.aria-describedby]="lectureForm.get('duration')?.invalid && lectureForm.get('duration')?.touched ? 'durationError' : null"
-                       placeholder="{{ translationService.translate('profile.enterDuration') || 'أدخل المدة بالدقائق' }}" />
-                <label for="lectureDuration">{{ translationService.translate('profile.lectureDuration') || 'مدة المحاضرة (دقائق)' }}</label>
-                <div *ngIf="lectureForm.get('duration')?.invalid && lectureForm.get('duration')?.touched"
-                     id="durationError"
-                     class="invalid-feedback">
-                  <span *ngIf="lectureForm.get('duration')?.errors?.['required']">
-                    {{ translationService.translate('profile.validation.duration.required') || 'المدة مطلوبة' }}
-                  </span>
-                  <span *ngIf="lectureForm.get('duration')?.errors?.['min'] || lectureForm.get('duration')?.errors?.['max']">
-                    {{ translationService.translate('profile.validation.duration.range') || 'المدة يجب أن تكون بين 1 و180 دقيقة' }}
-                  </span>
-                  <span *ngIf="lectureForm.get('duration')?.errors?.['pattern']">
-                    {{ translationService.translate('profile.validation.duration.pattern') || 'المدة يجب أن تكون رقمًا صحيحًا' }}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-4 col-sm-6" style="background-color:white">
-              <div class="form-floating">
-                <input id="lectureLink"
-                       formControlName="link"
-                       type="url"
-                       class="form-control"
-                       [class.is-invalid]="lectureForm.get('link')?.invalid && lectureForm.get('link')?.touched"
-                       [attr.aria-label]="translationService.translate('profile.lectureLink') || 'رابط المحاضرة'"
-                       [attr.aria-describedby]="lectureForm.get('link')?.invalid && lectureForm.get('link')?.touched ? 'linkError' : null"
-                       placeholder="https://example.com" />
-                <label for="lectureLink">{{ translationService.translate('profile.lectureLink') || 'رابط المحاضرة' }}</label>
-                <div *ngIf="lectureForm.get('link')?.invalid && lectureForm.get('link')?.touched"
-                     id="linkError"
-                     class="invalid-feedback">
-                  <span *ngIf="lectureForm.get('link')?.errors?.['required']">
-                    {{ translationService.translate('profile.validation.link.required') || 'الرابط مطلوب' }}
-                  </span>
-                  <span *ngIf="lectureForm.get('link')?.errors?.['pattern']">
-                    {{ translationService.translate('profile.validation.link.pattern') || 'رابط غير صالح' }}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-4 col-sm-6">
-              <div class="form-floating">
-                <input id="lectureName"
-                       formControlName="name"
-                       type="text"
-                       class="form-control"
-                       [class.is-invalid]="lectureForm.get('name')?.invalid && lectureForm.get('name')?.touched"
-                       [attr.aria-label]="translationService.translate('profile.lectureName') || 'اسم المحاضرة'"
-                       [attr.aria-describedby]="lectureForm.get('name')?.invalid && lectureForm.get('name')?.touched ? 'nameError' : null" />
-                <label for="lectureName">{{ translationService.translate('profile.lectureName') || 'اسم المحاضرة' }}</label>
-                <div *ngIf="lectureForm.get('name')?.invalid && lectureForm.get('name')?.touched"
-                     id="nameError"
-                     class="invalid-feedback">
-                  <span *ngIf="lectureForm.get('name')?.errors?.['required']">
-                    {{ translationService.translate('profile.validation.name.required') || 'الاسم مطلوب' }}
-                  </span>
-                  <span *ngIf="lectureForm.get('name')?.errors?.['minlength']">
-                    {{ translationService.translate('profile.validation.name.minlength') || 'الاسم قصير جدًا' }}
-                  </span>
-                  <span *ngIf="lectureForm.get('name')?.errors?.['maxlength']">
-                    {{ translationService.translate('profile.validation.name.maxlength') || 'الاسم طويل جدًا' }}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex justify-content-center mt-3 col-12">
-              <button type="submit"
-                      class="btn btn-success"
-                      [disabled]="isUploadingLecture || lectureForm.invalid || !profile.students?.length"
-                      [attr.aria-label]="translationService.translate('profile.uploadLecture') || 'تحميل المحاضرة'">
-                <span *ngIf="isUploadingLecture" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                {{ isUploadingLecture ?
-                  (translationService.translate('profile.uploadingLecture') || 'جارٍ تحميل المحاضرة') :
-                  (translationService.translate('profile.uploadLecture') || 'تحميل المحاضرة') }}
-              </button>
-            </div>
-          </form>
         </div>
       </div>
 
+      <div class="col-md-4 col-sm-6">
+        <div class="form-floating">
+          <select id="lectureSubject"
+                  formControlName="subject"
+                  class="form-control"
+                  [class.is-invalid]="lectureForm.get('subject')?.invalid && lectureForm.get('subject')?.touched"
+                  [attr.aria-label]="translationService.translate('profile.lectureSubject') || 'مادة المحاضرة'"
+                  [attr.aria-describedby]="lectureForm.get('subject')?.invalid && lectureForm.get('subject')?.touched ? 'subjectError' : null">
+            <option value="" disabled>{{ translationService.translate('profile.selectSubject') || 'اختر المادة' }}</option>
+            <option *ngFor="let subject of filteredSubjectKeys" [value]="subject">
+              {{ getTranslatedSubject(subject) }}
+            </option>
+          </select>
+          <label for="lectureSubject">{{ translationService.translate('profile.lectureSubject') || 'مادة المحاضرة' }}</label>
+          <div *ngIf="lectureForm.get('subject')?.invalid && lectureForm.get('subject')?.touched"
+               id="subjectError"
+               class="invalid-feedback">
+            <span *ngIf="lectureForm.get('subject')?.errors?.['required']">
+              {{ translationService.translate('profile.validation.subject.required') || 'المادة مطلوبة' }}
+            </span>
+            <span *ngIf="lectureForm.get('subject')?.errors?.['invalidSubject']">
+              {{ translationService.translate('profile.validation.subject.invalid') || 'المادة غير صالحة' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 col-sm-6">
+        <div class="form-floating">
+          <input id="lectureDate"
+                 formControlName="date"
+                 type="datetime-local"
+                 class="form-control"
+                 [class.is-invalid]="lectureForm.get('date')?.invalid && lectureForm.get('date')?.touched"
+                 [attr.aria-label]="translationService.translate('profile.lectureDate') || 'تاريخ المحاضرة'"
+                 [attr.aria-describedby]="lectureForm.get('date')?.invalid && lectureForm.get('date')?.touched ? 'dateError' : null"
+                 [min]="getMinDateTime()"
+                 [max]="getMaxDateTime()" />
+          <label for="lectureDate">{{ translationService.translate('profile.lectureDate') || 'تاريخ ووقت المحاضرة' }}</label>
+          <div *ngIf="lectureForm.get('date')?.invalid && lectureForm.get('date')?.touched"
+               id="dateError"
+               class="invalid-feedback">
+            <span *ngIf="lectureForm.get('date')?.errors?.['required']">
+              {{ translationService.translate('profile.validation.date.required') || 'التاريخ مطلوب' }}
+            </span>
+            <span *ngIf="lectureForm.get('date')?.errors?.['invalidDate']">
+              {{ translationService.translate('profile.validation.date.invalid') || 'التاريخ غير صالح' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 col-sm-6">
+        <div class="form-floating">
+          <input id="lectureDuration"
+                 formControlName="duration"
+                 type="number"
+                 class="form-control"
+                 min="1"
+                 max="180"
+                 step="1"
+                 [class.is-invalid]="lectureForm.get('duration')?.invalid && lectureForm.get('duration')?.touched"
+                 [attr.aria-label]="translationService.translate('profile.lectureDuration') || 'مدة المحاضرة'"
+                 [attr.aria-describedby]="lectureForm.get('duration')?.invalid && lectureForm.get('duration')?.touched ? 'durationError' : null"
+                 placeholder="{{ translationService.translate('profile.enterDuration') || 'أدخل المدة بالدقائق' }}" />
+          <label for="lectureDuration">{{ translationService.translate('profile.lectureDuration') || 'مدة المحاضرة (دقائق)' }}</label>
+          <div *ngIf="lectureForm.get('duration')?.invalid && lectureForm.get('duration')?.touched"
+               id="durationError"
+               class="invalid-feedback">
+            <span *ngIf="lectureForm.get('duration')?.errors?.['required']">
+              {{ translationService.translate('profile.validation.duration.required') || 'المدة مطلوبة' }}
+            </span>
+            <span *ngIf="lectureForm.get('duration')?.errors?.['min'] || lectureForm.get('duration')?.errors?.['max']">
+              {{ translationService.translate('profile.validation.duration.range') || 'المدة يجب أن تكون بين 1 و180 دقيقة' }}
+            </span>
+            <span *ngIf="lectureForm.get('duration')?.errors?.['pattern']">
+              {{ translationService.translate('profile.validation.duration.pattern') || 'المدة يجب أن تكون رقمًا صحيحًا' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 col-sm-6" style="background-color:white">
+        <div class="form-floating">
+          <input id="lectureLink"
+                 formControlName="link"
+                 type="url"
+                 class="form-control"
+                 [class.is-invalid]="lectureForm.get('link')?.invalid && lectureForm.get('link')?.touched"
+                 [attr.aria-label]="translationService.translate('profile.lectureLink') || 'رابط المحاضرة'"
+                 [attr.aria-describedby]="lectureForm.get('link')?.invalid && lectureForm.get('link')?.touched ? 'linkError' : null"
+                 placeholder="https://example.com" />
+          <label for="lectureLink">{{ translationService.translate('profile.lectureLink') || 'رابط المحاضرة' }}</label>
+          <div *ngIf="lectureForm.get('link')?.invalid && lectureForm.get('link')?.touched"
+               id="linkError"
+               class="invalid-feedback">
+            <span *ngIf="lectureForm.get('link')?.errors?.['required']">
+              {{ translationService.translate('profile.validation.link.required') || 'الرابط مطلوب' }}
+            </span>
+            <span *ngIf="lectureForm.get('link')?.errors?.['pattern']">
+              {{ translationService.translate('profile.validation.link.pattern') || 'رابط غير صالح' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 col-sm-6">
+        <div class="form-floating">
+          <input id="lectureName"
+                 formControlName="name"
+                 type="text"
+                 class="form-control"
+                 [class.is-invalid]="lectureForm.get('name')?.invalid && lectureForm.get('name')?.touched"
+                 [attr.aria-label]="translationService.translate('profile.lectureName') || 'اسم المحاضرة'"
+                 [attr.aria-describedby]="lectureForm.get('name')?.invalid && lectureForm.get('name')?.touched ? 'nameError' : null" />
+          <label for="lectureName">{{ translationService.translate('profile.lectureName') || 'اسم المحاضرة' }}</label>
+          <div *ngIf="lectureForm.get('name')?.invalid && lectureForm.get('name')?.touched"
+               id="nameError"
+               class="invalid-feedback">
+            <span *ngIf="lectureForm.get('name')?.errors?.['required']">
+              {{ translationService.translate('profile.validation.name.required') || 'الاسم مطلوب' }}
+            </span>
+            <span *ngIf="lectureForm.get('name')?.errors?.['minlength']">
+              {{ translationService.translate('profile.validation.name.minlength') || 'الاسم قصير جدًا' }}
+            </span>
+            <span *ngIf="lectureForm.get('name')?.errors?.['maxlength']">
+              {{ translationService.translate('profile.validation.name.maxlength') || 'الاسم طويل جدًا' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center mt-3 col-12">
+        <button type="submit"
+                class="btn btn-success"
+                [disabled]="isUploadingLecture || lectureForm.invalid || !profile.students?.length"
+                [attr.aria-label]="translationService.translate('profile.uploadLecture') || 'تحميل المحاضرة'">
+          <span *ngIf="isUploadingLecture" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          {{ isUploadingLecture ?
+            (translationService.translate('profile.uploadingLecture') || 'جارٍ تحميل المحاضرة') :
+            (translationService.translate('profile.uploadLecture') || 'تحميل المحاضرة') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
       <!-- Students Section -->
       <div id="students-section" *ngIf="activeSection === 'students'" class="card shadow-sm mt-4">
         <div class="card-header">

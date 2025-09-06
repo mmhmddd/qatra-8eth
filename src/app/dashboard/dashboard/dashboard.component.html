@@ -34,6 +34,7 @@
           عدد الطلبات: {{ joinRequestsCount }}
         </span>
         <button class="btn btn-primary ms-3" (click)="exportToExcel()">تصدير الأعضاء إلى Excel</button>
+        <button class="btn btn-primary ms-3" (click)="exportStudentsToExcel()">تصدير تفاصيل الطلاب إلى Excel</button>
       </div>
     </div>
     <section class="content-area">
@@ -115,15 +116,13 @@
               <h5 class="card-title">طلبات pdf المحاضرات</h5>
               <p class="card-text">عرض قائمة طلبات رفع المحاضرات</p>
             </div>
-
-            
           </div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <div class="card shadow-sm dashboard-card card-request-drive" (click)="navigateTo('/drive-lecture')">
             <div class="card-body text-center">
               <i class="fas fa-file-alt fa-3x mb-3"></i>
-              <h5 class="card-title">طلبات  محاضرات ال drive</h5>
+              <h5 class="card-title">طلبات محاضرات ال drive</h5>
               <p class="card-text">عرض قائمة طلبات رفع المحاضرات</p>
             </div>
           </div>

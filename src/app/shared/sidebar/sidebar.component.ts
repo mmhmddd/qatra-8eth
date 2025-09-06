@@ -26,7 +26,7 @@ export class SidebarComponent {
     { label: 'إضافة صوره الي المعرض ', icon: 'fas fa-plus', link: '/add-gallery' },
     { label: 'العضاء المقصرون', icon: 'fas fa-user-times', link: '/low-lecture-members', class: 'low-lecture-members' },
     { label: 'احصائات', icon: 'fas fa-chart-bar', link: '/statistics', class: 'statistics' },
-    { label: 'رسائل صفحة الانضمام', icon: 'fas fa-envelope', link: '/join-message', class: 'join-massege' },
+    { label: 'رسائل صفحة الانضمام', icon: 'fas fa-envelope', link: '/join-massege', class: 'join-massege' },
     { label: 'عرض حميع طلبات محاضرات الدرايف', icon: 'fas fa-file-alt', link: '/drive-lecture', class: 'drive-lecture' }
   ];
 
@@ -48,7 +48,7 @@ export class SidebarComponent {
 
   goHome() {
     this.router.navigate(['/home']);
-    this.activeNavIndex = -1; // Reset active nav since home is not in navItems
+    this.activeNavIndex = -1;
   }
 
   goBack() {

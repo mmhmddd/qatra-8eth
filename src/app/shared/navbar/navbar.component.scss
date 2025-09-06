@@ -400,6 +400,7 @@ $black: #000000;
 }
 
 @media (max-width: 400px) {
+
   .navbar {
     height: 65px;
     padding: 0.3rem 0.4rem;
@@ -562,3 +563,15 @@ body {
     }
   }
 }
+.navbar[_ngcontent-ng-c1851075353] .btn.btn-profile[_ngcontent-ng-c1851075353], .navbar[_ngcontent-ng-c1851075353] .btn.btn-dashboard[_ngcontent-ng-c1851075353] {
+    background-color: transparent;
+    color: #000000;
+    padding: 0.35rem 0.9rem;
+    display: flex
+;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    margin: auto;
+}
+

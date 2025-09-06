@@ -68,7 +68,9 @@ interface UpdateMemberDetailsResponse {
 interface AddStudentResponse {
   students: { name: string; email: string; phone: string; grade?: string; subjects: { name: string; minLectures: number }[] }[];
   message: string;
-  student: { name: string; email: string; phone: string; grade?: string; subjects: { name: string; minLectures: number }[] };
+  student: {
+    academicLevel: any; name: string; email: string; phone: string; grade?: string; subjects: { name: string; minLectures: number }[]
+};
   numberOfStudents: number;
   subjects: string[];
 }
@@ -162,7 +164,7 @@ export class JoinRequestService {
 
   getAll(): Observable<JoinRequestResponse> {
     return this.http.get<JoinRequest[]>(ApiEndpoints.joinRequests.getAll, { headers: this.getAuthHeaders() }).pipe(
-      tap(response => console.log('Raw getAll response:', response)),
+      tap(response => console.log('Raw getAll response:', JSON.stringify(response, null, 2))),
       map(members => ({
         success: true,
         message: 'تم جلب طلبات الانضمام بنجاح',
@@ -180,7 +182,16 @@ export class JoinRequestService {
           numberOfStudents: member.numberOfStudents || 0,
           subjects: member.subjects || [],
           subjectsCount: member.subjects?.length || 0,
-          students: member.students || [],
+          students: (member.students || []).map((student: any) => ({
+            name: student.name || '',
+            email: student.email || '',
+            phone: student.phone || '',
+            grade: student.grade && student.grade.trim() ? student.grade : student.academicLevel && student.academicLevel.trim() ? student.academicLevel : 'غير محدد',
+            subjects: (student.subjects || []).map((subject: any) => ({
+              name: subject.name && subject.name.trim() ? subject.name : 'غير محدد',
+              minLectures: Number.isInteger(subject.minLectures) ? subject.minLectures : 0
+            })).filter((subject: any) => subject.name !== 'غير محدد' || subject.minLectures > 0)
+          })).filter((student: any) => student.name && student.email),
           lectures: member.lectures || [],
           lectureCount: member.lectureCount || 0,
           createdAt: member.createdAt || '',
@@ -209,7 +220,7 @@ export class JoinRequestService {
 
   getApprovedMembers(): Observable<JoinRequestResponse> {
     return this.http.get<JoinRequest[]>(ApiEndpoints.joinRequests.getApproved, { headers: this.getAuthHeaders() }).pipe(
-      tap(response => console.log('Raw getApprovedMembers response:', response)),
+      tap(response => console.log('Raw getApprovedMembers response:', JSON.stringify(response, null, 2))),
       map(members => ({
         success: true,
         message: 'تم جلب الأعضاء المعتمدين بنجاح',
@@ -227,7 +238,16 @@ export class JoinRequestService {
           numberOfStudents: member.numberOfStudents || 0,
           subjects: member.subjects || [],
           subjectsCount: member.subjects?.length || 0,
-          students: member.students || [],
+          students: (member.students || []).map((student: any) => ({
+            name: student.name || '',
+            email: student.email || '',
+            phone: student.phone || '',
+            grade: student.grade && student.grade.trim() ? student.grade : student.academicLevel && student.academicLevel.trim() ? student.academicLevel : 'غير محدد',
+            subjects: (student.subjects || []).map((subject: any) => ({
+              name: subject.name && subject.name.trim() ? subject.name : 'غير محدد',
+              minLectures: Number.isInteger(subject.minLectures) ? subject.minLectures : 0
+            })).filter((subject: any) => subject.name !== 'غير محدد' || subject.minLectures > 0)
+          })).filter((student: any) => student.name && student.email),
           lectures: member.lectures || [],
           lectureCount: member.lectureCount || 0,
           createdAt: member.createdAt || '',
@@ -263,7 +283,7 @@ export class JoinRequestService {
     }
     console.log('Fetching member with ID:', id);
     return this.http.get<any>(ApiEndpoints.joinRequests.getMember(id), { headers: this.getAuthHeaders() }).pipe(
-      tap(response => console.log('Raw getMember response:', response)),
+      tap(response => console.log('Raw getMember response:', JSON.stringify(response, null, 2))),
       map(response => {
         if (response.success && response.member) {
           const member = response.member;
@@ -284,17 +304,17 @@ export class JoinRequestService {
               numberOfStudents: member.numberOfStudents || 0,
               subjects: member.subjects || [],
               subjectsCount: member.subjects?.length || 0,
-              students: (member.students || []).map((student: { name: any; email: any; phone: any; grade: any; subjects: any; }) => ({
+              students: (member.students || []).map((student: any) => ({
                 name: student.name || '',
                 email: student.email || '',
                 phone: student.phone || '',
-                grade: student.grade || '',
-                subjects: (student.subjects || []).map((subject: { name: any; minLectures: any; }) => ({
-                  name: subject.name || '',
-                  minLectures: subject.minLectures ?? 0
-                }))
-              })),
-              lectures: (member.lectures || []).map((lecture: { _id: any; studentEmail: any; subject: any; date: any; duration: any; link: any; name: any; }) => ({
+                grade: student.grade && student.grade.trim() ? student.grade : student.academicLevel && student.academicLevel.trim() ? student.academicLevel : 'غير محدد',
+                subjects: (student.subjects || []).map((subject: any) => ({
+                  name: subject.name && subject.name.trim() ? subject.name : 'غير محدد',
+                  minLectures: Number.isInteger(subject.minLectures) ? subject.minLectures : 0
+                })).filter((subject: any) => subject.name !== 'غير محدد' || subject.minLectures > 0)
+              })).filter((student: any) => student.name && student.email),
+              lectures: (member.lectures || []).map((lecture: any) => ({
                 _id: lecture._id || '',
                 studentEmail: lecture.studentEmail || '',
                 subject: lecture.subject || '',
@@ -306,7 +326,7 @@ export class JoinRequestService {
               lectureCount: member.lectureCount || 0,
               createdAt: member.createdAt || '',
               messages: this.filterActiveMessages(member.messages || []),
-              meetings: (member.meetings || []).map((meeting: { id: any; _id: any; title: any; date: any; startTime: any; endTime: any; }) => ({
+              meetings: (member.meetings || []).map((meeting: any) => ({
                 id: meeting.id || meeting._id || '',
                 _id: meeting._id,
                 title: meeting.title || '',
@@ -395,7 +415,16 @@ export class JoinRequestService {
         data: {
           volunteerHours: response.volunteerHours,
           numberOfStudents: response.numberOfStudents,
-          students: response.students,
+          students: (response.students || []).map((student: any) => ({
+            name: student.name || '',
+            email: student.email || '',
+            phone: student.phone || '',
+            grade: student.grade && student.grade.trim() ? student.grade : student.academicLevel && student.academicLevel.trim() ? student.academicLevel : 'غير محدد',
+            subjects: (student.subjects || []).map((subject: any) => ({
+              name: subject.name && subject.name.trim() ? subject.name : 'غير محدد',
+              minLectures: Number.isInteger(subject.minLectures) ? subject.minLectures : 0
+            })).filter((subject: any) => subject.name !== 'غير محدد' || subject.minLectures > 0)
+          })),
           subjects: response.subjects,
           subjectsCount: response.subjects?.length || 0,
           lectureCount: response.lectureCount
@@ -462,15 +491,30 @@ export class JoinRequestService {
         message: 'الحد الأدنى للمحاضرات يجب أن يكون رقمًا صحيحًا غير سالب'
       }));
     }
-    const payload = { name, email, phone, grade, subjects };
+    const payload = {
+      name,
+      email,
+      phone,
+      grade: grade && grade.trim() ? grade : undefined, // Only include grade if valid
+      subjects: subjects.filter(subject => subject.name && subject.name.trim() && Number.isInteger(subject.minLectures) && subject.minLectures >= 0)
+    };
     console.log('Sending addStudent request:', { url: ApiEndpoints.joinRequests.addStudent(id), payload });
     return this.http.post<AddStudentResponse>(ApiEndpoints.joinRequests.addStudent(id), payload, { headers: this.getAuthHeaders() }).pipe(
-      tap(response => console.log('Raw addStudent response:', response)),
+      tap(response => console.log('Raw addStudent response:', JSON.stringify(response, null, 2))),
       map(response => ({
         success: true,
         message: response.message || 'تم إضافة الطالب بنجاح',
         data: {
-          students: response.student ? [...(response.students || []), response.student] : response.students || [],
+          students: response.student ? [...(response.students || []), {
+            name: response.student.name || '',
+            email: response.student.email || '',
+            phone: response.student.phone || '',
+            grade: response.student.grade && response.student.grade.trim() ? response.student.grade : response.student.academicLevel && response.student.academicLevel.trim() ? response.student.academicLevel : 'غير محدد',
+            subjects: (response.student.subjects || []).map((subject: any) => ({
+              name: subject.name && subject.name.trim() ? subject.name : 'غير محدد',
+              minLectures: Number.isInteger(subject.minLectures) ? subject.minLectures : 0
+            })).filter((subject: any) => subject.name !== 'غير محدد' || subject.minLectures > 0)
+          }] : response.students || [],
           numberOfStudents: response.numberOfStudents || 0,
           subjects: response.subjects || []
         }
@@ -570,7 +614,7 @@ export class JoinRequestService {
       ApiEndpoints.lectures.deleteLecture(lectureId),
       { headers: this.getAuthHeaders() }
     ).pipe(
-      tap(response => console.log('Raw deleteLecture response:', response)),
+      tap(response => console.log('Raw deleteLecture response:', JSON.stringify(response, null, 2))),
       map(response => ({
         success: true,
         message: response.message || 'تم حذف المحاضرة بنجاح',
@@ -621,7 +665,7 @@ export class JoinRequestService {
       }));
     }
     return this.http.post<SendMessageResponse>(ApiEndpoints.admin.sendMessage, { userId, content, displayDays }, { headers: this.getAuthHeaders() }).pipe(
-      tap(response => console.log('Raw sendMessage response:', response)),
+      tap(response => console.log('Raw sendMessage response:', JSON.stringify(response, null, 2))),
       map(response => ({
         success: response.success,
         message: response.message || 'تم إرسال الرسالة بنجاح',
@@ -722,7 +766,7 @@ export class JoinRequestService {
       }));
     }
     return this.http.get<GetMessageResponse>(ApiEndpoints.admin.getMessage(userId, messageId), { headers: this.getAuthHeaders() }).pipe(
-      tap(response => console.log('Raw getMessage response:', response)),
+      tap(response => console.log('Raw getMessage response:', JSON.stringify(response, null, 2))),
       map(response => ({
         success: response.success,
         message: response.message?.content || 'تم جلب الرسالة بنجاح',
