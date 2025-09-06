@@ -360,24 +360,21 @@ export class DashboardComponent implements OnInit {
           const workbook = new ExcelJS.Workbook();
 
           const styleSheet = (worksheet: ExcelJS.Worksheet, headers: string[], data: any[], wideColumns: string[] = []) => {
-            const columnWidths = headers.map(header => wideColumns.includes(header) ? 20 : 10);
-            worksheet.columns = headers.flatMap((_, index) => [
-              { width: columnWidths[index] },
-              { width: columnWidths[index] },
-              { width: columnWidths[index] },
-            ]);
+            // Set column widths based on content
+            worksheet.columns = headers.map((header) => ({
+              width: wideColumns.includes(header) ? 40 : header.length > 15 ? 25 : 15,
+            }));
 
-            const headerRow = worksheet.addRow(headers.flatMap(header => [header, '', '']));
-            headers.forEach((header, index) => {
-              const startCol = index * 3 + 1;
-              const cell = headerRow.getCell(startCol);
-              cell.value = header;
+            // Style header row
+            const headerRow = worksheet.addRow(headers);
+            headerRow.height = 30;
+            headerRow.eachCell((cell, colNumber) => {
               cell.fill = {
                 type: 'pattern',
                 pattern: 'solid',
-                fgColor: { argb: headerColors[header] || 'ADD8E6' },
+                fgColor: { argb: headerColors[headers[colNumber - 1]] || 'ADD8E6' },
               };
-              cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+              cell.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 12 };
               cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
               cell.border = {
                 top: { style: 'thin', color: { argb: 'FF000000' } },
@@ -385,22 +382,18 @@ export class DashboardComponent implements OnInit {
                 bottom: { style: 'thin', color: { argb: 'FF000000' } },
                 right: { style: 'thin', color: { argb: 'FF000000' } },
               };
-              worksheet.mergeCells(1, startCol, 1, startCol + 2);
             });
 
+            // Style data rows with alternating colors
             data.forEach((rowData, rowIndex) => {
-              const row = worksheet.addRow(Object.values(rowData).flatMap(value => [value, '', '']));
-              const hasWideColumnData = wideColumns.some(col => rowData[col] && rowData[col].includes('\n'));
-              if (hasWideColumnData) {
-                const maxLines = wideColumns.reduce((max, col) => {
-                  const lines = (rowData[col]?.match(/\n/g) || []).length + 1;
-                  return Math.max(max, lines);
-                }, 1);
-                row.height = Math.max(20, maxLines * 20);
-              }
-              headers.forEach((_, index) => {
-                const startCol = index * 3 + 1;
-                const cell = row.getCell(startCol);
+              const row = worksheet.addRow(Object.values(rowData));
+              const hasWideColumnData = wideColumns.some((col) => rowData[col] && rowData[col].includes('\n'));
+              const maxLines = wideColumns.reduce((max, col) => {
+                const lines = (rowData[col]?.match(/\n/g) || []).length + 1;
+                return Math.max(max, lines);
+              }, 1);
+              row.height = Math.max(25, maxLines * 20);
+              row.eachCell((cell) => {
                 cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
                 cell.border = {
                   top: { style: 'thin', color: { argb: 'FF000000' } },
@@ -408,8 +401,19 @@ export class DashboardComponent implements OnInit {
                   bottom: { style: 'thin', color: { argb: 'FF000000' } },
                   right: { style: 'thin', color: { argb: 'FF000000' } },
                 };
-                worksheet.mergeCells(rowIndex + 2, startCol, rowIndex + 2, startCol + 2);
+                // Alternating row colors
+                cell.fill = {
+                  type: 'pattern',
+                  pattern: 'solid',
+                  fgColor: { argb: rowIndex % 2 === 0 ? 'FFF8F8F8' : 'FFEFEFEF' },
+                };
+                cell.font = { size: 11 };
               });
+            });
+
+            // Add padding by setting row height and column width
+            worksheet.eachRow((row) => {
+              if (!row.height) row.height = 25;
             });
           };
 
@@ -441,10 +445,10 @@ export class DashboardComponent implements OnInit {
             styleSheet(lowLectureSheet, Object.keys(lowLectureData[0] || {}), lowLectureData, ['UnderTargetStudents', 'Lectures']);
           }
 
-          workbook.xlsx.writeBuffer().then(buffer => {
+          workbook.xlsx.writeBuffer().then((buffer) => {
             const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
             saveAs(blob, 'all_members_data.xlsx');
-          }).catch(err => {
+          }).catch((err) => {
             this.error = 'فشل في تصدير الملف إلى Excel';
             this.cdr.detectChanges();
           });
@@ -468,25 +472,28 @@ export class DashboardComponent implements OnInit {
           const studentData: any[] = [];
           let totalStudents = 0;
 
-          members.forEach(member => {
+          members.forEach((member) => {
             if (member.students && Array.isArray(member.students) && member.students.length > 0) {
-              member.students.forEach(student => {
+              member.students.forEach((student) => {
                 if (student.name && student.email) {
                   const subjects = Array.isArray(student.subjects) && student.subjects.length > 0
                     ? student.subjects
-                        .filter(sub => sub.name && sub.name.trim() && Number.isInteger(sub.minLectures) && sub.minLectures >= 0)
-                        .map(sub => `${sub.name.trim()} (الحد الأدنى: ${sub.minLectures} محاضرة)`)
+                        .filter((sub) => sub.name && sub.name.trim() && Number.isInteger(sub.minLectures) && sub.minLectures >= 0)
+                        .map((sub) => `${sub.name.trim()} (الحد الأدنى: ${sub.minLectures} محاضرة)`)
                         .join('\n')
                     : 'لا توجد مواد';
+                  // Count lectures for the student based on their email
+                  const lectureCount = member.lectures?.filter((lecture) => lecture.studentEmail === student.email).length || 0;
                   studentData.push({
                     'اسم الطالب': student.name.trim() || 'غير محدد',
-                    'اسم العضو': member.name?.trim() || 'غير محدد',
+                    'اسم المتطوع': member.name?.trim() || 'غير محدد',
                     'البريد الإلكتروني للطالب': student.email.trim() || 'غير محدد',
                     'هاتف الطالب': student.phone?.trim() || 'غير محدد',
                     'الصف الدراسي': (student.grade && student.grade.trim()) ? student.grade.trim() : 'غير محدد',
-                    'معرف العضو': member.id || member._id || 'غير محدد',
+                    'معرف المتطوع': member.id || member._id || 'غير محدد',
                     'المواد الدراسية': subjects,
-                    'عدد المواد': Array.isArray(student.subjects) ? student.subjects.filter(sub => sub.name && sub.name.trim() && Number.isInteger(sub.minLectures)).length : 0,
+                    'عدد المواد': Array.isArray(student.subjects) ? student.subjects.filter((sub) => sub.name && sub.name.trim() && Number.isInteger(sub.minLectures)).length : 0,
+                    'عدد المحاضرات': lectureCount,
                   });
                   totalStudents++;
                 }
@@ -505,30 +512,34 @@ export class DashboardComponent implements OnInit {
 
           const headers = [
             'اسم الطالب',
-            'اسم العضو',
+            'اسم المتطوع',
             'البريد الإلكتروني للطالب',
             'هاتف الطالب',
             'الصف الدراسي',
-            'معرف العضو',
+            'معرف المتطوع',
             'المواد الدراسية',
             'عدد المواد',
+            'عدد المحاضرات',
           ];
 
           const headerColors = [
             'ADD8E6', 'D3D3D3', 'FFE4E1', 'E6E6FA', 'F0FFF0', 'F5F5DC',
-            'E0FFFF', 'F0E68C'
+            'E0FFFF', 'F0E68C', '98FB98',
           ];
 
-          worksheet.columns = headers.map((header, index) => ({
-            width: header === 'المواد الدراسية' ? 30 : (header === 'اسم الطالب' || header === 'اسم العضو' ? 25 : 15)
+          // Set column widths
+          worksheet.columns = headers.map((header) => ({
+            width: header === 'المواد الدراسية' ? 40 : (header === 'اسم الطالب' || header === 'اسم المتطوع' ? 25 : 15),
           }));
 
+          // Style header row
           const headerRow = worksheet.addRow(headers);
+          headerRow.height = 30;
           headerRow.eachCell((cell, colNumber) => {
             cell.fill = {
               type: 'pattern',
               pattern: 'solid',
-              fgColor: { argb: headerColors[colNumber - 1] || 'ADD8E6' }
+              fgColor: { argb: headerColors[colNumber - 1] || 'ADD8E6' },
             };
             cell.font = { bold: true, color: { argb: 'FF000000' }, size: 12 };
             cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
@@ -536,19 +547,19 @@ export class DashboardComponent implements OnInit {
               top: { style: 'thin', color: { argb: 'FF000000' } },
               left: { style: 'thin', color: { argb: 'FF000000' } },
               bottom: { style: 'thin', color: { argb: 'FF000000' } },
-              right: { style: 'thin', color: { argb: 'FF000000' } }
+              right: { style: 'thin', color: { argb: 'FF000000' } },
             };
           });
-          headerRow.height = 25;
 
+          // Style data rows with alternating colors
           studentData.forEach((student, index) => {
             const dataRow = worksheet.addRow(Object.values(student));
             const subjectsText = student['المواد الدراسية'] || '';
             const studentName = student['اسم الطالب'] || '';
-            const memberName = student['اسم العضو'] || '';
+            const memberName = student['اسم المتطوع'] || '';
             const subjectsLineCount = (subjectsText.match(/\n/g) || []).length + 1;
             const isLongName = studentName.length > 20 || memberName.length > 20;
-            const rowHeight = Math.max(20, subjectsLineCount * 15, isLongName ? 40 : 20);
+            const rowHeight = Math.max(25, subjectsLineCount * 20, isLongName ? 40 : 25);
             dataRow.height = rowHeight;
             dataRow.eachCell((cell) => {
               cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
@@ -556,25 +567,25 @@ export class DashboardComponent implements OnInit {
                 top: { style: 'thin', color: { argb: 'FF000000' } },
                 left: { style: 'thin', color: { argb: 'FF000000' } },
                 bottom: { style: 'thin', color: { argb: 'FF000000' } },
-                right: { style: 'thin', color: { argb: 'FF000000' } }
+                right: { style: 'thin', color: { argb: 'FF000000' } },
               };
-              if (index % 2 === 0) {
-                cell.fill = {
-                  type: 'pattern',
-                  pattern: 'solid',
-                  fgColor: { argb: 'FFF8F8F8' }
-                };
-              }
+              cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: index % 2 === 0 ? 'FFF8F8F8' : 'FFEFEFEF' },
+              };
+              cell.font = { size: 11 };
             });
           });
 
+          // Add summary row
           worksheet.addRow([]);
-          const summaryRow = worksheet.addRow(['', '', '', `إجمالي عدد الطلاب: ${totalStudents}`, '', '', '', '']);
+          const summaryRow = worksheet.addRow(['', '', '', `إجمالي عدد الطلاب: ${totalStudents}`, '', '', '', '', '']);
           summaryRow.getCell(4).font = { bold: true, size: 14 };
           summaryRow.getCell(4).fill = {
             type: 'pattern',
             pattern: 'solid',
-            fgColor: { argb: 'FFFFD700' }
+            fgColor: { argb: 'FFFFD700' },
           };
           summaryRow.getCell(4).alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
           summaryRow.eachCell((cell, colNumber) => {
@@ -582,25 +593,25 @@ export class DashboardComponent implements OnInit {
               top: { style: 'thin', color: { argb: 'FF000000' } },
               left: { style: 'thin', color: { argb: 'FF000000' } },
               bottom: { style: 'thin', color: { argb: 'FF000000' } },
-              right: { style: 'thin', color: { argb: 'FF000000' } }
+              right: { style: 'thin', color: { argb: 'FF000000' } },
             };
             if (colNumber !== 4) {
               cell.fill = {
                 type: 'pattern',
                 pattern: 'solid',
-                fgColor: { argb: 'FFFFFF' }
+                fgColor: { argb: 'FFFFFF' },
               };
             }
           });
-          summaryRow.height = 25;
+          summaryRow.height = 30;
 
-          workbook.xlsx.writeBuffer().then(buffer => {
+          workbook.xlsx.writeBuffer().then((buffer) => {
             const blob = new Blob([buffer], {
-              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             });
             const currentDate = new Date().toISOString().split('T')[0];
             saveAs(blob, `students_complete_data_${currentDate}.xlsx`);
-          }).catch(err => {
+          }).catch((err) => {
             this.error = 'فشل في تصدير تفاصيل الطلاب إلى Excel';
             this.cdr.detectChanges();
           });
