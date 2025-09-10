@@ -1,4 +1,4 @@
-<section class="login-section" dir="rtl">
+<section class="login-section" [attr.dir]="translationService.isRtl() ? 'rtl' : 'ltr'">
   <div class="container-fluid h-100">
     <div class="row h-100 g-0">
 
@@ -12,11 +12,11 @@
           </div>
 
           <h1 class="welcome-title mb-4" @fadeInUp>
-            مرحباً بكم في المبادرة التعليمية
+            {{ 'login.welcomeTitle' | translate }}
           </h1>
 
           <p class="welcome-description mb-5" @fadeInUp>
-            انضموا إلى رحلتنا التعليمية لبناء مستقبل أفضل من خلال نشر العلم والمعرفة
+            {{ 'login.welcomeDescription' | translate }}
           </p>
 
           <div class="features-grid">
@@ -24,24 +24,24 @@
               <div class="feature-icon">
                 <i class="fas fa-book-open"></i>
               </div>
-              <h4>أنشطة تعليمية متنوعة</h4>
-              <p>مجموعة واسعة من التدريبات  والانشطة التعليمية</p>
+              <h4>{{ 'login.feature1Title' | translate }}</h4>
+              <p>{{ 'login.feature1Description' | translate }}</p>
             </div>
 
             <div class="feature-card" @fadeInUp>
               <div class="feature-icon">
                 <i class="fas fa-users"></i>
               </div>
-              <h4>مجتمع تعليمي</h4>
-              <p>انضم إلى مجتمع من المتعلمين والمعلمين</p>
+              <h4>{{ 'login.feature2Title' | translate }}</h4>
+              <p>{{ 'login.feature2Description' | translate }}</p>
             </div>
 
             <div class="feature-card" @fadeInUp>
               <div class="feature-icon">
                 <i class="fas fa-certificate"></i>
               </div>
-              <h4>شهادات معتمدة</h4>
-              <p>احصل على شهادة معتمدة عند إنتهاء الفرصة التعليمية </p>
+              <h4>{{ 'login.feature3Title' | translate }}</h4>
+              <p>{{ 'login.feature3Description' | translate }}</p>
             </div>
           </div>
         </div>
@@ -56,14 +56,14 @@
             <div class="mobile-logo mb-3">
               <i class="fas fa-graduation-cap"></i>
             </div>
-            <h2 class="mobile-title">المبادرة التعليمية</h2>
-            <p class="mobile-subtitle">تسجيل الدخول إلى حسابك</p>
+            <h2 class="mobile-title">{{ 'login.mobileTitle' | translate }}</h2>
+            <p class="mobile-subtitle">{{ 'login.mobileSubtitle' | translate }}</p>
           </div>
 
           <div class="login-card glass-card" @slideInRight>
             <div class="login-header text-center mb-4">
-              <h2 class="login-title">تسجيل الدخول</h2>
-              <p class="login-subtitle">أدخل بياناتك للوصول إلى حسابك</p>
+              <h2 class="login-title">{{ 'login.loginTitle' | translate }}</h2>
+              <p class="login-subtitle">{{ 'login.loginSubtitle' | translate }}</p>
             </div>
 
             <!-- Divider -->
@@ -76,7 +76,7 @@
               <div class="form-group mb-3">
                 <label for="email" class="form-label">
                   <i class="fas fa-envelope me-2"></i>
-                  البريد الإلكتروني
+                  {{ 'login.emailLabel' | translate }}
                 </label>
                 <div class="input-group">
                   <input
@@ -84,7 +84,7 @@
                     [class]="getFieldClasses('email')"
                     id="email"
                     formControlName="email"
-                    placeholder="أدخل بريدك الإلكتروني"
+                    [placeholder]="'login.emailPlaceholder' | translate"
                     (focus)="onFieldFocus('email')"
                     autocomplete="email"
                   >
@@ -95,7 +95,7 @@
                 </div>
                 <div *ngIf="isFieldValid('email')" class="valid-feedback">
                   <i class="fas fa-check-circle me-1"></i>
-                  البريد الإلكتروني صحيح
+                  {{ 'login.validation.emailValid' | translate }}
                 </div>
               </div>
 
@@ -103,7 +103,7 @@
               <div class="form-group mb-3">
                 <label for="password" class="form-label">
                   <i class="fas fa-lock me-2"></i>
-                  كلمة المرور
+                  {{ 'login.passwordLabel' | translate }}
                 </label>
                 <div class="input-group">
                   <input
@@ -111,7 +111,7 @@
                     [class]="getFieldClasses('password')"
                     id="password"
                     formControlName="password"
-                    placeholder="أدخل كلمة المرور"
+                    [placeholder]="'login.passwordPlaceholder' | translate"
                     (focus)="onFieldFocus('password')"
                     autocomplete="current-password"
                   >
@@ -130,7 +130,7 @@
                 </div>
                 <div *ngIf="isFieldValid('password')" class="valid-feedback">
                   <i class="fas fa-check-circle me-1"></i>
-                  كلمة المرور قوية
+                  {{ 'login.validation.passwordValid' | translate }}
                 </div>
               </div>
 
@@ -141,14 +141,14 @@
                   class="auth-link join-link"
                   (click)="goToForgotojoinus(); $event.preventDefault()"
                 >
-                  لست عضو؟ انضم إلينا الآن
+                  {{ 'login.joinLink' | translate }}
                 </a>
                 <a
                   href="#"
                   class="auth-link forgot-link"
                   (click)="goToForgotPassword(); $event.preventDefault()"
                 >
-                  نسيت كلمة المرور؟
+                  {{ 'login.forgotPasswordLink' | translate }}
                 </a>
               </div>
 
@@ -160,11 +160,11 @@
               >
                 <span *ngIf="!isLoading">
                   <i class="fas fa-sign-in-alt me-2"></i>
-                  تسجيل الدخول
+                  {{ 'login.loginButton' | translate }}
                 </span>
                 <span *ngIf="isLoading">
                   <i class="fas fa-spinner fa-spin me-2"></i>
-                  جاري تسجيل الدخول...
+                  {{ 'login.loginButtonLoading' | translate }}
                 </span>
               </button>
 
@@ -196,7 +196,7 @@
               (click)="goToHome(); $event.preventDefault()"
             >
               <i class="fas fa-home me-2"></i>
-              العودة إلى الصفحة الرئيسية
+              {{ 'login.homeButton' | translate }}
             </a>
           </div>
         </div>
@@ -204,12 +204,12 @@
 
     </div>
   </div>
-</section>
 
-<!-- Loading Overlay -->
-<div class="loading-overlay" *ngIf="isLoading" @fadeInUp>
-  <div class="loading-content">
-    <div class="loading-spinner"></div>
-    <p class="loading-text">جاري تسجيل الدخول...</p>
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" *ngIf="isLoading" @fadeInUp>
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">{{ 'login.loadingText' | translate }}</p>
+    </div>
   </div>
-</div>
+</section>

@@ -8,12 +8,16 @@ $white: #ffffff;
 $black: #212121;
 $success-color: #4caf50; // Green for success
 $error-color: #d32f2f; // Red for error
+$border-radius: 8px;
+$shadow: 0 2px 8px rgba($black, 0.1);
+$transition: all 0.2s ease;
 
 .page-wrapper {
   display: flex;
   min-height: 100vh;
   direction: rtl;
-  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; // Modern font stack
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  background: $light-gray;
 
   &.sidebar-visible {
     app-sidebar {
@@ -44,8 +48,8 @@ $error-color: #d32f2f; // Red for error
   border: none;
   padding: 12px;
   cursor: pointer;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba($black, 0.2);
+  border-radius: $border-radius;
+  box-shadow: $shadow;
 
   .hamburger-line {
     display: block;
@@ -53,7 +57,7 @@ $error-color: #d32f2f; // Red for error
     height: 3px;
     background: $white;
     margin: 5px 0;
-    transition: all 0.3s ease;
+    transition: $transition;
     border-radius: 2px;
   }
 
@@ -97,7 +101,7 @@ main {
   flex: 1;
   padding: 24px;
   background: $light-gray;
-  margin-right: 240px; // Slightly wider sidebar
+  margin-right: 240px;
   transition: margin-right 0.3s ease;
 
   @media (max-width: 1024px) {
@@ -106,7 +110,7 @@ main {
 }
 
 .container {
-  max-width: 1440px; // Slightly wider for modern displays
+  max-width: 1440px;
   margin: 0 auto;
 }
 
@@ -117,13 +121,14 @@ main {
   margin-bottom: 24px;
   padding: 16px;
   background: $white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba($black, 0.1);
+  border-radius: $border-radius;
+  box-shadow: $shadow;
 
   h2 {
     font-size: 28px;
     color: $dark-color;
     font-weight: 600;
+    margin: 0;
   }
 }
 
@@ -132,7 +137,8 @@ main {
   align-items: center;
   gap: 12px;
 
-  .refresh-btn, .export-btn {
+  .refresh-btn,
+  .export-btn {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -140,12 +146,12 @@ main {
     background: $primary-color;
     color: $white;
     border: none;
-    border-radius: 6px;
+    border-radius: $border-radius;
     cursor: pointer;
     font-size: 15px;
     font-weight: 500;
-    transition: all 0.2s ease;
-    box-shadow: 0 1px 3px rgba($black, 0.2);
+    transition: $transition;
+    box-shadow: $shadow;
 
     &:hover {
       background: $secondary-color;
@@ -156,10 +162,19 @@ main {
       background: $neutral-color;
       cursor: not-allowed;
       box-shadow: none;
+      opacity: 0.6;
     }
 
-    .refresh-icon.spinning {
-      animation: spin 1s linear infinite;
+    .refresh-icon {
+      font-size: 16px;
+
+      &.spinning {
+        animation: spin 1s linear infinite;
+      }
+    }
+
+    .export-icon {
+      font-size: 16px;
     }
   }
 
@@ -189,8 +204,9 @@ main {
   padding: 24px;
   color: $dark-color;
   background: $white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba($black, 0.1);
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+  font-size: 16px;
 
   .spinner {
     width: 28px;
@@ -209,9 +225,14 @@ main {
   padding: 16px;
   background: lighten($success-color, 40%);
   color: $success-color;
-  border-radius: 8px;
+  border-radius: $border-radius;
   margin-bottom: 24px;
-  box-shadow: 0 1px 3px rgba($black, 0.1);
+  box-shadow: $shadow;
+  font-size: 16px;
+
+  .success-icon {
+    font-size: 20px;
+  }
 }
 
 .error-message {
@@ -221,19 +242,25 @@ main {
   padding: 16px;
   background: lighten($error-color, 40%);
   color: $error-color;
-  border-radius: 8px;
+  border-radius: $border-radius;
   margin-bottom: 24px;
-  box-shadow: 0 1px 3px rgba($black, 0.1);
+  box-shadow: $shadow;
+  font-size: 16px;
+
+  .error-icon {
+    font-size: 20px;
+  }
 
   .retry-btn {
     padding: 8px 16px;
     background: $error-color;
     color: $white;
     border: none;
-    border-radius: 6px;
+    border-radius: $border-radius;
     cursor: pointer;
     font-weight: 500;
-    transition: all 0.2s ease;
+    transition: $transition;
+    box-shadow: $shadow;
 
     &:hover {
       background: darken($error-color, 10%);
@@ -248,17 +275,19 @@ main {
   gap: 16px;
   padding: 24px;
   background: $white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba($black, 0.1);
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+  text-align: center;
 
   .no-members-icon {
-    font-size: 36px;
+    font-size: 40px;
   }
 
   h3 {
     margin: 0;
     color: $dark-color;
     font-weight: 600;
+    font-size: 20px;
   }
 
   p {
@@ -270,8 +299,8 @@ main {
 
 .table-wrapper {
   background: $white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba($black, 0.1);
+  border-radius: $border-radius;
+  box-shadow: $shadow;
   overflow: hidden;
 }
 
@@ -282,16 +311,16 @@ main {
 
   .search-input {
     width: 100%;
-    max-width: 400px; // Limit width for better layout
+    max-width: 400px;
     padding: 12px 16px;
     border: 1px solid lighten($neutral-color, 30%);
-    border-radius: 6px;
+    border-radius: $border-radius;
     font-size: 15px;
     background: $white;
     color: $dark-color;
     direction: rtl;
     margin-bottom: 12px;
-    transition: all 0.2s ease;
+    transition: $transition;
     box-shadow: inset 0 1px 2px rgba($black, 0.05);
 
     &::placeholder {
@@ -338,14 +367,15 @@ main {
     color: $dark-color;
     text-align: right;
     font-size: 14px;
+    vertical-align: middle;
   }
 
   .member-row {
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: $transition;
 
     &:nth-child(odd) {
-      background: lighten($light-gray, 1%); // Alternating row color
+      background: lighten($light-gray, 1%);
     }
 
     &:hover {
@@ -360,9 +390,9 @@ main {
     gap: 12px;
 
     .avatar {
-      width: 36px;
-      height: 36px;
-      background: $primary-color;
+      width: 40px; // Fixed size for all avatars
+      height: 40px;
+      background: linear-gradient(135deg, $primary-color, $secondary-color); // Gradient for modern look
       color: $white;
       border-radius: 50%;
       display: flex;
@@ -370,7 +400,10 @@ main {
       justify-content: center;
       font-size: 18px;
       font-weight: 600;
-      box-shadow: 0 1px 2px rgba($black, 0.2);
+      box-shadow: 0 2px 4px rgba($black, 0.2);
+      flex-shrink: 0; // Prevent shrinking
+      text-transform: uppercase;
+      border: 2px solid $white; // Subtle border for contrast
     }
   }
 
@@ -382,9 +415,12 @@ main {
     border-radius: 16px;
     font-size: 13px;
     font-weight: 500;
+    box-shadow: 0 1px 2px rgba($black, 0.2);
   }
 
-  .member-students, .member-subjects, .member-lectures {
+  .member-students,
+  .member-subjects,
+  .member-lectures {
     text-align: center;
   }
 
@@ -399,12 +435,12 @@ main {
       background: $error-color;
       color: $white;
       border: none;
-      border-radius: 6px;
+      border-radius: $border-radius;
       cursor: pointer;
       font-size: 14px;
       font-weight: 500;
-      transition: all 0.2s ease;
-      box-shadow: 0 1px 3px rgba($black, 0.2);
+      transition: $transition;
+      box-shadow: $shadow;
 
       &:hover {
         background: darken($error-color, 10%);
@@ -429,8 +465,8 @@ main {
   .dialog-content {
     background: $white;
     padding: 24px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba($black, 0.2);
+    border-radius: $border-radius;
+    box-shadow: 0 4px 12px rgba($black, 0.2);
     max-width: 400px;
     width: 90%;
     text-align: center;
@@ -439,6 +475,7 @@ main {
       color: $dark-color;
       margin: 0 0 12px;
       font-weight: 600;
+      font-size: 20px;
     }
 
     p {
@@ -457,11 +494,11 @@ main {
         background: $error-color;
         color: $white;
         border: none;
-        border-radius: 6px;
+        border-radius: $border-radius;
         cursor: pointer;
         font-weight: 500;
-        transition: all 0.2s ease;
-        box-shadow: 0 1px 3px rgba($black, 0.2);
+        transition: $transition;
+        box-shadow: $shadow;
 
         &:hover {
           background: darken($error-color, 10%);
@@ -474,17 +511,82 @@ main {
         background: $neutral-color;
         color: $white;
         border: none;
-        border-radius: 6px;
+        border-radius: $border-radius;
         cursor: pointer;
         font-weight: 500;
-        transition: all 0.2s ease;
-        box-shadow: 0 1px 3px rgba($black, 0.2);
+        transition: $transition;
+        box-shadow: $shadow;
 
         &:hover {
           background: darken($neutral-color, 10%);
           transform: translateY(-1px);
         }
       }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  main {
+    padding: 16px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    gap: 16px;
+
+    h2 {
+      font-size: 24px;
+    }
+  }
+
+  .page-actions {
+    flex-direction: column;
+    width: 100%;
+
+    .refresh-btn,
+    .export-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .table-header {
+    .search-input {
+      max-width: 100%;
+    }
+  }
+
+  .members-table {
+    th,
+    td {
+      padding: 10px;
+      font-size: 13px;
+    }
+
+    .name-cell {
+      .avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+      }
+    }
+
+    .hours-badge {
+      padding: 4px 10px;
+      font-size: 12px;
+    }
+
+    .delete-btn {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+  }
+
+  .confirm-dialog {
+    .dialog-content {
+      padding: 16px;
+      max-width: 90%;
     }
   }
 }

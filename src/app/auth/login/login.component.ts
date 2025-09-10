@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { TranslationService } from '../../core/services/translation.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslatePipe],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   animations: [
@@ -42,7 +44,12 @@ export class LoginComponent {
   showPassword = false;
   rememberMe = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    public translationService: TranslationService // Inject TranslationService
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -69,10 +76,16 @@ export class LoginComponent {
   getFieldErrorMessage(field: string): string {
     const control = this.loginForm.get(field);
     if (!control || !control.errors) return '';
-    if (control.errors['required']) return field === 'email' ? 'البريد الإلكتروني مطلوب' : 'كلمة المرور مطلوبة';
-    if (control.errors['email']) return 'البريد الإلكتروني غير صحيح';
-    if (control.errors['minlength']) return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
-    return 'خطأ غير معروف';
+    if (control.errors['required']) {
+      return this.translationService.translate(`login.validation.${field}Required`);
+    }
+    if (control.errors['email']) {
+      return this.translationService.translate('login.validation.emailInvalid');
+    }
+    if (control.errors['minlength']) {
+      return this.translationService.translate('login.validation.passwordMinLength');
+    }
+    return this.translationService.translate('login.validation.unknownError');
   }
 
   onFieldFocus(field: string): void {
@@ -101,7 +114,7 @@ export class LoginComponent {
 
   demoLogin(role: string): void {
     this.isLoading = true;
-    this.loginForm.disable(); 
+    this.loginForm.disable();
     this.loginError = null;
     this.loginSuccess = null;
 
@@ -114,14 +127,14 @@ export class LoginComponent {
       next: (response) => {
         this.isLoading = false;
         this.loginForm.enable();
-        this.loginSuccess = 'تم تسجيل الدخول بنجاح!';
+        this.loginSuccess = this.translationService.translate('login.successMessage');
         this.loginError = null;
         this.router.navigate(['/home']);
       },
       error: (error) => {
         this.isLoading = false;
         this.loginForm.enable();
-        this.loginError = error.error?.message || 'فشل تسجيل الدخول';
+        this.loginError = error.error?.message || this.translationService.translate('login.errorMessage');
         this.loginSuccess = null;
       }
     });
@@ -147,14 +160,14 @@ export class LoginComponent {
       next: (response) => {
         this.isLoading = false;
         this.loginForm.enable();
-        this.loginSuccess = 'تم تسجيل الدخول بنجاح!';
+        this.loginSuccess = this.translationService.translate('login.successMessage');
         this.loginError = null;
         this.router.navigate(['/home']);
       },
       error: (error) => {
         this.isLoading = false;
         this.loginForm.enable();
-        this.loginError = error.error?.message || 'فشل تسجيل الدخول';
+        this.loginError = error.error?.message || this.translationService.translate('login.errorMessage');
         this.loginSuccess = null;
       }
     });

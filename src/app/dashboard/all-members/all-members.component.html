@@ -106,7 +106,9 @@
                 class="member-row">
                 <td class="member-name">
                   <div class="name-cell">
-                    <div class="avatar">{{ member.name ? member.name.charAt(0) : 'ع' }}</div>
+                    <div class="avatar">
+                      <span>{{ member.name ? member.name.charAt(0) : 'ع' }}</span>
+                    </div>
                     <span>{{ member.name || 'غير محدد' }}</span>
                   </div>
                 </td>

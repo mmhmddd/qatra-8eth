@@ -6,47 +6,59 @@
         <div class="col-md-3 col-lg-4 col-xl-3 mb-3">
           <div class="contact-info">
             <div class="logo-container">
-              <img src="../../../assets/images/home/footerlogo.png" alt="نحب لنحيا Logo" class="footer-logo">
+              <img src="../../../assets/images/home/footerlogo.png" alt="{{ 'footer.link' | translate }} Logo" class="footer-logo">
             </div>
             <div class="contact-details">
-              <p>انضم إلينا لتكون جزءًا من رحلتنا في نشر العطاء والعِلم .</p>
+              <p>{{ 'footer.joinDescription' | translate }}</p>
             </div>
           </div>
         </div>
 
         <!-- Useful Links Section -->
         <div class="col-md-2 col-lg-2 col-xl-2 mb-3" id="useful-links">
-          <h6 class="footer-heading">روابط مفيدة</h6>
+          <h6 class="footer-heading">{{ 'footer.usefulLinks' | translate }}</h6>
           <div class="footer-nav">
-            <p><a href="/home" class="footer-link">الرئيسية</a></p>
-            <p><a href="/about" class="footer-link">من نحن</a></p>
-            <p><a [routerLink]="['/testimonials']" routerLinkActive="router-link-active" class="footer-link">الآراء</a></p>
-            <p><a [routerLink]="['/join-us']" routerLinkActive="router-link-active" class="footer-link">انضم إلينا</a></p>
+            <p><a href="/home" class="footer-link">{{ 'nav.home' | translate }}</a></p>
+            <p><a href="/about" class="footer-link">{{ 'nav.about' | translate }}</a></p>
+            <p><a [routerLink]="['/testimonials']" routerLinkActive="router-link-active" class="footer-link">{{ 'nav.testimonials' | translate }}</a></p>
+            <p><a [routerLink]="['/join-us']" routerLinkActive="router-link-active" class="footer-link">{{ 'nav.joinUs' | translate }}</a></p>
           </div>
         </div>
 
         <!-- Additional Links Section -->
         <div class="col-md-3 col-lg-2 col-xl-2 mb-3">
-          <h6 class="footer-heading">روابط إضافية</h6>
+          <h6 class="footer-heading">{{ 'footer.additionalLinks' | translate }}</h6>
           <div class="footer-nav">
             <p>
               <a [routerLink]="['/last-news']" [fragment]="'gallerysection'" routerLinkActive="router-link-active" class="footer-link">
-                معرض الصور
+                {{ 'imageSection.sectionBadge' | translate }}
               </a>
             </p>
-            <p><a [routerLink]="['/last-news']" routerLinkActive="router-link-active" class="footer-link">اخر الاخبار</a></p>
-            <p><a [routerLink]="['/profile']" routerLinkActive="router-link-active" class="footer-link">الملف الشخصي</a></p>
+            <p><a [routerLink]="['/last-news']" routerLinkActive="router-link-active" class="footer-link">{{ 'nav.news' | translate }}</a></p>
+            <p><a [routerLink]="['/profile']" routerLinkActive="router-link-active" class="footer-link">{{ 'nav.profile' | translate }}</a></p>
           </div>
         </div>
 
         <!-- Contact Section -->
         <div class="col-md-4 col-lg-3 col-xl-3 mb-md-0 mb-3">
-          <h6 class="footer-heading">تواصل معنا</h6>
+          <h6 class="footer-heading">{{ 'footer.contactUs' | translate }}</h6>
           <div class="contact-details">
-            <p> عمان، شارع الجامعة الاردنية <i style="margin-right: 10px;" class="bi bi-home ms-3"></i></p>
-            <p> <a href="mailto:Contact@qatrah-ghaith.com" class="contact-link">Contact&#64;qatrah-ghaith.com</a><i style="margin-right: 10px;" class="bi bi-envelope ms-3"></i></p>
-            <p><a href="mailto:info@qatrah-ghaith.com" class="contact-link">info&#64;qatrah-ghaith.com</a><i style="margin-right: 10px;" class="bi bi-envelope ms-3"></i> </p>
-            <p>9627956864529 +<i style="margin-right: 10px;" class="bi bi-phone ms-3"></i> </p>
+            <p>{{ 'footer.address' | translate }} <i style="margin-right: 10px;" class="bi bi-home ms-3"></i></p>
+              <p>
+                <a href="mailto:Contact&#64;qatrah-ghaith.com" class="contact-link">
+                  Contact&#64;qatrah-ghaith.com
+                </a>
+                <i style="margin-right: 10px;" class="bi bi-envelope ms-3"></i>
+              </p>
+
+              <p>
+                <a href="mailto:info&#64;qatrah-ghaith.com" class="contact-link">
+                  info&#64;qatrah-ghaith.com
+                </a>
+                <i style="margin-right: 10px;" class="bi bi-envelope ms-3"></i>
+              </p>
+
+            <p>+9627956864529 <i style="margin-right: 10px;" class="bi bi-phone ms-3"></i></p>
           </div>
         </div>
       </div>
@@ -73,6 +85,6 @@
 
   <!-- Copyright -->
   <div class="footer-bottom text-center">
-    <p class="copyright">© 2025 جميع الحقوق محفوظة: <a href="https://nahblnahya.com"> قطرة غيث</a></p>
+    <p class="copyright">© {{ currentYear }} {{ 'footer.copyright' | translate }} <a href="https://nahblnahya.com">{{ 'footer.link' | translate }}</a></p>
   </div>
 </footer>

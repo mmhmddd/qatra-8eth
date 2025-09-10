@@ -1,7 +1,7 @@
 $primary-color: #00adb5;
 $secondary-color: #0097b2;
 $accent-color: #ff914d;
-$success-color: #22c55e; // Used for buttons, toasts use specific colors
+$success-color: #22c55e;
 $danger-color: #dc3545;
 $neutral-color: #495057;
 $background-color: #f4f6f9;
@@ -47,7 +47,7 @@ $info-color: #17a2b8;
     transform: translateY(-2px);
   }
 
-  &.toast-success {
+  &.bg-success {
     background-color: #d4edda;
     border: 1px solid #c3e6cb;
     color: #155724;
@@ -63,7 +63,7 @@ $info-color: #17a2b8;
     }
   }
 
-  &.toast-error {
+  &.bg-danger {
     background-color: #f8d7da;
     border: 1px solid #f5c6cb;
     color: #721c24;
@@ -76,22 +76,6 @@ $info-color: #17a2b8;
 
     .toast-body {
       color: #721c24;
-    }
-  }
-
-  &.toast-info {
-    background-color: #d1ecf1;
-    border: 1px solid #bee5eb;
-    color: #0c5460;
-
-    .toast-header {
-      background-color: #d1ecf1;
-      border-bottom: 1px solid #bee5eb;
-      color: #0c5460;
-    }
-
-    .toast-body {
-      color: #0c5460;
     }
   }
 
@@ -211,49 +195,6 @@ $info-color: #17a2b8;
   }
 }
 
-.lecture-card {
-  background: $white;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  border: 1px solid $border-color;
-  margin-bottom: 2rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-  }
-
-  .card-header {
-    background: linear-gradient(135deg, $secondary-color, darken($secondary-color, 10%));
-    padding: 1.25rem;
-    border-bottom: none;
-    border-radius: 12px 12px 0 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    h4 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: $white;
-      margin: 0;
-    }
-
-    .badge {
-      font-size: 0.9rem;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      background-color: $info-color;
-      color: $white;
-    }
-  }
-
-  .card-body {
-    padding: 2rem;
-  }
-}
-
 dl.row {
   margin-bottom: 0;
 
@@ -278,7 +219,7 @@ dl.row {
   text-align: center;
 }
 
-.form-control, textarea.form-control {
+.form-control, textarea.form-control, select.form-control {
   border: 1px solid $border-color;
   border-radius: 6px;
   padding: 0.75rem;
@@ -296,6 +237,11 @@ dl.row {
     color: #adb5bd;
     text-align: center;
   }
+}
+
+select.form-control[multiple] {
+  height: auto;
+  min-height: 100px;
 }
 
 .text-danger {
@@ -434,119 +380,6 @@ dl.row {
   }
 }
 
-.lecture-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-
-  &.table-striped {
-    tbody tr:nth-child(odd) {
-      background-color: lighten($background-color, 2%);
-    }
-    tbody tr:nth-child(even) {
-      background-color: $white;
-    }
-  }
-
-  &.table-hover {
-    tbody tr:hover {
-      background-color: rgba($primary-color, 0.1);
-      transition: background-color 0.2s ease;
-    }
-  }
-
-  th {
-    background: linear-gradient(180deg, $background-color, darken($background-color, 5%));
-    font-weight: 600;
-    color: $neutral-color;
-    padding: 1rem;
-    text-align: center;
-    border-bottom: 2px solid $border-color;
-    font-size: 1rem;
-  }
-
-  td {
-    padding: 1rem;
-    text-align: center;
-    color: $neutral-color;
-    border-bottom: 1px solid $border-color;
-    vertical-align: middle;
-    font-size: 0.95rem;
-  }
-
-  .lecture-link {
-    max-width: 250px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    a {
-      color: $primary-color;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease;
-
-      i {
-        font-size: 0.9rem;
-        color: $accent-color;
-        margin-left: 0.5rem;
-      }
-
-      &:hover {
-        color: darken($primary-color, 10%);
-        text-decoration: underline;
-      }
-    }
-
-    span {
-      color: #6c757d;
-      font-style: italic;
-    }
-  }
-
-  .action-column {
-    min-width: 120px;
-
-    .btn {
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      background-color: $danger-color;
-      color: $white;
-
-      i {
-        font-size: 0.9rem;
-        margin-left: 0.5rem;
-      }
-
-      &:hover {
-        background-color: darken($danger-color, 10%);
-        transform: translateY(-1px);
-      }
-    }
-  }
-}
-
-.table-responsive {
-  border-radius: 6px;
-  overflow-x: auto;
-
-  .table {
-    min-width: 800px;
-  }
-
-  .lecture-table {
-    min-width: 600px;
-  }
-}
-
 .list-group {
   border-radius: 6px;
 
@@ -632,68 +465,12 @@ dl.row {
     }
   }
 
-  .lecture-card {
-    margin-bottom: 1.5rem;
-
-    .card-header {
-      padding: 1rem;
-      flex-direction: column;
-      gap: 0.5rem;
-
-      h4 {
-        font-size: 1.25rem;
-      }
-
-      .badge {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.8rem;
-      }
-    }
-
-    .card-body {
-      padding: 1.5rem;
-    }
-  }
-
   .table {
     font-size: 0.85rem;
 
     th, td {
       padding: 0.5rem;
       text-align: center;
-    }
-
-    .lecture-link {
-      max-width: 150px;
-    }
-
-    .action-column {
-      min-width: 80px;
-    }
-  }
-
-  .lecture-table {
-    font-size: 0.9rem;
-
-    th, td {
-      padding: 0.75rem;
-    }
-
-    .lecture-link {
-      max-width: 150px;
-
-      a {
-        font-size: 0.85rem;
-      }
-    }
-
-    .action-column {
-      min-width: 100px;
-
-      .btn {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
-      }
     }
   }
 
@@ -702,30 +479,7 @@ dl.row {
     font-size: 0.9rem;
   }
 
-  .form-control, textarea.form-control {
+  .form-control, textarea.form-control, select.form-control {
     text-align: center;
-  }
-}
-
-@media (max-width: 576px) {
-  .lecture-table {
-    font-size: 0.85rem;
-
-    th, td {
-      padding: 0.5rem;
-    }
-
-    .lecture-link {
-      max-width: 120px;
-    }
-
-    .action-column {
-      min-width: 80px;
-
-      .btn {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.75rem;
-      }
-    }
   }
 }

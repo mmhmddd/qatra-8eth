@@ -47,8 +47,8 @@ export class ShowMemberComponent implements OnInit, OnDestroy {
     email: '',
     phone: '',
     grade: '',
-    subjects: [] as string[],
-    minLectures: [] as number[],
+    subjects: [''],
+    minLectures: [0],
     subjectsString: ''
   };
   newMessage = { content: '', displayDays: 1 };
@@ -137,7 +137,6 @@ export class ShowMemberComponent implements OnInit, OnDestroy {
         return of(null);
       }),
       catchError(error => {
-        console.error('Error loading message:', error);
         this.toasts.push({
           id: 'error-' + Date.now(),
           type: 'error',
@@ -177,13 +176,15 @@ export class ShowMemberComponent implements OnInit, OnDestroy {
     return /^\+?\d{10,15}$/.test(phone);
   }
 
-  updateStudentSubjects(index: number, subjectsString: string): void {
-    const subjects = subjectsString.split(',').map(s => s.trim()).filter(s => s);
-    this.editedStudents[index].subjects = subjects.map(name => ({
-      name,
-      minLectures: this.editedStudents[index].subjects.find(s => s.name === name)?.minLectures || 0
-    }));
-    this.editedStudents[index].subjectsString = subjectsString;
+  updateStudentSubjects(index: number, subjects: string | string[]): void {
+    const subjectArray = Array.isArray(subjects) ? subjects : [subjects];
+    this.editedStudents[index].subjects = subjectArray
+      .filter(s => s)
+      .map(name => ({
+        name,
+        minLectures: this.editedStudents[index].subjects.find(s => s.name === name)?.minLectures || 0
+      }));
+    this.editedStudents[index].subjectsString = subjectArray.join(', ');
   }
 
   isValidSubjects(subjects: { name: string; minLectures: number }[]): boolean {
@@ -264,9 +265,15 @@ export class ShowMemberComponent implements OnInit, OnDestroy {
     this.editedSubjects.splice(index, 1);
   }
 
-  updateNewStudentSubjects(subjectsString: string): void {
-    this.newStudent.subjects = subjectsString.split(',').map(s => s.trim()).filter(s => s);
-    this.newStudent.minLectures = new Array(this.newStudent.subjects.length).fill(0);
+  addNewStudentSubject(): void {
+    this.newStudent.subjects.push('');
+    this.newStudent.minLectures.push(0);
+  }
+
+  removeNewStudentSubject(index: number): void {
+    this.newStudent.subjects.splice(index, 1);
+    this.newStudent.minLectures.splice(index, 1);
+    this.validateMinLectures();
   }
 
   validateMinLectures(): void {
@@ -287,14 +294,14 @@ export class ShowMemberComponent implements OnInit, OnDestroy {
     if (this.newStudent.grade && (this.newStudent.grade.length < 1 || this.newStudent.grade.length > 50)) {
       this.studentErrors.grade = 'الصف يجب أن يكون بين 1 و50 حرفًا';
     }
-    if (this.newStudent.subjects.some(s => !this.member?.subjects.includes(s))) {
-      this.studentErrors.subjects = 'يرجى إدخال مواد صالحة من قائمة المواد المتاحة';
+    if (this.newStudent.subjects.some(s => !s || !this.member?.subjects.includes(s))) {
+      this.studentErrors.subjects = 'يرجى اختيار مواد صالحة من قائمة المواد المتاحة';
     }
     return Object.keys(this.studentErrors).length === 0;
   }
 
   clearStudentForm(form: NgForm): void {
-    this.newStudent = { name: '', email: '', phone: '', grade: '', subjects: [], minLectures: [], subjectsString: '' };
+    this.newStudent = { name: '', email: '', phone: '', grade: '', subjects: [''], minLectures: [0], subjectsString: '' };
     this.studentErrors = {};
     form.resetForm();
   }

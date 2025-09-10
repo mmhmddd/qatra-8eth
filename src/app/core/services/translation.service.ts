@@ -112,7 +112,7 @@ export class TranslationService {
         note2: 'يُرجى التأكد من صحة جميع المعلومات المدخلة',
         note3: 'الملف المرفوع يجب أن يكون بصيغة PDF فقط',
         note4: 'الحد الأقصى لحجم الملف هو 10 ميغابايت',
-        note5: 'ستتلقى إشعارًا عند الموافقة على الطلب أو رفضه',
+        note5: 'الملف المرفوع يجب أن يكون بصيغة PDF فقط',
         notificationsTitle: 'الإشعارات',
         noNotifications: 'لا توجد إشعارات جديدة.',
         markAllRead: 'تحديد الكل كمقروء',
@@ -407,7 +407,7 @@ export class TranslationService {
         formInvalid: 'يرجى تصحيح الأخطاء في النموذج',
         invalidData: 'البيانات المدخلة غير صالحة. يرجى المراجعة والمحاولة مرة أخرى.',
         serverError: 'حدث خطأ في الخادم. يرجى المحاولة لاحقاً.',
-        networkError: 'لا يمكن الاتصال بالخادم. يرجى التحقق من اتصال الإنترنت.',
+        networkError: 'لا يمكن الاتصال بالخادم. يرجى المراجعة من اتصال الإنترنت.',
         unexpectedError: 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.',
         invalidFormat: 'تنسيق غير صالح'
       },
@@ -463,6 +463,50 @@ export class TranslationService {
         supportInitiativeAnswer: 'يمكنك التبرع، التطوع، أو نشر الوعي حول مبادراتنا.',
         workingHours: 'ما هي ساعات العمل؟',
         workingHoursAnswer: 'نحن متاحون من الساعة 8:00 صباحاً إلى 4:00 مساءً.'
+      },
+      footer: {
+        joinDescription: 'انضم إلينا لتكون جزءًا من رحلتنا في نشر العطاء والعِلم .',
+        usefulLinks: 'روابط مفيدة',
+        additionalLinks: 'روابط إضافية',
+        contactUs: 'تواصل معنا',
+        address: 'عمان، شارع الجامعة الاردنية',
+        copyright: 'جميع الحقوق محفوظة:',
+        link: 'قطرة غيث'
+      },
+      login: {
+        welcomeTitle: 'مرحباً بكم في المبادرة التعليمية',
+        welcomeDescription: 'انضموا إلى رحلتنا التعليمية لبناء مستقبل أفضل من خلال نشر العلم والمعرفة',
+        feature1Title: 'أنشطة تعليمية متنوعة',
+        feature1Description: 'مجموعة واسعة من التدريبات والأنشطة التعليمية',
+        feature2Title: 'مجتمع تعليمي',
+        feature2Description: 'انضم إلى مجتمع من المتعلمين والمعلمين',
+        feature3Title: 'شهادات معتمدة',
+        feature3Description: 'احصل على شهادة معتمدة عند إنتهاء الفرصة التعليمية',
+        mobileTitle: 'المبادرة التعليمية',
+        mobileSubtitle: 'تسجيل الدخول إلى حسابك',
+        loginTitle: 'تسجيل الدخول',
+        loginSubtitle: 'أدخل بياناتك للوصول إلى حسابك',
+        emailLabel: 'البريد الإلكتروني',
+        emailPlaceholder: 'أدخل بريدك الإلكتروني',
+        passwordLabel: 'كلمة المرور',
+        passwordPlaceholder: 'أدخل كلمة المرور',
+        joinLink: 'لست عضو؟ انضم إلينا الآن',
+        forgotPasswordLink: 'نسيت كلمة المرور؟',
+        loginButton: 'تسجيل الدخول',
+        loginButtonLoading: 'جاري تسجيل الدخول...',
+        homeButton: 'العودة إلى الصفحة الرئيسية',
+        loadingText: 'جاري تسجيل الدخول...',
+        validation: {
+          emailRequired: 'البريد الإلكتروني مطلوب',
+          emailInvalid: 'البريد الإلكتروني غير صحيح',
+          emailValid: 'البريد الإلكتروني صحيح',
+          passwordRequired: 'كلمة المرور مطلوبة',
+          passwordMinLength: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل',
+          passwordValid: 'كلمة المرور قوية',
+          unknownError: 'خطأ غير معروف'
+        },
+        successMessage: 'تم تسجيل الدخول بنجاح!',
+        errorMessage: 'فشل تسجيل الدخول'
       }
     },
     en: {
@@ -780,6 +824,51 @@ export class TranslationService {
         supportInitiativeAnswer: 'You can donate, volunteer, or spread awareness about our initiatives.',
         workingHours: 'What are the working hours?',
         workingHoursAnswer: 'We are available from 8:00 AM to 4:00 PM.'
+      },
+      footer: {
+        joinDescription: 'Join us to be part of our journey in spreading giving and knowledge.',
+        usefulLinks: 'Useful Links',
+        additionalLinks: 'Additional Links',
+        contactUs: 'Contact Us',
+        address: 'Amman, University of Jordan Street',
+        copyright: 'All Rights Reserved:',
+        link: 'Qatrah Ghaith'
+      },
+
+            login: {
+        welcomeTitle: 'Welcome to the Educational Initiative',
+        welcomeDescription: 'Join our educational journey to build a better future through spreading knowledge',
+        feature1Title: 'Diverse Educational Activities',
+        feature1Description: 'A wide range of training and educational activities',
+        feature2Title: 'Learning Community',
+        feature2Description: 'Join a community of learners and educators',
+        feature3Title: 'Certified Certificates',
+        feature3Description: 'Receive a certified certificate upon completing the educational opportunity',
+        mobileTitle: 'Educational Initiative',
+        mobileSubtitle: 'Log in to your account',
+        loginTitle: 'Login',
+        loginSubtitle: 'Enter your details to access your account',
+        emailLabel: 'Email',
+        emailPlaceholder: 'Enter your email',
+        passwordLabel: 'Password',
+        passwordPlaceholder: 'Enter your password',
+        joinLink: 'Not a member? Join us now',
+        forgotPasswordLink: 'Forgot your password?',
+        loginButton: 'Login',
+        loginButtonLoading: 'Logging in...',
+        homeButton: 'Back to Home Page',
+        loadingText: 'Logging in...',
+        validation: {
+          emailRequired: 'Email is required',
+          emailInvalid: 'Invalid email format',
+          emailValid: 'Email is valid',
+          passwordRequired: 'Password is required',
+          passwordMinLength: 'Password must be at least 6 characters',
+          passwordValid: 'Password is strong',
+          unknownError: 'Unknown error'
+        },
+        successMessage: 'Logged in successfully!',
+        errorMessage: 'Login failed'
       }
     }
   };
