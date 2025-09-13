@@ -6,6 +6,7 @@ import { ApiEndpoints } from '../constants/api-endpoints';
 
 // Define Pdf interface to match backend schema
 export interface Pdf {
+[x: string]: any;
   id: string;
   title: string;
   description: string;

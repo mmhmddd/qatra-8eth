@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { FooterComponent } from './shared/footer/footer.component';
-import { Router, NavigationEnd, Event } from '@angular/router';
+import { Router, NavigationEnd, NavigationStart, Event } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
@@ -18,6 +18,8 @@ import { SeoService } from './core/services/seo.service';
 export class AppComponent implements OnInit {
   title = 'qatra-8eth';
   isDashboardRoute = false;
+  showLoader = false;
+  private loaderTimeout: any;
 
   constructor(
     private router: Router,
@@ -26,44 +28,67 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // تهيئة SeoService
+    // Initialize SeoService
     this.seoService.init();
 
-    // مراقبة تغييرات الـ route لتحديد ما إذا كانت صفحة dashboard
+    // Define dashboard routes
+    const dashboardRoutes = [
+      '/dashboard',
+      '/all-join-request',
+      '/all-members',
+      '/upload-pdf',
+      '/add-testimonials',
+      '/add-leaderboards',
+      '/add-gallery',
+      '/low-lecture-members',
+      '/lectures-request',
+      '/join-massege',
+      '/statistics',
+      '/drive-lecture',
+      '/login'
+    ];
+
+    // Monitor route changes
     this.router.events.pipe(
-      filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd)
-    ).subscribe((event: NavigationEnd) => {
-      const url = event.urlAfterRedirects;
+      filter((event: Event): event is NavigationStart | NavigationEnd =>
+        event instanceof NavigationStart || event instanceof NavigationEnd)
+    ).subscribe((event: NavigationStart | NavigationEnd) => {
+      if (event instanceof NavigationStart) {
+        // Clear any existing timeout
+        if (this.loaderTimeout) {
+          clearTimeout(this.loaderTimeout);
+        }
 
-      // تحسين منطق التحقق من الـ dashboard routes
-      const dashboardRoutes = [
-        '/dashboard',
-        '/all-join-request',
-        '/all-members',
-        '/upload-pdf',
-        '/add-testimonials',
-        '/add-leaderboards',
-        '/add-gallery',
-        '/low-lecture-members',
-        '/lectures-request',
-        '/join-massege',
-        '/statistics',
-        '/drive-lecture',
-        '/login'
-      ];
+        const url = event.url;
+        // Check if the route is a dashboard route
+        const isDashboard = dashboardRoutes.some(route => url.startsWith(route)) ||
+                           /^\/member\/[^\/]+$/.test(url);
 
-      this.isDashboardRoute =
-        dashboardRoutes.some(route => url.startsWith(route)) ||
-        /^\/member\/[^\/]+$/.test(url);
+        // Show loader only for non-dashboard routes
+        if (!isDashboard) {
+          this.showLoader = true;
+          this.loaderTimeout = setTimeout(() => {
+            this.showLoader = false;
+          }, 800);
+        } else {
+          this.showLoader = false; // Ensure loader is not shown for dashboard routes
+        }
+      } else if (event instanceof NavigationEnd) {
+        const url = event.urlAfterRedirects;
 
-      // إضافة/إزالة noindex بناءً على نوع الصفحة
-      if (this.isDashboardRoute) {
-        this.seoService.setNoIndex();
-      } else {
-        this.seoService.removeNoIndex();
+        // Check if the current route is a dashboard route
+        this.isDashboardRoute = dashboardRoutes.some(route => url.startsWith(route)) ||
+                               /^\/member\/[^\/]+$/.test(url);
+
+        // Add/remove noindex based on page type
+        if (this.isDashboardRoute) {
+          this.seoService.setNoIndex();
+        } else {
+          this.seoService.removeNoIndex();
+        }
+
+        console.log('Current route:', url, 'isDashboardRoute:', this.isDashboardRoute);
       }
-
-      console.log('Current route:', url, 'isDashboardRoute:', this.isDashboardRoute);
     });
   }
 }

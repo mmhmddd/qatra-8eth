@@ -48,7 +48,7 @@
       <!-- Main content area -->
       <div class="pdf-main-content">
         <div class="pdf-header">
-          <h3>{{ pdf.title }}</h3>
+          <h3 class="pdf-title" [attr.title]="pdf.title">{{ pdf.title }}</h3>
           <div class="pdf-description">{{ pdf.description }}</div>
         </div>
 
@@ -71,7 +71,11 @@
         <div class="pdf-details">
           <div class="detail">
             <span class="label">{{ 'library.fileNameLabel' | translate }}</span>
-            <span>{{ pdf.fileName }}</span>
+            <span class="file-name"
+                  [attr.dir]="isRtl ? 'rtl' : 'ltr'"
+                  [attr.title]="isRtl ? pdf.fileName : (pdf['fileNameEn'] || pdf.fileName)">
+              {{ isRtl ? pdf.fileName : (pdf['fileNameEn'] || pdf.fileName) }}
+            </span>
           </div>
           <div class="detail">
             <span class="label">{{ 'library.createdAtLabel' | translate }}</span>

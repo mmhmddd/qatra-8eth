@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { LeaderboardService, LeaderboardUser } from '../../core/services/leaderboard.service';
 import { TranslationService } from '../../core/services/translation.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-leaderboards',
   standalone: true,
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule, TranslatePipe, RouterLink],
   templateUrl: './leaderboards.component.html',
   styleUrls: ['./leaderboards.component.scss'],
 })

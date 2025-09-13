@@ -255,4 +255,9 @@ export class LibraryComponent implements OnInit {
   trackByPdfId(index: number, pdf: Pdf): string {
     return pdf.id;
   }
+
+  // Inside the class, after constructor
+get isRtl(): boolean {
+  return this.translationService.isRtl();
+}
 }
