@@ -503,10 +503,11 @@ export class TranslationService {
           passwordRequired: 'كلمة المرور مطلوبة',
           passwordMinLength: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل',
           passwordValid: 'كلمة المرور قوية',
-          unknownError: 'خطأ غير معروف'
+          unknownError: 'خطأ غير معروف',
+          loginError: 'فشل في تسجيل الدخول. يرجى التحقق من بياناتك والمحاولة مرة أخرى.'
         },
         successMessage: 'تم تسجيل الدخول بنجاح!',
-        errorMessage: 'فشل تسجيل الدخول'
+        errorMessage: 'فشل في تسجيل الدخول. يرجى التحقق من بياناتك والمحاولة مرة أخرى.'
       }
     },
     en: {
@@ -865,7 +866,8 @@ export class TranslationService {
           passwordRequired: 'Password is required',
           passwordMinLength: 'Password must be at least 6 characters',
           passwordValid: 'Password is strong',
-          unknownError: 'Unknown error'
+          unknownError: 'Unknown error',
+          loginError: 'Login failed. Please check your credentials and try again.'
         },
         successMessage: 'Logged in successfully!',
         errorMessage: 'Login failed'
