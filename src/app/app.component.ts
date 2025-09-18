@@ -44,6 +44,7 @@ export class AppComponent implements OnInit {
       '/lectures-request',
       '/join-massege',
       '/statistics',
+      '/library',
       '/drive-lecture',
       '/login'
     ];

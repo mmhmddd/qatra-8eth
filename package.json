@@ -2,15 +2,15 @@
   "name": "qatra-8eth",
   "version": "0.0.0",
   "scripts": {
-  "ng": "ng",
-  "start": "ng serve",
-  "build": "ng build",
-  "build:ssr": "ng build && ng run qatra-8eth:server",
-  "serve:ssr": "node dist/qatra-8eth/server/server.mjs",
-  "prerender": "ng run qatra-8eth:prerender",
-  "watch": "ng build --watch --configuration development",
-  "test": "ng test"
-},
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "build:ssr": "ng build && ng run qatra-8eth:server",
+    "serve:ssr": "node dist/qatra-8eth/server/server.mjs",
+    "prerender": "ng run qatra-8eth:prerender",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^17.3.12",
@@ -40,6 +40,7 @@
     "file-saver": "^2.0.5",
     "ng2-charts": "^3.1.2",
     "ngx-toastr": "^19.0.0",
+    "pdf-lib": "^1.17.1",
     "rxjs": "~7.8.0",
     "swiper": "^11.2.10",
     "tslib": "^2.3.0",

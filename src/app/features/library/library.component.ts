@@ -28,6 +28,10 @@ export class LibraryComponent implements OnInit {
     academicLevel: '',
     country: ''
   };
+  // Map to track loading state for each PDF
+  loadingStates: { [key: string]: boolean } = {};
+  // Track initial loading state for PDF list
+  isLoading: boolean = true;
 
   private academicLevelClassMap: { [key: string]: string } = {
     'أول': 'level-أول',
@@ -65,8 +69,8 @@ export class LibraryComponent implements OnInit {
     this.loadPdfs();
   }
 
-
   private loadPdfs(): void {
+    this.isLoading = true; // Set loading state to true
     this.pdfService.getPdfs()
       .subscribe({
         next: (pdfs) => {
@@ -78,9 +82,11 @@ export class LibraryComponent implements OnInit {
           this.filteredPdfs = [...this.pdfs];
           this.errorMessage = pdfs.length === 0 ? this.translationService.translate('library.noPdfs') : null;
           this.initializeFilters(pdfs);
+          this.isLoading = false; // Clear loading state
         },
         error: (err) => {
           this.errorMessage = err.message || this.translationService.translate('library.errorLoadingPdfs');
+          this.isLoading = false; // Clear loading state on error
           this.clearMessages();
         }
       });
@@ -93,11 +99,9 @@ export class LibraryComponent implements OnInit {
     this.countries = [...new Set(pdfs.map(pdf => pdf.country).filter(country => country))].sort();
   }
 
-
   searchPdfs(): void {
     this.filterPdfs();
   }
-
 
   filterPdfs(): void {
     let tempPdfs = [...this.pdfs];
@@ -135,7 +139,6 @@ export class LibraryComponent implements OnInit {
     }
   }
 
-
   clearSearch(): void {
     this.searchTerm = '';
     this.filters = {
@@ -148,12 +151,14 @@ export class LibraryComponent implements OnInit {
     this.errorMessage = this.pdfs.length === 0 ? this.translationService.translate('library.noPdfs') : null;
   }
 
-
   openPdf(id: string): void {
     if (!id) {
       this.showErrorMessage(this.translationService.translate('library.invalidId'));
       return;
     }
+
+    // Set loading state for this PDF
+    this.loadingStates[id] = true;
 
     this.pdfService.getPdfDetails(id)
       .subscribe({
@@ -173,14 +178,18 @@ export class LibraryComponent implements OnInit {
             }, 1000);
           } catch (error) {
             this.showErrorMessage(this.translationService.translate('library.errorOpeningFile'));
+          } finally {
+            // Clear loading state
+            this.loadingStates[id] = false;
           }
         },
         error: (err) => {
           this.showErrorMessage(err.message || this.translationService.translate('library.errorLoadingFile'));
+          // Clear loading state on error
+          this.loadingStates[id] = false;
         }
       });
   }
-
 
   sharePdf(id: string): void {
     if (!id) {
@@ -203,7 +212,6 @@ export class LibraryComponent implements OnInit {
     }
   }
 
-
   private fallbackCopyTextToClipboard(text: string): void {
     const textArea = document.createElement('textarea');
     textArea.value = text;
@@ -224,20 +232,17 @@ export class LibraryComponent implements OnInit {
     }
   }
 
-
   private showSuccessMessage(message: string): void {
     this.successMessage = message;
     this.errorMessage = null;
     this.clearMessages();
   }
 
-
   private showErrorMessage(message: string): void {
     this.errorMessage = message;
     this.successMessage = null;
     this.clearMessages();
   }
-
 
   private clearMessages(): void {
     setTimeout(() => {
@@ -246,18 +251,15 @@ export class LibraryComponent implements OnInit {
     }, 4000);
   }
 
-
   getAcademicLevelClass(level: string): string {
     return this.academicLevelClassMap[level] || 'level-default';
   }
-
 
   trackByPdfId(index: number, pdf: Pdf): string {
     return pdf.id;
   }
 
-  // Inside the class, after constructor
-get isRtl(): boolean {
-  return this.translationService.isRtl();
-}
+  get isRtl(): boolean {
+    return this.translationService.isRtl();
+  }
 }
