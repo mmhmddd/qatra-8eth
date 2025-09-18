@@ -9,12 +9,53 @@ $success-color: #28a745;
 $danger-color: #dc3545;
 $pending-color: #ffc107;
 $black: #000;
+$spacing-unit: 8px;
+$border-radius: 10px;
 
 .leaderboard-container {
   max-width: 100%;
   margin: 0;
   padding: 0;
   margin-top: 4rem;
+}
+
+.loader-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-unit * 4;
+  background-color: $white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba($black, 0.12);
+  margin: $spacing-unit * 2 auto;
+  max-width: 1440px;
+}
+
+.loader {
+  width: 30px;
+  height: 30px;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 4px solid;
+    border-radius: 50%;
+    border-color: transparent transparent transparent $primary-color;
+    animation: spin 1s linear infinite;
+  }
+
+  &::before {
+    border-right-color: transparent;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 }
 
 .hero-section {
@@ -76,7 +117,6 @@ $black: #000;
   font-size: 1rem;
 }
 
-/* Responsive adjustments */
 @media (max-width: 991px) {
   .hero-section {
     min-height: 50vh;
@@ -251,7 +291,6 @@ $black: #000;
   font-weight: 700;
 }
 
-/* Responsive adjustments */
 @media (max-width: 767px) {
   .podium-user {
     &.first-place {
@@ -291,8 +330,12 @@ $black: #000;
       font-size: 1.5rem;
     }
   }
-}
 
+  .loader-container .loader {
+    width: 24px;
+    height: 24px;
+  }
+}
 
 .criteria-section {
   background: linear-gradient(135deg, rgba($primary-color, 0.1), rgba($secondary-color, 0.1));
@@ -349,7 +392,6 @@ $black: #000;
   }
 }
 
-/* Responsive adjustments */
 @media (max-width: 767px) {
   .criteria-section {
     padding: 40px 0;
@@ -549,7 +591,6 @@ $black: #000;
   }
 }
 
-/* Responsive adjustments */
 @media (max-width: 767px) {
   .volunteers-section {
     padding: 40px 0;

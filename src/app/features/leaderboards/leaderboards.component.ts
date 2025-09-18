@@ -18,6 +18,7 @@ export class LeaderboardsComponent implements OnInit {
   topVolunteers: LeaderboardUser[] = [];
   remainingVolunteers: LeaderboardUser[] = [];
   error: string = '';
+  isLoading: boolean = true; // Track initial loading state
 
   constructor(
     private leaderboardService: LeaderboardService,
@@ -33,6 +34,7 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   loadLeaderboard(): void {
+    this.isLoading = true; // Set loading state to true
     this.leaderboardService.getLeaderboard().subscribe({
       next: (users) => {
         this.leaderboard = users;
@@ -49,6 +51,7 @@ export class LeaderboardsComponent implements OnInit {
           .filter(user => !this.topVolunteers.includes(user));
 
         this.error = '';
+        this.isLoading = false; // Clear loading state
       },
       error: (err) => {
         this.error = this.translationService.translate('leaderboards.errorLoadingLeaderboard');
@@ -56,14 +59,13 @@ export class LeaderboardsComponent implements OnInit {
         this.topLeaders = [];
         this.topVolunteers = [];
         this.remainingVolunteers = [];
+        this.isLoading = false; // Clear loading state on error
       },
     });
   }
 
-
   private isLeaderType(userType: string): boolean {
     const type = userType?.toLowerCase();
-
     return type === 'leader' ||
            type === 'قاده' ||
            type === 'admin' ||
@@ -71,9 +73,7 @@ export class LeaderboardsComponent implements OnInit {
   }
 
   private isVolunteerType(userType: string): boolean {
-    // Convert to lowercase for case-insensitive comparison
     const type = userType?.toLowerCase();
-
     return type === 'volunteer' ||
            type === 'متطوع' ||
            type === 'user';
