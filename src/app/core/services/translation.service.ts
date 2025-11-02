@@ -408,7 +408,7 @@ export class TranslationService {
         invalidData: 'البيانات المدخلة غير صالحة. يرجى المراجعة والمحاولة مرة أخرى.',
         serverError: 'حدث خطأ في الخادم. يرجى المحاولة لاحقاً.',
         networkError: 'لا يمكن الاتصال بالخادم. يرجى المراجعة من اتصال الإنترنت.',
-        unexpectedError: 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.',
+        unexpectedError: 'الايميل الخاص بك غير صالح تم رفضه ',
         invalidFormat: 'تنسيق غير صالح'
       },
       leaderboards: {

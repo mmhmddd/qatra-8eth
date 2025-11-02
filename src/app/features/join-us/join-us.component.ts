@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
   AbstractControl,
@@ -19,14 +18,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class CustomValidators {
   static fullName(control: AbstractControl): ValidationErrors | null {
     const value = control.value?.trim();
-    if (!value) return null; // Let Validators.required handle empty input
+    if (!value) return null;
     const namePattern = /^[\u0600-\u06FFa-zA-Z\s]+$/;
-    if (!namePattern.test(value)) {
-      return { pattern: true };
-    }
-    if (value.replace(/\s/g, '').length === 0) {
-      return { onlySpaces: true };
-    }
+    if (!namePattern.test(value)) return { pattern: true };
+    if (value.replace(/\s/g, '').length === 0) return { onlySpaces: true };
     return null;
   }
 
@@ -38,7 +33,7 @@ export class CustomValidators {
 
   static phoneNumber(control: AbstractControl): ValidationErrors | null {
     const value = control.value?.trim();
-    if (!value) return null; // Let Validators.required handle empty input
+    if (!value) return null;
     const phonePattern = /^\d{9,12}$/;
     return phonePattern.test(value) ? null : { pattern: true };
   }
@@ -52,32 +47,15 @@ interface JoinFormData {
   address: string;
 }
 
-interface JoinRequestResponse {
-  success: boolean;
-  message: string;
-  data?: any;
-  error?: string;
-}
-
-interface ApiError {
-  error: {
-    message: string;
-    code?: string;
-    details?: any;
-  };
-  status: number;
-}
-
 @Component({
   selector: 'app-join-us',
   standalone: true,
-  imports: [FormsModule, CommonModule, ReactiveFormsModule, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './join-us.component.html',
   styleUrls: ['./join-us.component.scss']
 })
 export class JoinUsComponent implements OnInit, OnDestroy {
   joinForm!: FormGroup;
-  submitted = false;
   isPending = false;
   isSubmitting = false;
   emailExistsError = false;
@@ -85,7 +63,6 @@ export class JoinUsComponent implements OnInit, OnDestroy {
   joinStatusMessage: Message | null = null;
 
   private destroy$ = new Subject<void>();
-  private existingEmails: Set<string> = new Set();
 
   constructor(
     private fb: FormBuilder,
@@ -97,7 +74,6 @@ export class JoinUsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadExistingEmails();
     this.setupFormChangeListeners();
     this.loadJoinStatusMessage();
   }
@@ -109,195 +85,114 @@ export class JoinUsComponent implements OnInit, OnDestroy {
 
   private initializeForm(): void {
     this.joinForm = this.fb.group({
-      name: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(100),
-          CustomValidators.fullName
-        ]
-      ],
-      email: [
-        '',
-        [
-          Validators.required,
-          CustomValidators.enhancedEmail
-        ]
-      ],
-      number: [
-        '',
-        [
-          Validators.required,
-          CustomValidators.phoneNumber
-        ]
-      ],
-      academicSpecialization: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(100)
-        ]
-      ],
-      address: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(5),
-          Validators.maxLength(500)
-        ]
-      ]
+      name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100), CustomValidators.fullName]],
+      email: ['', [Validators.required, CustomValidators.enhancedEmail]],
+      number: ['', [Validators.required, CustomValidators.phoneNumber]],
+      academicSpecialization: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+      address: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(500)]]
     });
   }
 
   private loadJoinStatusMessage(): void {
     this.joinUsService.getMessages().pipe(takeUntil(this.destroy$)).subscribe({
       next: (response) => {
-        const visibleMessages = response.messages.filter((msg: Message) => msg.isVisible);
-        this.joinStatusMessage = visibleMessages.length > 0 ? visibleMessages[0] : null;
+        const visible = response.messages.filter((m: Message) => m.isVisible);
+        this.joinStatusMessage = visible.length > 0 ? visible[0] : null;
       },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error fetching join status message:', error);
-        this.joinStatusMessage = null; // Fallback to default open message
-      }
+      error: () => this.joinStatusMessage = null
     });
   }
 
   private setupFormChangeListeners(): void {
-    this.joinForm.get('email')?.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        if (this.emailExistsError) {
-          this.emailExistsError = false;
-          const emailControl = this.joinForm.get('email');
-          if (emailControl && emailControl.errors) {
-            delete emailControl.errors['emailExists'];
-            if (Object.keys(emailControl.errors).length === 0) {
-              emailControl.setErrors(null);
-            }
-          }
+    this.joinForm.get('email')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      if (this.emailExistsError) {
+        this.emailExistsError = false;
+        const ctrl = this.joinForm.get('email');
+        if (ctrl?.errors?.['emailExists']) {
+          delete ctrl.errors['emailExists'];
+          if (Object.keys(ctrl.errors).length === 0) ctrl.setErrors(null);
         }
-      });
-
-    this.joinForm.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        if (this.generalError) {
-          this.generalError = null;
-        }
-      });
-  }
-
-  private loadExistingEmails(): void {
-    this.existingEmails.add('test@example.com');
-    this.existingEmails.add('admin@example.com');
-    this.existingEmails.add('user@domain.com');
-  }
-
-  private isEmailExists(email: string): boolean {
-    return this.existingEmails.has(email.toLowerCase());
-  }
-
-  isFieldInvalid(fieldName: string): boolean {
-    const field = this.joinForm.get(fieldName);
-    return !!(field && field.invalid && (field.dirty || field.touched));
-  }
-
-  isFieldValid(fieldName: string): boolean {
-    const field = this.joinForm.get(fieldName);
-    return !!(field && field.valid && (field.dirty || field.touched));
-  }
-
-  private validateForm(): boolean {
-    Object.keys(this.joinForm.controls).forEach(key => {
-      const control = this.joinForm.get(key);
-      if (control) {
-        control.markAsTouched();
       }
     });
 
-    if (!this.joinForm.valid) {
-      this.generalError = this.translationService.translate('joinUs.formInvalid');
-      this.scrollToTop();
-      return false;
-    }
+    this.joinForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      if (this.generalError) this.generalError = null;
+    });
+  }
 
-    const email = this.joinForm.get('email')?.value;
-    if (email && this.isEmailExists(email)) {
-      this.emailExistsError = true;
-      this.joinForm.get('email')?.setErrors({ emailExists: true });
-      this.scrollToTop();
-      return false;
-    }
+  isFieldInvalid(field: string): boolean {
+    const c = this.joinForm.get(field);
+    return !!(c && c.invalid && (c.dirty || c.touched));
+  }
 
-    return true;
+  isFieldValid(field: string): boolean {
+    const c = this.joinForm.get(field);
+    return !!(c && c.valid && (c.dirty || c.touched));
+  }
+
+  private markAllTouched(): void {
+    Object.keys(this.joinForm.controls).forEach(k => this.joinForm.get(k)?.markAsTouched());
   }
 
   onSubmit(): void {
     this.resetErrors();
+    this.isSubmitting = true;
 
-    if (!this.validateForm()) {
+    this.markAllTouched();
+    if (!this.joinForm.valid) {
+      this.generalError = this.translationService.translate('joinUs.formInvalid');
       this.isSubmitting = false;
+      this.scrollToTop();
       return;
     }
 
-    this.isSubmitting = true;
+    const data: JoinFormData = this.joinForm.value;
 
-    const formData: JoinFormData = this.joinForm.value;
-
-    this.joinRequestService.create(formData)
+    this.joinRequestService.create(data)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response: JoinRequestResponse) => {
-          this.handleSuccessResponse(response, formData.email);
-        },
-        error: (error: ApiError) => {
-          this.handleErrorResponse(error);
+        next: (res) => this.handleSuccess(res, data.email),
+        error: (err: HttpErrorResponse) => {
+          this.handleErrorResponse(err);
           this.isSubmitting = false;
           this.scrollToTop();
-        },
-        complete: () => {
-          this.isSubmitting = false;
         }
       });
   }
 
-  private scrollToTop(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  private handleSuccessResponse(response: JoinRequestResponse, email: string): void {
-    console.log('Join request submitted successfully:', response);
-
-    this.existingEmails.add(email.toLowerCase());
-
+  private handleSuccess(res: any, email: string): void {
     this.joinForm.reset();
-
-    Object.keys(this.joinForm.controls).forEach(key => {
-      const control = this.joinForm.get(key);
-      if (control) {
-        control.markAsUntouched();
-        control.markAsPristine();
-      }
+    Object.keys(this.joinForm.controls).forEach(k => {
+      const c = this.joinForm.get(k);
+      c?.markAsPristine();
+      c?.markAsUntouched();
     });
-
-    this.submitted = true;
     this.isPending = true;
-
-    this.simulateApprovalProcess();
+    timer(5000).pipe(takeUntil(this.destroy$)).subscribe(() => this.isPending = false);
   }
 
-  private handleErrorResponse(error: ApiError): void {
-    console.error('Error submitting join request:', error);
+  // ====== FIXED ERROR HANDLING ======
+  private handleErrorResponse(error: HttpErrorResponse): void {
+    console.error('API Error:', error);
 
-    if (error.status === 409 ||
-        (error.error?.code === 'EMAIL_EXISTS') ||
-        (error.error?.message?.toLowerCase().includes('email') &&
-         error.error?.message?.toLowerCase().includes('exists'))) {
+    const msg = (error.error?.message || '').toString().toLowerCase();
+    const code = error.error?.code;
+
+    const isEmailExists =
+      error.status === 409 ||
+      code === 'EMAIL_EXISTS' ||
+      (msg.includes('email') && msg.includes('exist')) ||
+      (msg.includes('البريد') && msg.includes('مستخدم'));
+
+    if (isEmailExists) {
       this.emailExistsError = true;
-      this.joinForm.get('email')?.setErrors({ emailExists: true });
-    } else if (error.status === 400) {
+      const emailCtrl = this.joinForm.get('email');
+      emailCtrl?.setErrors({ emailExists: true });
+      return;
+    }
+
+    // Other errors
+    if (error.status === 400) {
       this.generalError = this.translationService.translate('joinUs.invalidData');
     } else if (error.status === 500) {
       this.generalError = this.translationService.translate('joinUs.serverError');
@@ -308,25 +203,26 @@ export class JoinUsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private simulateApprovalProcess(): void {
-    timer(5000).pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.isPending = false;
-    });
+  private scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   private resetErrors(): void {
     this.emailExistsError = false;
     this.generalError = null;
+    const emailCtrl = this.joinForm.get('email');
+    if (emailCtrl?.errors?.['emailExists']) {
+      delete emailCtrl.errors['emailExists'];
+      if (Object.keys(emailCtrl.errors).length === 0) emailCtrl.setErrors(null);
+    }
   }
 
   dismissEmailError(): void {
     this.emailExistsError = false;
-    const emailControl = this.joinForm.get('email');
-    if (emailControl && emailControl.errors) {
-      delete emailControl.errors['emailExists'];
-      if (Object.keys(emailControl.errors).length === 0) {
-        emailControl.setErrors(null);
-      }
+    const c = this.joinForm.get('email');
+    if (c?.errors?.['emailExists']) {
+      delete c.errors['emailExists'];
+      if (Object.keys(c.errors).length === 0) c.setErrors(null);
     }
   }
 
@@ -336,29 +232,5 @@ export class JoinUsComponent implements OnInit, OnDestroy {
 
   dismissJoinStatus(): void {
     this.joinStatusMessage = null;
-  }
-
-  resetForm(): void {
-    this.joinForm.reset();
-    this.resetErrors();
-    this.submitted = false;
-    this.isPending = false;
-    this.isSubmitting = false;
-
-    Object.keys(this.joinForm.controls).forEach(key => {
-      const control = this.joinForm.get(key);
-      if (control) {
-        control.markAsUntouched();
-        control.markAsPristine();
-      }
-    });
-  }
-
-  getFormControl(name: string): AbstractControl | null {
-    return this.joinForm.get(name);
-  }
-
-  get hasFormErrors(): boolean {
-    return this.joinForm.invalid && (this.joinForm.dirty || this.joinForm.touched);
   }
 }

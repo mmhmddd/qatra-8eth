@@ -17,9 +17,10 @@
           <div *ngIf="joinStatusMessage" class="alert alert-warning alert-dismissible fade show" role="alert">
             <i class="fas fa-exclamation-triangle me-2"></i>
             {{ joinStatusMessage.content || ('joinUs.joinStatusOpen' | translate) }}
+            <button type="button" class="btn-close" (click)="dismissJoinStatus()" aria-label="Close"></button>
           </div>
 
-          <!-- Email Exists Error -->
+          <!-- Email Exists Error (Top Alert) -->
           <div *ngIf="emailExistsError" class="alert alert-danger alert-dismissible fade show" role="alert">
             <i class="fas fa-exclamation-triangle me-2"></i>
             {{ 'joinUs.emailExistsError' | translate }}
