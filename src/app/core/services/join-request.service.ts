@@ -274,6 +274,68 @@ export class JoinRequestService {
     );
   }
 
+
+deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
+  if (!id) {
+    return throwError(() => ({
+      success: false,
+      message: 'معرف الطلب مطلوب'
+    }));
+  }
+
+  // Validate MongoDB ObjectId format
+  if (!/^[0-9a-fA-F]{24}$/.test(id.trim())) {
+    return throwError(() => ({
+      success: false,
+      message: 'معرف الطلب غير صالح: يجب أن يكون معرف MongoDB ObjectId صالحًا'
+    }));
+  }
+
+  return this.http.delete<{
+    message: string;
+    deletedRequest: {
+      id: string;
+      name: string;
+      email: string;
+      status: string;
+    };
+  }>(ApiEndpoints.joinRequests.delete(id), { headers: this.getAuthHeaders() }).pipe(
+    tap(response => console.log('Raw deleteJoinRequest response:', JSON.stringify(response, null, 2))),
+    map(response => ({
+      success: true,
+      message: response.message || 'تم حذف طلب الانضمام بنجاح',
+      data: response.deletedRequest ? {
+        id: response.deletedRequest.id,
+        name: response.deletedRequest.name,
+        email: response.deletedRequest.email,
+        status: response.deletedRequest.status
+      } : undefined
+    })),
+    catchError(error => {
+      console.error('Error deleting join request:', error);
+      let errorMessage = 'فشل في حذف طلب الانضمام، تحقق من المعرف أو الاتصال بالخادم';
+
+      if (error.status === 400) {
+        errorMessage = 'معرف الطلب غير صالح';
+      } else if (error.status === 404) {
+        errorMessage = 'الطلب غير موجود';
+      } else if (error.status === 401) {
+        errorMessage = 'غير مصرح - يرجى تسجيل الدخول مرة أخرى';
+      } else if (error.status === 0) {
+        errorMessage = 'مشكلة في الاتصال بالخادم - تحقق من الإنترنت';
+      }
+
+      return throwError(() => ({
+        success: false,
+        message: errorMessage,
+        error: error.statusText || error.message,
+        status: error.status
+      }));
+    })
+  );
+}
+
+
   getMember(id: string): Observable<JoinRequestResponse> {
     if (!id) {
       return throwError(() => ({

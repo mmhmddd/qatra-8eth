@@ -189,6 +189,49 @@ export class AllJoinRequestComponent implements OnInit {
     });
   }
 
+  confirmDeleteRequest(id: string | undefined) {
+    if (!id) {
+      this.showToast('معرف الطلب غير موجود', 'error');
+      console.error('No request ID provided for deletion');
+      return;
+    }
+    if (confirm('هل أنت متأكد من حذف هذا الطلب المرفوض نهائيًا؟ لا يمكن التراجع عن هذا الإجراء.')) {
+      this.deleteRequest(id);
+    }
+  }
+
+  deleteRequest(id: string) {
+    this.isLoading = true;
+    console.log('Attempting to delete request with ID:', id);
+    this.joinRequestService.deleteJoinRequest(id).subscribe({
+      next: (response: JoinRequestResponse) => {
+        console.log('Delete response:', response);
+        this.fetchJoinRequests();
+        this.showToast('تم حذف الطلب بنجاح', 'success');
+        this.isLoading = false;
+      },
+      error: (error: any) => {
+        this.isLoading = false;
+        let errorMessage = 'فشل في حذف الطلب';
+        if (error.status === 401) {
+          errorMessage = 'غير مصرح: يرجى التحقق من رمز التوثيق أو تسجيل الدخول مجددًا';
+          localStorage.removeItem('token');
+          this.router.navigate(['/login']);
+        } else if (error.status === 404) {
+          errorMessage = 'الطلب غير موجود';
+        } else if (error.status === 400) {
+          errorMessage = 'معرف الطلب غير صالح';
+        } else if (error.status === 500) {
+          errorMessage = 'خطأ في الخادم: فشل في معالجة الطلب';
+        } else if (error.error?.message) {
+          errorMessage = error.error.message;
+        }
+        this.showToast(errorMessage, 'error');
+        console.error('Error deleting request:', error);
+      }
+    });
+  }
+
   getStatusClass(status: string): string {
     switch (status?.toLowerCase()) {
       case 'approved':

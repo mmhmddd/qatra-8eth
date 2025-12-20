@@ -49,11 +49,27 @@
               </span>
             </td>
             <td>
-              <button class="btn btn-success" (click)="confirmApproveRequest(request.id)" [disabled]="request.status !== 'Pending' || isLoading || !request.id">
+              <button
+                class="btn btn-success"
+                (click)="confirmApproveRequest(request.id)"
+                [disabled]="request.status !== 'Pending' || isLoading || !request.id"
+                title="الموافقة على الطلب">
                 <i class="fas fa-check"></i> موافقة
               </button>
-              <button class="btn btn-danger" (click)="confirmRejectRequest(request.id)" [disabled]="request.status !== 'Pending' || isLoading || !request.id">
+              <button
+                class="btn btn-danger"
+                (click)="confirmRejectRequest(request.id)"
+                [disabled]="request.status !== 'Pending' || isLoading || !request.id"
+                title="رفض الطلب">
                 <i class="fas fa-times"></i> رفض
+              </button>
+              <button
+                *ngIf="request.status === 'Rejected'"
+                class="btn btn-danger-outline"
+                (click)="confirmDeleteRequest(request.id)"
+                [disabled]="isLoading || !request.id"
+                title="حذف الطلب المرفوض نهائياً">
+                <i class="fas fa-trash"></i> حذف
               </button>
             </td>
           </tr>

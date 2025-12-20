@@ -13,6 +13,12 @@ export const ApiEndpoints = {
     getAll: `${base}/join-requests`,
     approve: (id: string) => `${base}/join-requests/${id.trim()}/approve`,
     reject: (id: string) => `${base}/join-requests/${id.trim()}/reject`,
+    delete: (id: string) => {
+      if (!id || typeof id !== 'string' || id.trim() === '' || !/^[0-9a-fA-F]{24}$/.test(id.trim())) {
+        throw new Error('Invalid request ID: Must be a valid MongoDB ObjectId');
+      }
+      return `${base}/join-requests/${id.trim()}`;
+    },
     getApproved: `${base}/approved-members`,
     getMember: (id: string) => `${base}/members/${id.trim()}`,
     updateMemberDetails: (id: string) => `${base}/members/${id.trim()}/update-details`,
