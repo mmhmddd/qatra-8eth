@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { map, catchError, tap } from 'rxjs/operators';
+import { map, catchError, tap, timeout } from 'rxjs/operators';
 import { ApiEndpoints } from '../constants/api-endpoints';
 
 export interface Meeting {
@@ -108,6 +108,7 @@ interface GetMessageResponse {
 })
 export class JoinRequestService {
   private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  private readonly REQUEST_TIMEOUT = 30000; // 30 seconds timeout
 
   constructor(private http: HttpClient) {}
 
@@ -132,6 +133,33 @@ export class JoinRequestService {
     });
   }
 
+  private handleError(error: HttpErrorResponse, operation: string): Observable<never> {
+    console.error(`Error in ${operation}:`, error);
+
+    let errorMessage = `فشل في ${operation}`;
+
+    if (error.status === 0) {
+      errorMessage = 'مشكلة في الاتصال بالخادم - تحقق من الإنترنت';
+    } else if (error.status === 401) {
+      errorMessage = 'غير مصرح - يرجى تسجيل الدخول مرة أخرى';
+    } else if (error.status === 404) {
+      errorMessage = 'الطلب غير موجود';
+    } else if (error.status === 400) {
+      errorMessage = error.error?.message || 'بيانات غير صحيحة';
+    } else if (error.status === 500) {
+      errorMessage = 'خطأ في الخادم - يرجى المحاولة لاحقاً';
+    } else if (error.error?.message) {
+      errorMessage = error.error.message;
+    }
+
+    return throwError(() => ({
+      success: false,
+      message: errorMessage,
+      error: error.statusText || error.message,
+      status: error.status
+    }));
+  }
+
   create(data: { name: string; email: string; number: string; academicSpecialization: string; address: string; subjects?: string[] }): Observable<JoinRequestResponse> {
     if (!data.name || !data.email || !data.number || !data.academicSpecialization || !data.address) {
       return throwError(() => ({
@@ -146,24 +174,19 @@ export class JoinRequestService {
       }));
     }
     return this.http.post<CreateJoinRequestResponse>(ApiEndpoints.joinRequests.create, data, { headers: this.headers }).pipe(
+      timeout(this.REQUEST_TIMEOUT),
       map(response => ({
         success: true,
         message: response.message || 'تم تسجيل طلب الانضمام بنجاح',
         data: { id: response.id }
       })),
-      catchError(error => {
-        console.error('Error creating join request:', error);
-        return throwError(() => ({
-          success: false,
-          message: error.error?.message || 'فشل في تسجيل طلب الانضمام، تحقق من البيانات أو الاتصال بالخادم',
-          error: error.statusText || error.message
-        }));
-      })
+      catchError(error => this.handleError(error, 'تسجيل طلب الانضمام'))
     );
   }
 
   getAll(): Observable<JoinRequestResponse> {
     return this.http.get<JoinRequest[]>(ApiEndpoints.joinRequests.getAll, { headers: this.getAuthHeaders() }).pipe(
+      timeout(this.REQUEST_TIMEOUT),
       tap(response => console.log('Raw getAll response:', JSON.stringify(response, null, 2))),
       map(members => ({
         success: true,
@@ -200,26 +223,13 @@ export class JoinRequestService {
           profileImage: member.profileImage || ''
         }))
       })),
-      catchError(error => {
-        console.error('Error fetching join requests:', error);
-        if (error.status === 401) {
-          return throwError(() => ({
-            success: false,
-            message: 'غير مسموح بالوصول. يرجى تسجيل الدخول مرة أخرى',
-            error: 'Unauthorized'
-          }));
-        }
-        return throwError(() => ({
-          success: false,
-          message: error.error?.message || 'فشل في جلب طلبات الانضمام، تحقق من الاتصال بالخادم',
-          error: error.statusText || error.message
-        }));
-      })
+      catchError(error => this.handleError(error, 'جلب طلبات الانضمام'))
     );
   }
 
   getApprovedMembers(): Observable<JoinRequestResponse> {
     return this.http.get<JoinRequest[]>(ApiEndpoints.joinRequests.getApproved, { headers: this.getAuthHeaders() }).pipe(
+      timeout(this.REQUEST_TIMEOUT),
       tap(response => console.log('Raw getApprovedMembers response:', JSON.stringify(response, null, 2))),
       map(members => ({
         success: true,
@@ -256,85 +266,125 @@ export class JoinRequestService {
           profileImage: member.profileImage || ''
         }))
       })),
+      catchError(error => this.handleError(error, 'جلب الأعضاء المعتمدين'))
+    );
+  }
+
+  approve(id: string): Observable<JoinRequestResponse> {
+    if (!id || typeof id !== 'string' || id.trim() === '') {
+      return throwError(() => ({
+        success: false,
+        message: 'معرف الطلب مطلوب'
+      }));
+    }
+
+    // Validate MongoDB ObjectId format
+    if (!/^[0-9a-fA-F]{24}$/.test(id.trim())) {
+      return throwError(() => ({
+        success: false,
+        message: 'معرف الطلب غير صالح'
+      }));
+    }
+
+    console.log('Approving request with ID:', id);
+    console.log('Using endpoint:', ApiEndpoints.joinRequests.approve(id));
+    console.log('Auth headers:', this.getAuthHeaders());
+
+    return this.http.post<ApproveJoinRequestResponse>(
+      ApiEndpoints.joinRequests.approve(id),
+      {},
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      timeout(this.REQUEST_TIMEOUT),
+      tap(response => console.log('Raw approve response:', JSON.stringify(response, null, 2))),
+      map(response => {
+        console.log('Mapping approve response:', response);
+        return {
+          success: true,
+          message: response.message || 'تم الموافقة على الطلب وإنشاء الحساب',
+          email: response.email
+        };
+      }),
       catchError(error => {
-        console.error('Error fetching approved members:', error);
-        if (error.status === 401) {
-          return throwError(() => ({
-            success: false,
-            message: 'غير مسموح بالوصول. يرجى تسجيل الدخول مرة أخرى',
-            error: 'Unauthorized'
-          }));
-        }
-        return throwError(() => ({
-          success: false,
-          message: error.error?.message || 'فشل في جلب الأعضاء المعتمدين، تحقق من الاتصال بالخادم',
-          error: error.statusText || error.message
-        }));
+        console.error('Approve request error:', error);
+        return this.handleError(error, 'الموافقة على الطلب');
       })
     );
   }
 
-
-deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
-  if (!id) {
-    return throwError(() => ({
-      success: false,
-      message: 'معرف الطلب مطلوب'
-    }));
-  }
-
-  // Validate MongoDB ObjectId format
-  if (!/^[0-9a-fA-F]{24}$/.test(id.trim())) {
-    return throwError(() => ({
-      success: false,
-      message: 'معرف الطلب غير صالح: يجب أن يكون معرف MongoDB ObjectId صالحًا'
-    }));
-  }
-
-  return this.http.delete<{
-    message: string;
-    deletedRequest: {
-      id: string;
-      name: string;
-      email: string;
-      status: string;
-    };
-  }>(ApiEndpoints.joinRequests.delete(id), { headers: this.getAuthHeaders() }).pipe(
-    tap(response => console.log('Raw deleteJoinRequest response:', JSON.stringify(response, null, 2))),
-    map(response => ({
-      success: true,
-      message: response.message || 'تم حذف طلب الانضمام بنجاح',
-      data: response.deletedRequest ? {
-        id: response.deletedRequest.id,
-        name: response.deletedRequest.name,
-        email: response.deletedRequest.email,
-        status: response.deletedRequest.status
-      } : undefined
-    })),
-    catchError(error => {
-      console.error('Error deleting join request:', error);
-      let errorMessage = 'فشل في حذف طلب الانضمام، تحقق من المعرف أو الاتصال بالخادم';
-
-      if (error.status === 400) {
-        errorMessage = 'معرف الطلب غير صالح';
-      } else if (error.status === 404) {
-        errorMessage = 'الطلب غير موجود';
-      } else if (error.status === 401) {
-        errorMessage = 'غير مصرح - يرجى تسجيل الدخول مرة أخرى';
-      } else if (error.status === 0) {
-        errorMessage = 'مشكلة في الاتصال بالخادم - تحقق من الإنترنت';
-      }
-
+  reject(id: string): Observable<JoinRequestResponse> {
+    if (!id || typeof id !== 'string' || id.trim() === '') {
       return throwError(() => ({
         success: false,
-        message: errorMessage,
-        error: error.statusText || error.message,
-        status: error.status
+        message: 'معرف الطلب مطلوب'
       }));
-    })
-  );
-}
+    }
 
+    // Validate MongoDB ObjectId format
+    if (!/^[0-9a-fA-F]{24}$/.test(id.trim())) {
+      return throwError(() => ({
+        success: false,
+        message: 'معرف الطلب غير صالح'
+      }));
+    }
+
+    console.log('Rejecting request with ID:', id);
+
+    return this.http.post<RejectJoinRequestResponse>(
+      ApiEndpoints.joinRequests.reject(id),
+      {},
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      timeout(this.REQUEST_TIMEOUT),
+      tap(response => console.log('Raw reject response:', JSON.stringify(response, null, 2))),
+      map(response => ({
+        success: true,
+        message: response.message || 'تم رفض الطلب'
+      })),
+      catchError(error => this.handleError(error, 'رفض الطلب'))
+    );
+  }
+
+  deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
+    if (!id || typeof id !== 'string' || id.trim() === '') {
+      return throwError(() => ({
+        success: false,
+        message: 'معرف الطلب مطلوب'
+      }));
+    }
+
+    // Validate MongoDB ObjectId format
+    if (!/^[0-9a-fA-F]{24}$/.test(id.trim())) {
+      return throwError(() => ({
+        success: false,
+        message: 'معرف الطلب غير صالح: يجب أن يكون معرف MongoDB ObjectId صالحًا'
+      }));
+    }
+
+    return this.http.delete<{
+      message: string;
+      deletedRequest: {
+        id: string;
+        name: string;
+        email: string;
+        status: string;
+      };
+    }>(ApiEndpoints.joinRequests.delete(id), { headers: this.getAuthHeaders() }).pipe(
+      timeout(this.REQUEST_TIMEOUT),
+      tap(response => console.log('Raw deleteJoinRequest response:', JSON.stringify(response, null, 2))),
+      map(response => ({
+        success: true,
+        message: response.message || 'تم حذف طلب الانضمام بنجاح',
+        data: response.deletedRequest ? {
+          id: response.deletedRequest.id,
+          name: response.deletedRequest.name,
+          email: response.deletedRequest.email,
+          status: response.deletedRequest.status
+        } : undefined
+      })),
+      catchError(error => this.handleError(error, 'حذف طلب الانضمام'))
+    );
+  }
 
   getMember(id: string): Observable<JoinRequestResponse> {
     if (!id) {
@@ -345,6 +395,7 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
     }
     console.log('Fetching member with ID:', id);
     return this.http.get<any>(ApiEndpoints.joinRequests.getMember(id), { headers: this.getAuthHeaders() }).pipe(
+      timeout(this.REQUEST_TIMEOUT),
       tap(response => console.log('Raw getMember response:', JSON.stringify(response, null, 2))),
       map(response => {
         if (response.success && response.member) {
@@ -407,23 +458,7 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
           };
         }
       }),
-      catchError(error => {
-        console.error('Error fetching member details:', error);
-        let errorMessage = 'فشل في جلب بيانات العضو، تحقق من المعرف أو الاتصال بالخادم';
-        if (error.status === 401) {
-          errorMessage = 'غير مصرح - يرجى تسجيل الدخول مرة أخرى';
-        } else if (error.status === 404) {
-          errorMessage = 'العضو غير موجود';
-        } else if (error.status === 0) {
-          errorMessage = 'مشكلة في الاتصال بالخادم - تحقق من الإنترنت';
-        }
-        return throwError(() => ({
-          success: false,
-          message: errorMessage,
-          error: error.statusText || error.message,
-          status: error.status
-        }));
-      })
+      catchError(error => this.handleError(error, 'جلب بيانات العضو'))
     );
   }
 
@@ -452,25 +487,12 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
         message: 'بيانات الطلاب يجب أن تحتوي على الاسم، البريد الإلكتروني الصحيح، والهاتف'
       }));
     }
-    if (students.some(student => student.grade && (student.grade.length < 1 || student.grade.length > 50))) {
-      return throwError(() => ({
-        success: false,
-        message: 'الصف يجب أن يكون بين 1 و50 حرفًا إذا تم توفيره'
-      }));
-    }
-    if (students.some(student => student.subjects && student.subjects.some(subject => !subject.name || subject.name.length < 1 || subject.name.length > 100))) {
-      return throwError(() => ({
-        success: false,
-        message: 'كل مادة يجب أن تكون بين 1 و100 حرف'
-      }));
-    }
-    if (students.some(student => student.subjects && student.subjects.some(subject => !Number.isInteger(subject.minLectures) || subject.minLectures < 0))) {
-      return throwError(() => ({
-        success: false,
-        message: 'الحد الأدنى للمحاضرات يجب أن يكون رقمًا صحيحًا غير سالب'
-      }));
-    }
-    return this.http.put<UpdateMemberDetailsResponse>(ApiEndpoints.joinRequests.updateMemberDetails(id), { volunteerHours, numberOfStudents, students, subjects }, { headers: this.getAuthHeaders() }).pipe(
+    return this.http.put<UpdateMemberDetailsResponse>(
+      ApiEndpoints.joinRequests.updateMemberDetails(id),
+      { volunteerHours, numberOfStudents, students, subjects },
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      timeout(this.REQUEST_TIMEOUT),
       map(response => ({
         success: true,
         message: response.message || 'تم تحديث تفاصيل العضو بنجاح',
@@ -492,14 +514,7 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
           lectureCount: response.lectureCount
         }
       })),
-      catchError(error => {
-        console.error('Error updating member details:', error);
-        return throwError(() => ({
-          success: false,
-          message: error.error?.message || 'فشل في تحديث تفاصيل العضو، تحقق من البيانات أو الاتصال بالخادم',
-          error: error.statusText || error.message
-        }));
-      })
+      catchError(error => this.handleError(error, 'تحديث تفاصيل العضو'))
     );
   }
 
@@ -529,39 +544,19 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
         message: 'البريد الإلكتروني للطالب غير صالح'
       }));
     }
-    if (!/^\+?\d{10,15}$/.test(phone)) {
-      return throwError(() => ({
-        success: false,
-        message: 'رقم الهاتف غير صالح'
-      }));
-    }
-    if (grade && (grade.length < 1 || grade.length > 50)) {
-      return throwError(() => ({
-        success: false,
-        message: 'الصف يجب أن يكون بين 1 و50 حرفًا إذا تم توفيره'
-      }));
-    }
-    if (subjects.some(subject => !subject.name || subject.name.length < 1 || subject.name.length > 100)) {
-      return throwError(() => ({
-        success: false,
-        message: 'كل مادة يجب أن تكون بين 1 و100 حرف'
-      }));
-    }
-    if (subjects.some(subject => !Number.isInteger(subject.minLectures) || subject.minLectures < 0)) {
-      return throwError(() => ({
-        success: false,
-        message: 'الحد الأدنى للمحاضرات يجب أن يكون رقمًا صحيحًا غير سالب'
-      }));
-    }
     const payload = {
       name,
       email,
       phone,
-      grade: grade && grade.trim() ? grade : undefined, // Only include grade if valid
+      grade: grade && grade.trim() ? grade : undefined,
       subjects: subjects.filter(subject => subject.name && subject.name.trim() && Number.isInteger(subject.minLectures) && subject.minLectures >= 0)
     };
-    console.log('Sending addStudent request:', { url: ApiEndpoints.joinRequests.addStudent(id), payload });
-    return this.http.post<AddStudentResponse>(ApiEndpoints.joinRequests.addStudent(id), payload, { headers: this.getAuthHeaders() }).pipe(
+    return this.http.post<AddStudentResponse>(
+      ApiEndpoints.joinRequests.addStudent(id),
+      payload,
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      timeout(this.REQUEST_TIMEOUT),
       tap(response => console.log('Raw addStudent response:', JSON.stringify(response, null, 2))),
       map(response => ({
         success: true,
@@ -581,63 +576,7 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
           subjects: response.subjects || []
         }
       })),
-      catchError(error => {
-        console.error('Error adding student:', error);
-        return throwError(() => ({
-          success: false,
-          message: error.error?.message || 'فشل في إضافة الطالب، تحقق من البيانات أو الاتصال بالخادم',
-          error: error.statusText || error.message,
-          status: error.status,
-          errorDetails: error.error
-        }));
-      })
-    );
-  }
-
-  approve(id: string): Observable<JoinRequestResponse> {
-    if (!id) {
-      return throwError(() => ({
-        success: false,
-        message: 'معرف الطلب مطلوب'
-      }));
-    }
-    return this.http.post<ApproveJoinRequestResponse>(ApiEndpoints.joinRequests.approve(id), {}, { headers: this.getAuthHeaders() }).pipe(
-      map(response => ({
-        success: true,
-        message: response.message || 'تم الموافقة على الطلب وإنشاء الحساب',
-        email: response.email
-      })),
-      catchError(error => {
-        console.error('Error approving join request:', error);
-        return throwError(() => ({
-          success: false,
-          message: error.error?.message || 'فشل في الموافقة على الطلب، تحقق من المعرف أو الاتصال بالخادم',
-          error: error.statusText || error.message
-        }));
-      })
-    );
-  }
-
-  reject(id: string): Observable<JoinRequestResponse> {
-    if (!id) {
-      return throwError(() => ({
-        success: false,
-        message: 'معرف الطلب مطلوب'
-      }));
-    }
-    return this.http.post<RejectJoinRequestResponse>(ApiEndpoints.joinRequests.reject(id), {}, { headers: this.getAuthHeaders() }).pipe(
-      map(response => ({
-        success: true,
-        message: response.message || 'تم رفض الطلب'
-      })),
-      catchError(error => {
-        console.error('Error rejecting join request:', error);
-        return throwError(() => ({
-          success: false,
-          message: error.error?.message || 'فشل في رفض الطلب، تحقق من المعرف أو الاتصال بالخادم',
-          error: error.statusText || error.message
-        }));
-      })
+      catchError(error => this.handleError(error, 'إضافة الطالب'))
     );
   }
 
@@ -648,19 +587,16 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
         message: 'معرف العضو مطلوب'
       }));
     }
-    return this.http.delete<DeleteMemberResponse>(ApiEndpoints.joinRequests.deleteMember(id), { headers: this.getAuthHeaders() }).pipe(
+    return this.http.delete<DeleteMemberResponse>(
+      ApiEndpoints.joinRequests.deleteMember(id),
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      timeout(this.REQUEST_TIMEOUT),
       map(response => ({
         success: true,
         message: response.message || 'تم حذف العضو بنجاح'
       })),
-      catchError(error => {
-        console.error('Error deleting member:', error);
-        return throwError(() => ({
-          success: false,
-          message: error.error?.message || 'فشل في حذف العضو، تحقق من المعرف أو الاتصال بالخادم',
-          error: error.statusText || error.message
-        }));
-      })
+      catchError(error => this.handleError(error, 'حذف العضو'))
     );
   }
 
@@ -676,6 +612,7 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
       ApiEndpoints.lectures.deleteLecture(lectureId),
       { headers: this.getAuthHeaders() }
     ).pipe(
+      timeout(this.REQUEST_TIMEOUT),
       tap(response => console.log('Raw deleteLecture response:', JSON.stringify(response, null, 2))),
       map(response => ({
         success: true,
@@ -685,25 +622,7 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
           volunteerHours: response.volunteerHours
         }
       })),
-      catchError(error => {
-        console.error('Error deleting lecture:', error);
-        let errorMessage = 'فشل في حذف المحاضرة، تحقق من المعرف أو الاتصال بالخادم';
-        if (error.status === 400) {
-          errorMessage = 'معرف المحاضرة غير صالح';
-        } else if (error.status === 404) {
-          errorMessage = 'المحاضرة غير موجودة';
-        } else if (error.status === 401) {
-          errorMessage = 'غير مصرح - يرجى تسجيل الدخول مرة أخرى';
-        } else if (error.status === 403) {
-          errorMessage = 'ليس لديك صلاحية لحذف المحاضرة';
-        }
-        return throwError(() => ({
-          success: false,
-          message: errorMessage,
-          error: error.statusText || error.message,
-          status: error.status
-        }));
-      })
+      catchError(error => this.handleError(error, 'حذف المحاضرة'))
     );
   }
 
@@ -726,7 +645,12 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
         message: 'عدد الأيام يجب أن يكون عددًا صحيحًا بين 1 و30'
       }));
     }
-    return this.http.post<SendMessageResponse>(ApiEndpoints.admin.sendMessage, { userId, content, displayDays }, { headers: this.getAuthHeaders() }).pipe(
+    return this.http.post<SendMessageResponse>(
+      ApiEndpoints.admin.sendMessage,
+      { userId, content, displayDays },
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      timeout(this.REQUEST_TIMEOUT),
       tap(response => console.log('Raw sendMessage response:', JSON.stringify(response, null, 2))),
       map(response => ({
         success: response.success,
@@ -738,7 +662,6 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
         } : undefined
       })),
       catchError(error => {
-        console.error('Error sending message:', error);
         if (error.status === 400 && error.error?.activeMessage) {
           return throwError(() => ({
             success: false,
@@ -750,11 +673,7 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
             }
           }));
         }
-        return throwError(() => ({
-          success: false,
-          message: error.error?.message || 'فشل في إرسال الرسالة، تحقق من البيانات أو الاتصال بالخادم',
-          error: error.statusText || error.message
-        }));
+        return this.handleError(error, 'إرسال الرسالة');
       })
     );
   }
@@ -778,7 +697,12 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
         message: 'عدد الأيام يجب أن يكون عددًا صحيحًا بين 1 و30'
       }));
     }
-    return this.http.put<EditMessageResponse>(ApiEndpoints.admin.editMessage, { userId, messageId, content, displayDays }, { headers: this.getAuthHeaders() }).pipe(
+    return this.http.put<EditMessageResponse>(
+      ApiEndpoints.admin.editMessage,
+      { userId, messageId, content, displayDays },
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      timeout(this.REQUEST_TIMEOUT),
       map(response => ({
         success: true,
         message: response.message || 'تم تعديل الرسالة بنجاح',
@@ -786,14 +710,7 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
           displayUntil: response.displayUntil
         }
       })),
-      catchError(error => {
-        console.error('Error editing message:', error);
-        return throwError(() => ({
-          success: false,
-          message: error.error?.message || 'فشل في تعديل الرسالة، تحقق من البيانات أو الاتصال بالخادم',
-          error: error.statusText || error.message
-        }));
-      })
+      catchError(error => this.handleError(error, 'تعديل الرسالة'))
     );
   }
 
@@ -804,19 +721,16 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
         message: 'معرف المستخدم ومعرف الرسالة مطلوبان'
       }));
     }
-    return this.http.delete<DeleteMessageResponse>(ApiEndpoints.admin.deleteMessage, { headers: this.getAuthHeaders(), body: { userId, messageId } }).pipe(
+    return this.http.delete<DeleteMessageResponse>(
+      ApiEndpoints.admin.deleteMessage,
+      { headers: this.getAuthHeaders(), body: { userId, messageId } }
+    ).pipe(
+      timeout(this.REQUEST_TIMEOUT),
       map(response => ({
         success: true,
         message: response.message || 'تم حذف الرسالة بنجاح'
       })),
-      catchError(error => {
-        console.error('Error deleting message:', error);
-        return throwError(() => ({
-          success: false,
-          message: error.error?.message || 'فشل في حذف الرسالة، تحقق من البيانات أو الاتصال بالخادم',
-          error: error.statusText || error.message
-        }));
-      })
+      catchError(error => this.handleError(error, 'حذف الرسالة'))
     );
   }
 
@@ -827,7 +741,11 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
         message: 'معرف المستخدم ومعرف الرسالة مطلوبان'
       }));
     }
-    return this.http.get<GetMessageResponse>(ApiEndpoints.admin.getMessage(userId, messageId), { headers: this.getAuthHeaders() }).pipe(
+    return this.http.get<GetMessageResponse>(
+      ApiEndpoints.admin.getMessage(userId, messageId),
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      timeout(this.REQUEST_TIMEOUT),
       tap(response => console.log('Raw getMessage response:', JSON.stringify(response, null, 2))),
       map(response => ({
         success: response.success,
@@ -838,15 +756,7 @@ deleteJoinRequest(id: string): Observable<JoinRequestResponse> {
           displayUntil: response.message.displayUntil
         } : undefined
       })),
-      catchError(error => {
-        console.error('Error fetching message:', error);
-        return throwError(() => ({
-          success: false,
-          message: error.error?.message || 'فشل في جلب الرسالة، تحقق من المعرفات أو الاتصال بالخادم',
-          error: error.statusText || error.message,
-          status: error.status
-        }));
-      })
+      catchError(error => this.handleError(error, 'جلب الرسالة'))
     );
   }
 }

@@ -161,17 +161,25 @@ export class JoinUsComponent implements OnInit, OnDestroy {
   }
 
   private handleSuccess(res: any, email: string): void {
+    // Reset the form
     this.joinForm.reset();
     Object.keys(this.joinForm.controls).forEach(k => {
       const c = this.joinForm.get(k);
       c?.markAsPristine();
       c?.markAsUntouched();
     });
+
+    // ✅ FIX: Stop the loading state
+    this.isSubmitting = false;
+
+    // Show success message
     this.isPending = true;
     timer(5000).pipe(takeUntil(this.destroy$)).subscribe(() => this.isPending = false);
+
+    // Scroll to top to show success message
+    this.scrollToTop();
   }
 
-  // ====== FIXED ERROR HANDLING ======
   private handleErrorResponse(error: HttpErrorResponse): void {
     console.error('API Error:', error);
 
