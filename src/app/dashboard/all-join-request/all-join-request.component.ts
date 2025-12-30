@@ -41,7 +41,8 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
   filteredRequests: JoinRequest[] = [];
   selectedStatus: string = '';
   isLoading = false;
-  toastMessage: { message: string; type: 'success' | 'error' } | null = null;
+  isWakingUpServer = false;
+  toastMessage: { message: string; type: 'success' | 'error' | 'info' } | null = null;
   private destroy$ = new Subject<void>();
 
   headers: { key: keyof JoinRequest; label: string }[] = [
@@ -96,7 +97,7 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
                 day: '2-digit'
               }),
               createdAtRaw: new Date(request.createdAt)
-            })).sort((a, b) => b.createdAtRaw.getTime() - a.createdAtRaw.getTime());
+            })).sort((a, b) => b.createdAtRaw!.getTime() - a.createdAtRaw!.getTime());
 
             this.filterRequests();
             console.log('Fetched and sorted join requests:', this.joinRequests);
@@ -135,27 +136,73 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
     console.log('Filtered requests:', this.filteredRequests);
   }
 
-  confirmApproveRequest(id: string | undefined) {
+  // Wake up server before approval (for Render.com cold start)
+  private async wakeUpServer(): Promise<boolean> {
+    this.isWakingUpServer = true;
+    this.showToast('جاري تجهيز الخادم... قد يستغرق هذا حتى دقيقة', 'info');
+
+    try {
+      // Try to wake up the server with a simple request
+      await this.joinRequestService.getAll().toPromise();
+      this.isWakingUpServer = false;
+      return true;
+    } catch (error) {
+      console.warn('Server wake-up check failed, but continuing...', error);
+      this.isWakingUpServer = false;
+      return true; // Continue anyway
+    }
+  }
+
+  // Enhanced confirmApproveRequest with server wake-up
+  async confirmApproveRequest(id: string | undefined) {
     if (!id) {
       this.showToast('معرف الطلب غير موجود', 'error');
       console.error('No request ID provided for approval');
       return;
     }
 
-    const request = this.joinRequests.find(r => r.id === id || r._id === id);
-    if (!request) {
-      this.showToast('الطلب غير موجود', 'error');
+    // Validate MongoDB ObjectId format
+    if (!/^[0-9a-fA-F]{24}$/.test(id.trim())) {
+      this.showToast('معرف الطلب غير صالح', 'error');
+      console.error('Invalid MongoDB ObjectId format:', id);
       return;
     }
 
-    if (confirm(`هل أنت متأكد من الموافقة على طلب ${request.name}؟\nسيتم إرسال بريد إلكتروني إلى: ${request.email}`)) {
+    const request = this.joinRequests.find(r => r.id === id || r._id === id);
+    if (!request) {
+      this.showToast('الطلب غير موجود', 'error');
+      console.error('Request not found in local state:', id);
+      return;
+    }
+
+    if (request.status !== 'Pending') {
+      this.showToast('هذا الطلب تمت معالجته مسبقًا', 'error');
+      return;
+    }
+
+    const confirmMessage = `هل أنت متأكد من الموافقة على طلب ${request.name}؟\n\nسيتم:\n• إنشاء حساب للعضو\n• إرسال بريد إلكتروني إلى: ${request.email}\n• تضمين بيانات تسجيل الدخول\n\nملاحظة: قد تستغرق العملية حتى دقيقة`;
+
+    if (confirm(confirmMessage)) {
+      // Wake up server first if it might be sleeping (Render.com)
+      const serverUrl = window.location.hostname.includes('localhost') ? '' : 'render.com';
+      if (serverUrl) {
+        await this.wakeUpServer();
+      }
+
       this.approveRequest(id);
     }
   }
 
+  // Fixed approveRequest with better timeout handling
   approveRequest(id: string) {
     if (this.isLoading) {
       console.log('Already processing a request, ignoring...');
+      return;
+    }
+
+    // Validate ID format
+    if (!id || !/^[0-9a-fA-F]{24}$/.test(id.trim())) {
+      this.showToast('معرف الطلب غير صالح', 'error');
       return;
     }
 
@@ -163,6 +210,9 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
     console.log('=== Starting approval process ===');
     console.log('Request ID:', id);
     console.log('Token exists:', !!localStorage.getItem('token'));
+
+    // Show progress message
+    this.showToast('جاري معالجة الطلب... يرجى الانتظار', 'info');
 
     this.joinRequestService.approve(id)
       .pipe(takeUntil(this.destroy$))
@@ -172,38 +222,71 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
           console.log('Response:', response);
 
           this.isLoading = false;
-          this.showToast(
-            `تم الموافقة على الطلب بنجاح وإرسال البريد الإلكتروني إلى: ${response.email || 'البريد الإلكتروني'}`,
-            'success'
-          );
 
-          // Refresh the list after a short delay
+          const successMessage = response.email
+            ? `تم الموافقة على الطلب بنجاح وإرسال البريد الإلكتروني إلى: ${response.email}`
+            : 'تم الموافقة على الطلب بنجاح';
+
+          this.showToast(successMessage, 'success');
+
+          // Update local state immediately
+          const requestIndex = this.joinRequests.findIndex(r => r.id === id || r._id === id);
+          if (requestIndex !== -1) {
+            this.joinRequests[requestIndex].status = 'Approved';
+            this.filterRequests();
+          }
+
+          // Refresh the full list after a short delay
           setTimeout(() => {
             this.fetchJoinRequests();
-          }, 500);
+          }, 1000);
         },
         error: (error: any) => {
           console.error('=== Approval failed ===');
           console.error('Error details:', error);
           console.error('Error status:', error.status);
           console.error('Error message:', error.message);
+          console.error('Error code:', error.errorCode);
 
           this.isLoading = false;
 
           let errorMessage = 'فشل في الموافقة على الطلب';
 
-          if (error.status === 401) {
-            errorMessage = 'غير مصرح: يرجى تسجيل الدخول مجددًا';
+          if (error.status === 0) {
+            errorMessage = 'فشل الاتصال بالخادم. تحقق من الإنترنت أو اتصل بالدعم الفني';
+          } else if (error.name === 'TimeoutError' || error.message?.includes('Timeout')) {
+            errorMessage = 'انتهت مهلة الطلب. الخادم قد يكون نائمًا، يرجى المحاولة مرة أخرى بعد دقيقة';
+            // Automatically retry after showing message
+            setTimeout(() => {
+              if (confirm('هل تريد المحاولة مرة أخرى الآن؟')) {
+                this.approveRequest(id);
+              }
+            }, 2000);
+          } else if (error.status === 401) {
+            errorMessage = 'غير مصرح: انتهت جلستك. يرجى تسجيل الدخول مجددًا';
             localStorage.removeItem('token');
             setTimeout(() => {
               this.router.navigate(['/login']);
-            }, 1500);
+            }, 2000);
           } else if (error.status === 404) {
-            errorMessage = 'الطلب غير موجود';
+            errorMessage = 'الطلب غير موجود أو تم حذفه';
           } else if (error.status === 400) {
-            errorMessage = error.message || 'بيانات غير صحيحة';
+            if (error.errorCode === 'ALREADY_PROCESSED') {
+              errorMessage = 'تمت معالجة هذا الطلب مسبقًا';
+              setTimeout(() => {
+                this.fetchJoinRequests();
+              }, 500);
+            } else if (error.errorCode === 'INVALID_EMAIL') {
+              errorMessage = 'البريد الإلكتروني للطلب غير صالح';
+            } else {
+              errorMessage = error.message || 'بيانات غير صحيحة';
+            }
           } else if (error.status === 500) {
-            errorMessage = 'خطأ في الخادم: فشل في معالجة الطلب';
+            if (error.errorCode === 'SMTP_CONFIG_MISSING') {
+              errorMessage = 'خطأ في إعدادات البريد الإلكتروني. اتصل بالدعم الفني';
+            } else {
+              errorMessage = 'خطأ في الخادم. يرجى المحاولة مرة أخرى';
+            }
           } else if (error.message) {
             errorMessage = error.message;
           }
@@ -344,13 +427,14 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
     }
   }
 
-  showToast(message: string, type: 'success' | 'error') {
+  showToast(message: string, type: 'success' | 'error' | 'info') {
     console.log('Showing toast:', { message, type });
     this.toastMessage = { message, type };
 
+    const duration = type === 'info' ? 3000 : 5000;
     setTimeout(() => {
       this.toastMessage = null;
-    }, 5000);
+    }, duration);
   }
 
   exportToExcel(): void {

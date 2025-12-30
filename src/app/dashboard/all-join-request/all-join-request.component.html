@@ -25,6 +25,7 @@
         <option value="Rejected">مرفوض</option>
       </select>
     </div>
+
     <div class="table-responsive">
       <table class="table">
         <thead>
@@ -79,13 +80,22 @@
         </tbody>
       </table>
     </div>
-    <div class="loading-overlay" *ngIf="isLoading">
+
+    <div class="loading-overlay" *ngIf="isLoading || isWakingUpServer">
       <div class="loading-content">
         <div class="loading-spinner"></div>
-        <p>جاري التحميل...</p>
+        <p *ngIf="!isWakingUpServer">جاري التحميل...</p>
+        <p *ngIf="isWakingUpServer">جاري تجهيز الخادم... قد يستغرق دقيقة</p>
       </div>
     </div>
-    <div *ngIf="toastMessage" class="toast" [ngClass]="{'toast-success': toastMessage.type === 'success', 'toast-error': toastMessage.type === 'error'}">
+
+    <div *ngIf="toastMessage"
+         class="toast"
+         [ngClass]="{
+           'toast-success': toastMessage.type === 'success',
+           'toast-error': toastMessage.type === 'error',
+           'toast-info': toastMessage.type === 'info'
+         }">
       {{ toastMessage.message }}
     </div>
   </div>
