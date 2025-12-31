@@ -41,7 +41,7 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
   filteredRequests: JoinRequest[] = [];
   selectedStatus: string = '';
   isLoading = false;
-  isWakingUpServer = false;
+  processingRequestId: string | null = null;
   toastMessage: { message: string; type: 'success' | 'error' | 'info' } | null = null;
   private destroy$ = new Subject<void>();
 
@@ -85,7 +85,7 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: JoinRequestResponse) => {
-          console.log('Received join requests response:', response);
+          console.log('Received join requests:', response);
 
           if (response.success && response.members) {
             this.joinRequests = response.members.map(request => ({
@@ -100,7 +100,7 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
             })).sort((a, b) => b.createdAtRaw!.getTime() - a.createdAtRaw!.getTime());
 
             this.filterRequests();
-            console.log('Fetched and sorted join requests:', this.joinRequests);
+            console.log('Fetched requests:', this.joinRequests.length);
           } else {
             this.showToast(response.message || 'فشل في جلب طلبات الانضمام', 'error');
           }
@@ -133,45 +133,24 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
     } else {
       this.filteredRequests = [...this.joinRequests];
     }
-    console.log('Filtered requests:', this.filteredRequests);
   }
 
-  // Wake up server before approval (for Render.com cold start)
-  private async wakeUpServer(): Promise<boolean> {
-    this.isWakingUpServer = true;
-    this.showToast('جاري تجهيز الخادم... قد يستغرق هذا حتى دقيقة', 'info');
-
-    try {
-      // Try to wake up the server with a simple request
-      await this.joinRequestService.getAll().toPromise();
-      this.isWakingUpServer = false;
-      return true;
-    } catch (error) {
-      console.warn('Server wake-up check failed, but continuing...', error);
-      this.isWakingUpServer = false;
-      return true; // Continue anyway
-    }
-  }
-
-  // Enhanced confirmApproveRequest with server wake-up
-  async confirmApproveRequest(id: string | undefined) {
+  confirmApproveRequest(id: string | undefined) {
     if (!id) {
       this.showToast('معرف الطلب غير موجود', 'error');
-      console.error('No request ID provided for approval');
       return;
     }
 
     // Validate MongoDB ObjectId format
     if (!/^[0-9a-fA-F]{24}$/.test(id.trim())) {
       this.showToast('معرف الطلب غير صالح', 'error');
-      console.error('Invalid MongoDB ObjectId format:', id);
       return;
     }
 
     const request = this.joinRequests.find(r => r.id === id || r._id === id);
+
     if (!request) {
       this.showToast('الطلب غير موجود', 'error');
-      console.error('Request not found in local state:', id);
       return;
     }
 
@@ -180,23 +159,17 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const confirmMessage = `هل أنت متأكد من الموافقة على طلب ${request.name}؟\n\nسيتم:\n• إنشاء حساب للعضو\n• إرسال بريد إلكتروني إلى: ${request.email}\n• تضمين بيانات تسجيل الدخول\n\nملاحظة: قد تستغرق العملية حتى دقيقة`;
+    const confirmMessage = `هل أنت متأكد من الموافقة على طلب ${request.name}؟\n\nسيتم:\n• إنشاء حساب للعضو\n• إرسال بريد إلكتروني إلى: ${request.email}\n• تضمين بيانات تسجيل الدخول`;
 
     if (confirm(confirmMessage)) {
-      // Wake up server first if it might be sleeping (Render.com)
-      const serverUrl = window.location.hostname.includes('localhost') ? '' : 'render.com';
-      if (serverUrl) {
-        await this.wakeUpServer();
-      }
-
       this.approveRequest(id);
     }
   }
 
-  // Fixed approveRequest with better timeout handling
   approveRequest(id: string) {
-    if (this.isLoading) {
-      console.log('Already processing a request, ignoring...');
+    // Prevent multiple simultaneous requests
+    if (this.processingRequestId) {
+      console.log('Already processing a request:', this.processingRequestId);
       return;
     }
 
@@ -206,10 +179,12 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.processingRequestId = id;
     this.isLoading = true;
-    console.log('=== Starting approval process ===');
+
+    console.log('=== Starting approval ===');
     console.log('Request ID:', id);
-    console.log('Token exists:', !!localStorage.getItem('token'));
+    console.log('Time:', new Date().toISOString());
 
     // Show progress message
     this.showToast('جاري معالجة الطلب... يرجى الانتظار', 'info');
@@ -222,60 +197,49 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
           console.log('Response:', response);
 
           this.isLoading = false;
+          this.processingRequestId = null;
 
           const successMessage = response.email
-            ? `تم الموافقة على الطلب بنجاح وإرسال البريد الإلكتروني إلى: ${response.email}`
+            ? `تم الموافقة على الطلب وإرسال البريد الإلكتروني إلى: ${response.email}`
             : 'تم الموافقة على الطلب بنجاح';
 
           this.showToast(successMessage, 'success');
 
-          // Update local state immediately
+          // Update local state
           const requestIndex = this.joinRequests.findIndex(r => r.id === id || r._id === id);
           if (requestIndex !== -1) {
             this.joinRequests[requestIndex].status = 'Approved';
             this.filterRequests();
           }
 
-          // Refresh the full list after a short delay
+          // Refresh after short delay
           setTimeout(() => {
             this.fetchJoinRequests();
           }, 1000);
         },
         error: (error: any) => {
           console.error('=== Approval failed ===');
-          console.error('Error details:', error);
-          console.error('Error status:', error.status);
-          console.error('Error message:', error.message);
-          console.error('Error code:', error.errorCode);
+          console.error('Error:', error);
 
           this.isLoading = false;
+          this.processingRequestId = null;
 
           let errorMessage = 'فشل في الموافقة على الطلب';
 
           if (error.status === 0) {
-            errorMessage = 'فشل الاتصال بالخادم. تحقق من الإنترنت أو اتصل بالدعم الفني';
-          } else if (error.name === 'TimeoutError' || error.message?.includes('Timeout')) {
-            errorMessage = 'انتهت مهلة الطلب. الخادم قد يكون نائمًا، يرجى المحاولة مرة أخرى بعد دقيقة';
-            // Automatically retry after showing message
-            setTimeout(() => {
-              if (confirm('هل تريد المحاولة مرة أخرى الآن؟')) {
-                this.approveRequest(id);
-              }
-            }, 2000);
+            errorMessage = 'فشل الاتصال بالخادم. تحقق من الإنترنت';
+          } else if (error.name === 'TimeoutError') {
+            errorMessage = 'انتهت مهلة الطلب. يرجى المحاولة مرة أخرى';
           } else if (error.status === 401) {
-            errorMessage = 'غير مصرح: انتهت جلستك. يرجى تسجيل الدخول مجددًا';
+            errorMessage = 'انتهت جلستك. يرجى تسجيل الدخول مجددًا';
             localStorage.removeItem('token');
-            setTimeout(() => {
-              this.router.navigate(['/login']);
-            }, 2000);
+            setTimeout(() => this.router.navigate(['/login']), 2000);
           } else if (error.status === 404) {
             errorMessage = 'الطلب غير موجود أو تم حذفه';
           } else if (error.status === 400) {
             if (error.errorCode === 'ALREADY_PROCESSED') {
               errorMessage = 'تمت معالجة هذا الطلب مسبقًا';
-              setTimeout(() => {
-                this.fetchJoinRequests();
-              }, 500);
+              setTimeout(() => this.fetchJoinRequests(), 500);
             } else if (error.errorCode === 'INVALID_EMAIL') {
               errorMessage = 'البريد الإلكتروني للطلب غير صالح';
             } else {
@@ -283,7 +247,7 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
             }
           } else if (error.status === 500) {
             if (error.errorCode === 'SMTP_CONFIG_MISSING') {
-              errorMessage = 'خطأ في إعدادات البريد الإلكتروني. اتصل بالدعم الفني';
+              errorMessage = 'خطأ في إعدادات البريد الإلكتروني';
             } else {
               errorMessage = 'خطأ في الخادم. يرجى المحاولة مرة أخرى';
             }
@@ -299,11 +263,11 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
   confirmRejectRequest(id: string | undefined) {
     if (!id) {
       this.showToast('معرف الطلب غير موجود', 'error');
-      console.error('No request ID provided for rejection');
       return;
     }
 
     const request = this.joinRequests.find(r => r.id === id || r._id === id);
+
     if (!request) {
       this.showToast('الطلب غير موجود', 'error');
       return;
@@ -315,42 +279,36 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
   }
 
   rejectRequest(id: string) {
-    if (this.isLoading) {
+    if (this.isLoading || this.processingRequestId) {
       return;
     }
 
+    this.processingRequestId = id;
     this.isLoading = true;
-    console.log('Rejecting request with ID:', id);
 
     this.joinRequestService.reject(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: JoinRequestResponse) => {
-          console.log('Rejection successful:', response);
           this.isLoading = false;
+          this.processingRequestId = null;
           this.showToast('تم رفض الطلب بنجاح', 'success');
-
-          setTimeout(() => {
-            this.fetchJoinRequests();
-          }, 500);
+          setTimeout(() => this.fetchJoinRequests(), 500);
         },
         error: (error: any) => {
-          console.error('Rejection failed:', error);
           this.isLoading = false;
+          this.processingRequestId = null;
 
-          let errorMessage = 'فشل في رفض الطلب';
-
-          if (error.status === 401) {
-            errorMessage = 'غير مصرح: يرجى تسجيل الدخول مجددًا';
-            localStorage.removeItem('token');
-            setTimeout(() => {
-              this.router.navigate(['/login']);
-            }, 1500);
-          } else if (error.message) {
-            errorMessage = error.message;
-          }
+          const errorMessage = error.status === 401
+            ? 'غير مصرح: يرجى تسجيل الدخول مجددًا'
+            : error.message || 'فشل في رفض الطلب';
 
           this.showToast(errorMessage, 'error');
+
+          if (error.status === 401) {
+            localStorage.removeItem('token');
+            setTimeout(() => this.router.navigate(['/login']), 1500);
+          }
         }
       });
   }
@@ -358,11 +316,11 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
   confirmDeleteRequest(id: string | undefined) {
     if (!id) {
       this.showToast('معرف الطلب غير موجود', 'error');
-      console.error('No request ID provided for deletion');
       return;
     }
 
     const request = this.joinRequests.find(r => r.id === id || r._id === id);
+
     if (!request) {
       this.showToast('الطلب غير موجود', 'error');
       return;
@@ -374,44 +332,42 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
   }
 
   deleteRequest(id: string) {
-    if (this.isLoading) {
+    if (this.isLoading || this.processingRequestId) {
       return;
     }
 
+    this.processingRequestId = id;
     this.isLoading = true;
-    console.log('Deleting request with ID:', id);
 
     this.joinRequestService.deleteJoinRequest(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: JoinRequestResponse) => {
-          console.log('Deletion successful:', response);
           this.isLoading = false;
+          this.processingRequestId = null;
           this.showToast('تم حذف الطلب بنجاح', 'success');
-
-          setTimeout(() => {
-            this.fetchJoinRequests();
-          }, 500);
+          setTimeout(() => this.fetchJoinRequests(), 500);
         },
         error: (error: any) => {
-          console.error('Deletion failed:', error);
           this.isLoading = false;
+          this.processingRequestId = null;
 
-          let errorMessage = 'فشل في حذف الطلب';
-
-          if (error.status === 401) {
-            errorMessage = 'غير مصرح: يرجى تسجيل الدخول مجددًا';
-            localStorage.removeItem('token');
-            setTimeout(() => {
-              this.router.navigate(['/login']);
-            }, 1500);
-          } else if (error.message) {
-            errorMessage = error.message;
-          }
+          const errorMessage = error.status === 401
+            ? 'غير مصرح: يرجى تسجيل الدخول مجددًا'
+            : error.message || 'فشل في حذف الطلب';
 
           this.showToast(errorMessage, 'error');
+
+          if (error.status === 401) {
+            localStorage.removeItem('token');
+            setTimeout(() => this.router.navigate(['/login']), 1500);
+          }
         }
       });
+  }
+
+  isRequestProcessing(id: string): boolean {
+    return this.processingRequestId === id;
   }
 
   getStatusClass(status: string): string {
@@ -428,7 +384,7 @@ export class AllJoinRequestComponent implements OnInit, OnDestroy {
   }
 
   showToast(message: string, type: 'success' | 'error' | 'info') {
-    console.log('Showing toast:', { message, type });
+    console.log('Toast:', { message, type });
     this.toastMessage = { message, type };
 
     const duration = type === 'info' ? 3000 : 5000;

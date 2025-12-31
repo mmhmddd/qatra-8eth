@@ -16,9 +16,14 @@
       </div>
     </div>
 
+    <!-- Filter Section -->
     <div class="filter-container">
       <label for="statusFilter">تصفية حسب الحالة: </label>
-      <select id="statusFilter" [(ngModel)]="selectedStatus" (change)="filterRequests()">
+      <select
+        id="statusFilter"
+        [(ngModel)]="selectedStatus"
+        (change)="filterRequests()"
+        [disabled]="isLoading">
         <option value="">الكل</option>
         <option value="Pending">معلق</option>
         <option value="Approved">موافق عليه</option>
@@ -26,6 +31,7 @@
       </select>
     </div>
 
+    <!-- Table Section -->
     <div class="table-responsive">
       <table class="table">
         <thead>
@@ -35,13 +41,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let request of filteredRequests">
+          <tr *ngFor="let request of filteredRequests"
+              [class.processing]="isRequestProcessing(request.id)">
             <td *ngFor="let header of headers">
               <span *ngIf="header.key === 'status'" [ngClass]="getStatusClass(request.status)">
                 {{ request.status | statusTranslate }}
               </span>
               <span *ngIf="header.key === 'email'" style="text-decoration: none">
-                <a [href]="'mailto:' + request.email" class="text-primary" style="text-decoration: none">
+                <a [href]="'mailto:' + request.email"
+                   class="text-primary"
+                   style="text-decoration: none">
                   {{ request.email || 'غير متوفر' }}
                 </a>
               </span>
@@ -49,46 +58,60 @@
                 {{ request[header.key] || 'غير متوفر' }}
               </span>
             </td>
-            <td>
+            <td class="action-buttons">
               <button
                 class="btn btn-success"
                 (click)="confirmApproveRequest(request.id)"
-                [disabled]="request.status !== 'Pending' || isLoading || !request.id"
+                [disabled]="request.status !== 'Pending' || isLoading || !request.id || isRequestProcessing(request.id)"
                 title="الموافقة على الطلب">
-                <i class="fas fa-check"></i> موافقة
+                <span *ngIf="!isRequestProcessing(request.id)">
+                  <i class="fas fa-check"></i> موافقة
+                </span>
+                <span *ngIf="isRequestProcessing(request.id)" class="processing-text">
+                  <i class="fas fa-spinner fa-spin"></i> جاري المعالجة...
+                </span>
               </button>
+
               <button
                 class="btn btn-danger"
                 (click)="confirmRejectRequest(request.id)"
-                [disabled]="request.status !== 'Pending' || isLoading || !request.id"
+                [disabled]="request.status !== 'Pending' || isLoading || !request.id || isRequestProcessing(request.id)"
                 title="رفض الطلب">
                 <i class="fas fa-times"></i> رفض
               </button>
+
               <button
                 *ngIf="request.status === 'Rejected'"
                 class="btn btn-danger-outline"
                 (click)="confirmDeleteRequest(request.id)"
-                [disabled]="isLoading || !request.id"
+                [disabled]="isLoading || !request.id || isRequestProcessing(request.id)"
                 title="حذف الطلب المرفوض نهائياً">
                 <i class="fas fa-trash"></i> حذف
               </button>
             </td>
           </tr>
-          <tr *ngIf="filteredRequests.length === 0">
-            <td [attr.colspan]="headers.length + 1" class="text-center">لا توجد طلبات انضمام</td>
+
+          <tr *ngIf="filteredRequests.length === 0 && !isLoading">
+            <td [attr.colspan]="headers.length + 1" class="text-center">
+              لا توجد طلبات انضمام
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <div class="loading-overlay" *ngIf="isLoading || isWakingUpServer">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" *ngIf="isLoading">
       <div class="loading-content">
         <div class="loading-spinner"></div>
-        <p *ngIf="!isWakingUpServer">جاري التحميل...</p>
-        <p *ngIf="isWakingUpServer">جاري تجهيز الخادم... قد يستغرق دقيقة</p>
+        <p>جاري التحميل...</p>
+        <p class="loading-subtitle" *ngIf="processingRequestId">
+          معالجة الطلب - قد يستغرق حتى 30 ثانية
+        </p>
       </div>
     </div>
 
+    <!-- Toast Notification -->
     <div *ngIf="toastMessage"
          class="toast"
          [ngClass]="{
@@ -96,7 +119,315 @@
            'toast-error': toastMessage.type === 'error',
            'toast-info': toastMessage.type === 'info'
          }">
-      {{ toastMessage.message }}
+      <div class="toast-content">
+        <i class="fas"
+           [ngClass]="{
+             'fa-check-circle': toastMessage.type === 'success',
+             'fa-exclamation-circle': toastMessage.type === 'error',
+             'fa-info-circle': toastMessage.type === 'info'
+           }"></i>
+        <span>{{ toastMessage.message }}</span>
+      </div>
     </div>
   </div>
 </main>
+
+<style>
+.join-requests-container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.page-header h2 {
+  color: #2c3e50;
+  font-size: 2rem;
+  margin: 0;
+}
+
+.export-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.export-btn:hover:not(:disabled) {
+  background: #2980b9;
+}
+
+.export-btn:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+}
+
+.filter-container {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.filter-container label {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.filter-container select {
+  padding: 0.5rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.filter-container select:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead {
+  background: #f8f9fa;
+}
+
+.table th {
+  padding: 1rem;
+  text-align: right;
+  font-weight: 600;
+  color: #2c3e50;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #e0e0e0;
+  transition: background 0.2s;
+}
+
+.table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.table tbody tr.processing {
+  background: #fff3cd;
+}
+
+.table td {
+  padding: 1rem;
+  text-align: right;
+}
+
+.status-approved {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+.status-rejected {
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+.status-pending {
+  color: #f39c12;
+  font-weight: 600;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-success {
+  background: #27ae60;
+  color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+  background: #229954;
+}
+
+.btn-danger {
+  background: #e74c3c;
+  color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #c0392b;
+}
+
+.btn-danger-outline {
+  background: white;
+  color: #e74c3c;
+  border: 2px solid #e74c3c;
+}
+
+.btn-danger-outline:hover:not(:disabled) {
+  background: #e74c3c;
+  color: white;
+}
+
+.processing-text {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loading-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+.loading-subtitle {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin-top: 0.5rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 10000;
+  animation: slideIn 0.3s ease-out;
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.toast-success {
+  background: #27ae60;
+  color: white;
+}
+
+.toast-error {
+  background: #e74c3c;
+  color: white;
+}
+
+.toast-info {
+  background: #3498db;
+  color: white;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-primary {
+  color: #3498db;
+}
+
+@media (max-width: 768px) {
+  .join-requests-container {
+    padding: 1rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+</style>

@@ -600,6 +600,9 @@ export class JoinRequestService {
     );
   }
 
+  // IMPROVED approve() method for join-request.service.ts
+  // Replace the existing approve() method with this improved version
+
   approve(id: string): Observable<JoinRequestResponse> {
     if (!id) {
       return throwError(() => ({
@@ -620,6 +623,7 @@ export class JoinRequestService {
     console.log('Request ID:', id);
     console.log('API Endpoint:', ApiEndpoints.joinRequests.approve(id));
     console.log('Token exists:', !!localStorage.getItem('token'));
+    console.log('Timestamp:', new Date().toISOString());
 
     return this.http.post<any>(
       ApiEndpoints.joinRequests.approve(id),
@@ -629,32 +633,55 @@ export class JoinRequestService {
         observe: 'response'
       }
     ).pipe(
-      timeout(90000), // 90 second timeout (for Render cold start)
-      tap(response => {
-        console.log('=== Approval response received ===');
-        console.log('Status:', response.status);
-        console.log('Body:', response.body);
+      // Increase timeout to 120 seconds for server cold start
+      timeout(120000),
+
+      // Log progress
+      tap({
+        next: (response) => {
+          console.log('=== Approval response received ===');
+          console.log('Status:', response.status);
+          console.log('Body:', response.body);
+          console.log('Timestamp:', new Date().toISOString());
+        },
+        error: (error) => {
+          console.error('=== Approval request error ===');
+          console.error('Error:', error);
+          console.error('Timestamp:', new Date().toISOString());
+        }
       }),
+
+      // Map response
       map(response => {
         const body = response.body;
         return {
           success: body.success !== false,
           message: body.message || 'تم الموافقة على الطلب وإنشاء الحساب',
-          email: body.email
+          email: body.email,
+          data: body.data
         };
       }),
+
+      // Comprehensive error handling
       catchError(error => {
         console.error('=== Approval request failed ===');
         console.error('Full error:', error);
         console.error('Error status:', error.status);
-        console.error('Error body:', error.error);
+        console.error('Error name:', error.name);
 
         let errorMessage = 'فشل في الموافقة على الطلب';
         let errorCode = undefined;
 
+        // Network/connection errors
         if (error.status === 0) {
           errorMessage = 'فشل الاتصال بالخادم. تحقق من الإنترنت أو إعدادات CORS';
-        } else if (error.status === 400) {
+        }
+        // Timeout errors
+        else if (error.name === 'TimeoutError' || error.message?.includes('Timeout')) {
+          errorMessage = 'انتهت مهلة الطلب (120 ثانية). الخادم قد يكون نائمًا، يرجى المحاولة مرة أخرى';
+        }
+        // Bad request errors
+        else if (error.status === 400) {
           errorCode = error.error?.error;
           if (errorCode === 'ALREADY_PROCESSED') {
             errorMessage = 'تمت معالجة هذا الطلب مسبقًا';
@@ -665,21 +692,29 @@ export class JoinRequestService {
           } else {
             errorMessage = error.error?.message || 'بيانات غير صحيحة';
           }
-        } else if (error.status === 401) {
+        }
+        // Authentication errors
+        else if (error.status === 401) {
           errorMessage = 'غير مصرح: يرجى تسجيل الدخول مجددًا';
-        } else if (error.status === 404) {
+        }
+        // Not found errors
+        else if (error.status === 404) {
           errorCode = error.error?.error;
           errorMessage = errorCode === 'REQUEST_NOT_FOUND' ? 'الطلب غير موجود' : 'الطلب غير موجود';
-        } else if (error.status === 500) {
+        }
+        // Server errors
+        else if (error.status === 500) {
           errorCode = error.error?.error;
           if (errorCode === 'SMTP_CONFIG_MISSING') {
             errorMessage = 'خطأ في إعدادات البريد الإلكتروني. اتصل بالدعم الفني';
+          } else if (errorCode === 'DATABASE_ERROR') {
+            errorMessage = 'خطأ في قاعدة البيانات. يرجى المحاولة لاحقاً';
           } else {
             errorMessage = error.error?.message || 'خطأ في الخادم';
           }
-        } else if (error.name === 'TimeoutError') {
-          errorMessage = 'انتهت مهلة الطلب. يرجى المحاولة مرة أخرى';
-        } else if (error.error?.message) {
+        }
+        // Other errors
+        else if (error.error?.message) {
           errorMessage = error.error.message;
         }
 
@@ -691,14 +726,18 @@ export class JoinRequestService {
           errorCode: errorCode
         }));
       }),
+
+      // Retry logic - only for network/timeout errors
       retry({
-        count: 1, // Reduce retry count to 1 for approval (it's a critical operation)
+        count: 2, // Maximum 2 retries
         delay: (error, retryCount) => {
-          // Only retry on network errors or timeout, not on 4xx/5xx
+          // Only retry on network errors (status 0) or timeout
           if (error.status === 0 || error.name === 'TimeoutError') {
-            console.log(`Retrying approval request (attempt ${retryCount + 1})...`);
-            return timer(2000); // Wait 2 seconds before retry
+            const delayTime = retryCount === 1 ? 5000 : 10000; // 5s, then 10s
+            console.log(`Retrying approval request (attempt ${retryCount + 1}) after ${delayTime}ms...`);
+            return timer(delayTime);
           }
+          // Don't retry for 4xx/5xx errors
           return throwError(() => error);
         }
       })
